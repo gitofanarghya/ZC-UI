@@ -1,0 +1,790 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  height: 100%;
+}
+
+html {
+  height: 100%;
+}
+
+main {
+  background-color: #f1f1f1;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.footer {
+  overflow:auto;
+  border:1px;
+  height:100px;
+  width:200px;
+  resize:horizontal;
+  display:inline-block;
+  background-color:yellow;
+  position: relative; /* required */
+}
+
+/* Additional */
+
+.overlayModal {
+  position: fixed;
+  margin: auto;
+  width: 95%;
+  height: 95%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.8);
+  z-index: 20000000;
+  cursor: pointer;
+}
+
+div.footer:after {
+    content: "";
+    resize: horizontal;
+    bottom: 0;
+    right: 0;
+    cursor: e-resize;
+    position: absolute;
+    z-index: 9;
+    width: 20px;
+    height: 20px;
+}
+
+.resizeUI {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: inherit;
+  padding: 0px 3px;
+  pointer-events: none;
+  cursor: e-resize;
+}
+
+@media only screen and (max-width: 1600px) {
+  .fileInput{
+    max-width: 60% !important;
+    margin-right: 10px !important;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .flex1{
+    height: '45%';
+  }
+}
+
+@media screen and ( max-height: 800px ){
+  .settingsDiv1{
+    height: 65%;
+  }
+}
+
+@media screen and ( min-height: 800px ){
+  .settingsDiv1{
+    height: 50%;
+  }
+}
+
+@media screen and ( max-height: 800px ){
+  .settingsDiv{
+    height: 80%;
+  }
+}
+
+@media screen and ( min-height: 800px ){
+  .settingsDiv{
+    height: 60%;
+  }
+}
+
+@media screen and ( max-height: 800px ){
+  .scrollDiv{
+    height: 80%;
+    overflow-y: scroll;
+    padding-right: 20px;
+    }
+}
+
+
+
+@media screen and ( min-height: 800px ){
+  .scrollDiv{
+    height: 80%;
+    overflow-y: scroll;
+    padding-right: 20px;
+  }
+}
+
+.scrollDiv { overflow: -moz-scrollbars-none; }
+
+@-webkit-keyframes argh-my-eyes {
+  0%   { background-color: #fff; }
+  49% { background-color: #fff; }
+  50% { background-color: red; }
+  99% { background-color: red; }
+  100% { background-color: #fff; }
+}
+@-moz-keyframes argh-my-eyes {
+  0%   { background-color: #fff; }
+  49% { background-color: #fff; }
+  50% { background-color: red; }
+  99% { background-color: red; }
+  100% { background-color: #fff; }
+}
+@keyframes argh-my-eyes {
+  0%   { background-color: #fff; }
+  49% { background-color: #fff; }
+  50% { background-color: red; }
+  99% { background-color: red; }
+  100% { background-color: #fff; }
+}
+.blink {
+-webkit-animation: argh-my-eyes 1s infinite;
+-moz-animation:    argh-my-eyes 1s infinite;
+animation:         argh-my-eyes 1s infinite;
+}
+
+.zoneDetail{
+  color: black;
+  background-color: white;
+  border: 2px solid white;
+  border-radius: 3px;
+  margin: 3px;
+}
+
+#root {
+  height: 100%;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.ftclogo {
+  background-image: url('/img/Voyager logo - large- no bg.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.clientlogo {
+  background-image: url('/img/Voyager logo - large- no bg.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+}
+
+.angle0 {
+  background-image: url('/img/angle/0 deg sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle_2 {
+  background-image: url('/img/angle/-2 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle2 {
+  background-image: url('/img/angle/2 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_4 {
+  background-image: url('/img/angle/-4 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle4 {
+  background-image: url('/img/angle/4 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_6 {
+  background-image: url('/img/angle/-6 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle6 {
+  background-image: url('/img/angle/6 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_8 {
+  background-image: url('/img/angle/-8 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle8 {
+  background-image: url('/img/angle/8 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_10 {
+  background-image: url('/img/angle/-10 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle10 {
+  background-image: url('/img/angle/10 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+
+.angle_12 {
+  background-image: url('/img/angle/-12 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle12 {
+  background-image: url('/img/angle/12 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_14 {
+  background-image: url('/img/angle/-14 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle14 {
+  background-image: url('/img/angle/14 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_16 {
+  background-image: url('/img/angle/-16 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle16 {
+  background-image: url('/img/angle/16 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_18 {
+  background-image: url('/img/angle/-18 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle18 {
+  background-image: url('/img/angle/18 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_20 {
+  background-image: url('/img/angle/-20 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle20 {
+  background-image: url('/img/angle/20 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+
+.angle_22 {
+  background-image: url('/img/angle/-22 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle22 {
+  background-image: url('/img/angle/22 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_24 {
+  background-image: url('/img/angle/-24 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle24 {
+  background-image: url('/img/angle/24 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_26 {
+  background-image: url('/img/angle/-26 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle26 {
+  background-image: url('/img/angle/26 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_28 {
+  background-image: url('/img/angle/-28 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle28 {
+  background-image: url('/img/angle/28 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_30 {
+  background-image: url('/img/angle/-30 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle30 {
+  background-image: url('/img/angle/30 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+
+.angle_32 {
+  background-image: url('/img/angle/-32 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle32 {
+  background-image: url('/img/angle/32 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_34 {
+  background-image: url('/img/angle/-34 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle34 {
+  background-image: url('/img/angle/34 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_36 {
+  background-image: url('/img/angle/-36 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle36 {
+  background-image: url('/img/angle/36 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_38 {
+  background-image: url('/img/angle/-38 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle38 {
+  background-image: url('/img/angle/38 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_40 {
+  background-image: url('/img/angle/-40 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle40 {
+  background-image: url('/img/angle/40 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+
+.angle_42 {
+  background-image: url('/img/angle/-42 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle42 {
+  background-image: url('/img/angle/42 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_44 {
+  background-image: url('/img/angle/-44 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle44 {
+  background-image: url('/img/angle/44 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_46 {
+  background-image: url('/img/angle/-46 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle46 {
+  background-image: url('/img/angle/46 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_48 {
+  background-image: url('/img/angle/-48 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle48 {
+  background-image: url('/img/angle/48 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_50 {
+  background-image: url('/img/angle/-50 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle50 {
+  background-image: url('/img/angle/50 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+
+.angle_52 {
+  background-image: url('/img/angle/-52 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle52 {
+  background-image: url('/img/angle/52 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_54 {
+  background-image: url('/img/angle/-54 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle54 {
+  background-image: url('/img/angle/54 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_56 {
+  background-image: url('/img/angle/-56 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle56 {
+  background-image: url('/img/angle/56 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle_58 {
+  background-image: url('/img/angle/-58 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle58 {
+  background-image: url('/img/angle/58 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.angle_60 {
+  background-image: url('/img/angle/-60 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.angle60 {
+  background-image: url('/img/angle/60 sun.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+
+}
+
+.App-grid {
+  height: 100%;
+}
+
+.coverer-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-item {
+  flex-grow: 1;
+  flex-basis: auto;
+}
+
+.flex {
+  display: flex !important;
+  flex-grow: 1 !important;
+  max-height: 100%;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.map-grid {
+  padding: 10px;
+}
+
+.someComponent-grid {
+  padding: 10px;
+}
+
+.dash-right-grid {
+  padding: 10px;
+}
+
+.dash-left-grid {
+  flex-wrap: nowrap !important;
+}
+
+.topGridContainer {
+  height: 15%;
+}
+
+.bottomGridContainer {
+  height: 85%;
+}
+
+.padded {
+  padding: 10px;
+}
+
+.padded2x {
+  padding: 20px;
+}
+
+.mapContainer {
+  border-radius: 4px;
+  background-color: #ffffff;
+  margin-bottom: 10px !important;
+  flex-grow: 1.5 !important;
+}
+
+.graphContainer {
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+.graphDiv {
+  padding-top: 10px;
+}
+
+.title {
+  flex-grow: 0 !important;
+  padding: 10px;
+}
+
+.LoadingContainer {
+  width: 100%;
+  height: 100%;
+  background-color: #424242;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: '3%';
+}
+
+.loadingSVG{
+  width: 100px;
+  height: 100px;
+}
+
+
+html, body, .h100 {
+  min-height: 100% !important;
+  height: 100%;
+}
+
+.w100 {
+  width: 100%;
+}
+
+.bordered {
+  box-shadow: 0px 0px 1px 0px grey
+}
+
+.cleanIcon {
+  width: 1em;
+  height: 1em;
+  background-size: contain;
+  background-image: url('/img/buttons/clean.jpg');
+  font-size: 24px;
+}
+
+.trackerIcon {
+  background-image: url('/img/Tracker_button.png');
+}
+
+
+.overl {
+  background:linear-gradient(0deg,rgba(255,0,0,0.8),rgba(255,0,0,0.8)),url('/img/Tracker_button.png');
+}
+
+/*.overl:before{
+  position: absolute;
+  content:" ";
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  display: none;
+  z-index:0;
+  background-color: rgba(255,0,0,0.5);
+}
+
+.overl:hover:before{
+  display: block;
+}*/
+
