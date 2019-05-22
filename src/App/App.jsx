@@ -31,12 +31,12 @@ class App extends React.Component {
     componentDidMount = () => {
         this.props.init()
 
-        const socket = socketIOClient(`http://${window.location.hostname}:5000`, {
-            query: 'token=' + 'voyager'
-        });
+        const socket = socketIOClient(`http://${window.location.hostname}:5000`);
         socket.on('connect', data => {
             console.log('connected')
-            socket.emit('connectedOrNot', 'connected')
+            socket.emit('connectedOrNot', {connectedOrNot: 'connected'})
+            socket.on('discovery', data => console.log(data))
+            socket.on('message', data => console.log(data))
         })
         socket.on('discovery', data => console.log(data))
         socket.on('message', data => console.log(data))
