@@ -8,6 +8,8 @@ import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 import EditRowController from './EditRowController';
 import ControlRowController from './ControlRowController'
+import { appService } from '../App/app.services';
+import {connect} from 'react-redux'
 
 const styles = theme => ({
     root: {
@@ -24,18 +26,6 @@ const styles = theme => ({
         marginTop: 10
     }
 });
-  
-let id = 0;
-function createData(rowNum, deviceID, macID) {
-    id += 1;
-    return { id, rowNum, deviceID, macID };
-}
-  
-const rows = [
-    createData(1, 12345, 'abc123'),
-    createData(2, 12346, 'abc124'),
-    createData(3, 12347, 'abc125')
-];
 
 class RowControllerTab extends React.Component {
     state = {
@@ -44,7 +34,7 @@ class RowControllerTab extends React.Component {
     }
 
     selectAll = () => {
-        if(this.state.selectedTrackers.length === rows.length) {
+        if(this.state.selectedTrackers.length === this.props.commissioningData.length) {
             this.setState({
                 ...this.state,
                 selectedTrackers: []
@@ -52,7 +42,7 @@ class RowControllerTab extends React.Component {
         } else {
             this.setState({
                 ...this.state,
-                selectedTrackers: [...rows]
+                selectedTrackers: [...this.props.commissioningData]
             })
         }
     }
@@ -66,7 +56,7 @@ class RowControllerTab extends React.Component {
         } else {
             this.setState({
                 ...this.state,
-                selectedTrackers: [...this.state.selectedTrackers.filter(t => t.id !== row.id)]
+                selectedTrackers: [...this.state.selectedTrackers.filter(t => t.macID !== row.macID)]
             })
         }
     }
@@ -93,7 +83,7 @@ class RowControllerTab extends React.Component {
     }
 
     render() {
-        const { classes } = this.props
+        const { classes, commissioningData } = this.props
 
         return (
             <Fragment>
@@ -116,7 +106,7 @@ class RowControllerTab extends React.Component {
                                     style={{cursor: 'pointer'}}
                                 >
                                     <Checkbox 
-                                        checked={this.state.selectedTrackers.length === rows.length}
+                                        checked={this.state.selectedTrackers.length === commissioningData.length}
                                         color='primary'
                                     />
                                         </TableCell>
@@ -126,8 +116,8 @@ class RowControllerTab extends React.Component {
                             </TableRow>
                             </TableHead>
                             <TableBody>
-                            {rows.map(row => (
-                                <TableRow key={row.id}
+                            {commissioningData && commissioningData.map(row => (
+                                <TableRow key={row.macID}
                                     onClick={() => this.selectRow(row)}
                                     style={{cursor: 'pointer'}}
                                 >
@@ -137,7 +127,7 @@ class RowControllerTab extends React.Component {
                                         color='primary'
                                     />
                                 </TableCell>
-                                    <TableCell >{row.rowNum}</TableCell>
+                                    <TableCell >{row.rowNumber}</TableCell>
                                     <TableCell >{row.deviceID}</TableCell>
                                     <TableCell >{row.macID}</TableCell>
                                 </TableRow>
@@ -154,4 +144,28 @@ class RowControllerTab extends React.Component {
     }
 }
 
-export default withStyles(styles)(RowControllerTab)
+
+
+function mapStateToProps(state) {
+    const { commissioningData } = state.app
+
+    return {
+        commissioningData
+    }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    discover : (did) => {
+        dispatch({type: 'DISCOVER_REQUEST'})
+        appService.discover(did)
+            .then(json => {
+                dispatch({type: 'DISCOVER_SUCCESS'})
+            }, error => {
+                dispatch({type: 'DISCOVER_FAILURE'})
+            })
+    }
+})
+
+
+const connectedRowControllerTab = connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(RowControllerTab))
+export {connectedRowControllerTab as RowControllerTab}
