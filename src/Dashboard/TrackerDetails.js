@@ -102,9 +102,9 @@ class TrackerDetails extends React.Component {
                                     No Current Angle Data Found.
                             </div>}
                         </div>
-                    <Typography variant='h5' style={{textAlign: 'center', height: 48, marginTop: 5}}>
+                    {currentTrackerInfo.currentAngle !== '--' && <Typography variant='h5' style={{textAlign: 'center', height: 48, marginTop: 5}}>
                         Angle = {currentTrackerInfo.currentAngle}
-                    </Typography>
+                    </Typography>}
                     <div style={{height: 'calc(100% - 246px)', width: '100%', overflow: 'auto'}}>
                     <Table padding='none'>
                         <TableBody>
