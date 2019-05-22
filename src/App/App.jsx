@@ -35,7 +35,9 @@ class App extends React.Component {
         io.on('connect', () => {
             console.log('connected')
         })
-        io.on('message', data => console.log(data))
+        io.on('xbee/response', data => data.json().then(json => {
+            this.props.receivedXbeeResponse(json)
+        }))
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -140,6 +142,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     clearAlert : () => {
         dispatch({type: 'CLEAR_ALERT'})
+    },
+    receivedXbeeResponse: (json) => {
+        dispatch({type: 'XBEE_RESPONSE', json})
     }
 })
 

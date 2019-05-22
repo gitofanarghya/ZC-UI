@@ -30,17 +30,6 @@ const styles = theme => ({
     }
 });
   
-let id = 0;
-function createData(rowNum, deviceID, macID) {
-    id += 1;
-    return { id, rowNum, deviceID, macID };
-}
-  
-const rows = [
-    createData(1, 12345, 'abc123'),
-    createData(2, 12346, 'abc124'),
-    createData(3, 12347, 'abc125')
-];
 
 class ScanTab extends React.Component {
     state = {
@@ -93,7 +82,7 @@ class ScanTab extends React.Component {
     } 
 
     render() {
-        const { classes } = this.props
+        const { classes, xbeeResponse } = this.props
 
         return (
             <Fragment>
@@ -155,8 +144,8 @@ class ScanTab extends React.Component {
                         </TableRow>
                         </TableHead>
                         <TableBody>
-                        {rows.map(row => (
-                            <TableRow key={row.id}
+                        {xbeeResponse.map(res => (
+                            <TableRow key={res.DID}
                                 onClick={() => this.selectRow(row)}
                                 style={{cursor: 'pointer'}}
                             >
@@ -166,9 +155,9 @@ class ScanTab extends React.Component {
                                     color='primary'
                                 />
                             </TableCell>
-                                <TableCell >{row.rowNum}</TableCell>
-                                <TableCell >{row.deviceID}</TableCell>
-                                <TableCell >{row.macID}</TableCell>
+                                <TableCell >{res.VALUES.split(',')[0]}</TableCell>
+                                <TableCell >{res.DID}</TableCell>
+                                <TableCell >{res.macID}</TableCell>
                             </TableRow>
                         ))}
                         </TableBody>
@@ -185,10 +174,10 @@ class ScanTab extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { commissioningData } = state.app
+    const { xbeeResponse } = state.app
 
     return {
-        commissioningData
+        xbeeResponse
     }
 }
 

@@ -7,7 +7,8 @@ const initialState = {
     commissioningData: null,
     fetchingCommissioningData: false,
     currentTracker: null,
-    currentTrackerInfo: null
+    currentTrackerInfo: null,
+    xbeeResponse: []
 }
 
 export function app(state, action) {
@@ -124,6 +125,13 @@ export function app(state, action) {
                 type: 'error',
                 message: 'Error getting current tracker info!'
             }
+        }
+
+        case 'XBEE_RESPONSE':
+        const newXbeeResponse = [...state.xbeeResponse, action.json]
+        return {
+            ...state,
+            xbeeResponse: newXbeeResponse
         }
 
         default:
