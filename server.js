@@ -21,5 +21,5 @@ socket.on('connect', () => {
   console.log('connected')
 })
 
-socket.on('message', (data) => console.log(data))
-socket.on('discovery', (data) => console.log(data))
+socket.on('message', (data) => console.log('message'))
+socket.on('discovery', (data) => console.log('discovery'))
