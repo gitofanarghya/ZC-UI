@@ -135,7 +135,7 @@ export function app(state, action) {
         }
 
         case 'ADD_TRACKERS_SUCCESS':
-        const newXbeeResponse2 = state.xbeeResponse.map(r => action.DIDs.indexOf(r.DID) === -1)
+        const newXbeeResponse2 = state.xbeeResponse.map(r => action.devices.indexOf(r) === -1)
         return {
             ...this.state,
             xbeeResponse: newXbeeResponse2

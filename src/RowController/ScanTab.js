@@ -82,7 +82,7 @@ class ScanTab extends React.Component {
     } 
 
     addTrackers = () => {
-        this.props.addTrackers(this.state.selectedTrackers.map(s => s.DID))
+        this.props.addTrackers(this.state.selectedTrackers)
     }
 
     render() {
@@ -195,11 +195,11 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'DISCOVER_FAILURE'})
             })
     },
-    addTrackers: (DIDs) => {
+    addTrackers: (devices) => {
         dispatch({type: 'ADD_TRACKERS_REQUEST'})
-        appService.addTrackers(DIDs)
+        appService.addTrackers(devices)
             .then(json => {
-                dispatch({type: 'ADD_TRACKERS_SUCCESS', DIDs})
+                dispatch({type: 'ADD_TRACKERS_SUCCESS', devices})
             }, error => {
                 dispatch({type: 'ADD_TRACKERS_FAILURE'})
             })

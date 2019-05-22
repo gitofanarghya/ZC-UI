@@ -29,12 +29,12 @@ export const appService = {
 const hostName = `http://${window.location.hostname}:5000`;
 const hostName2 = `http://${window.location.hostname}:5001`;
 
-function addTrackers(DIDs) {
+function addTrackers(devices) {
     const requestOptions = {
         method: 'POST',
         mode: 'cors',
         body: JSON.stringify({
-            DIDs: DIDs
+            devices: devices
         })
     }
 
