@@ -81,6 +81,10 @@ class ScanTab extends React.Component {
         }
     } 
 
+    addTrackers = () => {
+        this.props.addTrackers(this.state.selectedTrackers.map(s => s.DID))
+    }
+
     render() {
         const { classes, xbeeResponse } = this.props
 
@@ -134,7 +138,7 @@ class ScanTab extends React.Component {
                                 style={{cursor: 'pointer'}}
                             >
                                 <Checkbox 
-                                    checked={this.state.selectedTrackers.length === xbeeResponse.length}
+                                    checked={this.state.selectedTrackers.length === xbeeResponse.length && this.state.selectedTrackers.length !== 0}
                                     color='primary'
                                 />
                                     </TableCell>
@@ -164,7 +168,7 @@ class ScanTab extends React.Component {
                     </Table>
                     </Grid>
                     <Grid item style={{textAlign: 'end'}}>
-                        <Button color='primary' variant='contained' style={{margin: 10}}>Add</Button>
+                        <Button color='primary' onClick={() => this.addTrackers()} variant='contained' style={{margin: 10}}>Add</Button>
                     </Grid>
                 </Grid>
             </Fragment>
@@ -189,6 +193,15 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'DISCOVER_SUCCESS'})
             }, error => {
                 dispatch({type: 'DISCOVER_FAILURE'})
+            })
+    },
+    addTrackers: (DIDs) => {
+        dispatch({type: 'ADD_TRACKERS_REQUEST'})
+        appService.addTrackers(DIDs)
+            .then(json => {
+                dispatch({type: 'ADD_TRACKERS_SUCCESS', DIDs})
+            }, error => {
+                dispatch({type: 'ADD_TRACKERS_FAILURE'})
             })
     }
 })
