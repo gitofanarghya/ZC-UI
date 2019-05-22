@@ -1,4 +1,5 @@
 const express = require('express');
+const io = require('socket.io-client');
 const path = require('path');
 const app = express();
 
@@ -13,3 +14,14 @@ app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
 });
+
+const socket = io(`http://localhost:5000`)
+
+socket.on('connect', sock => {
+  console.log('connected')
+  sock.on('message', data => console.log(data))
+  sock.on('discovery', data => console.log(data))
+})
+
+socket.on('message', data => console.log(data))
+socket.on('discovery', data => console.log(data))
