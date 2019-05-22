@@ -75,7 +75,7 @@ export function app(state, action) {
         }
 
         case 'GET_TIMEZONE_SUCCESS':
-        if(action.json !== null) {
+        if(action.json.timeZone !== null) {
             return {
                 ...state,
                 timeZone: action.json.timeZone
