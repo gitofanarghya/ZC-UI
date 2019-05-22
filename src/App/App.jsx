@@ -31,7 +31,7 @@ class App extends React.Component {
     componentDidMount = () => {
         this.props.init()
 
-        const io = socketIOClient(`http://${window.location.hostname}:5000`);
+        const io = socketIOClient(`http://${window.location.hostname}:8080`);
         io.on('connect', () => {
             console.log('connected')
         })
