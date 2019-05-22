@@ -17,7 +17,7 @@ client.on('message', function (topic, message) {
 })
 
 client.on('xbee/response', function (topic, message) {
-  console.log('inside xbee/response', message.toString(), topic.toString())
+  console.log('inside on xbee/response', message.toString(), topic.toString())
 })
 
 app.use(express.static(path.join(__dirname, 'build')));
