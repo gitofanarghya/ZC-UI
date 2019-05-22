@@ -127,6 +127,12 @@ export function app(state, action) {
             }
         }
 
+        case 'DISCOVER_SUCCESS':
+        return {
+            ...state,
+            xbeeResponse: []
+        }
+
         case 'XBEE_RESPONSE':
         const newXbeeResponse = [...state.xbeeResponse, action.json]
         return {
@@ -137,7 +143,7 @@ export function app(state, action) {
         case 'ADD_TRACKERS_SUCCESS':
         const newXbeeResponse2 = state.xbeeResponse.map(r => action.devices.indexOf(r) === -1)
         return {
-            ...this.state,
+            ...state,
             xbeeResponse: newXbeeResponse2
         }
 
