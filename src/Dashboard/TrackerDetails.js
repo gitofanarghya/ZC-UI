@@ -28,7 +28,7 @@ class TrackerDetails extends React.Component {
 
     render() {
         const { classes, currentTrackerInfo } = this.props
-        
+
         return (currentTrackerInfo === null ? <noCurrentTrackerInfo /> :
                 <Grid container direction='column' className={classes.root}>
                     <Typography variant='h5' style={{height: '48px'}}>
@@ -47,7 +47,7 @@ class TrackerDetails extends React.Component {
                                 Tracker ID
                                 </Typography>
                             </TableCell>
-                            <TableCell>--</TableCell>
+                            <TableCell>{currentTrackerInfo.trackerID}</TableCell>
                         </TableRow>
 
                         <TableRow style={{cursor: 'pointer'}}>
@@ -56,7 +56,7 @@ class TrackerDetails extends React.Component {
                                 Device ID
                                 </Typography>
                             </TableCell>
-                            <TableCell>--</TableCell>
+                            <TableCell>{currentTrackerInfo.deviceID}</TableCell>
                         </TableRow>
 
                         <TableRow style={{cursor: 'pointer'}}>
@@ -65,7 +65,7 @@ class TrackerDetails extends React.Component {
                                 Mac ID 
                                 </Typography>
                             </TableCell>
-                            <TableCell>--</TableCell>
+                            <TableCell>{currentTrackerInfo.macID}</TableCell>
                         </TableRow>
 
                         <TableRow style={{cursor: 'pointer'}}>
@@ -74,7 +74,7 @@ class TrackerDetails extends React.Component {
                                 Current Mode
                                 </Typography>
                             </TableCell>
-                            <TableCell>--</TableCell>
+                            <TableCell>{currentTrackerInfo.currentMode}</TableCell>
                         </TableRow>
 
                         <TableRow style={{cursor: 'pointer'}}>
@@ -83,7 +83,7 @@ class TrackerDetails extends React.Component {
                                     Current Angle
                                 </Typography>
                             </TableCell>
-                            <TableCell>--</TableCell>
+                            <TableCell>{currentTrackerInfo.currentAngle}</TableCell>
                         </TableRow>
 
                         <TableRow style={{cursor: 'pointer'}}>
@@ -92,7 +92,7 @@ class TrackerDetails extends React.Component {
                                     Date and Time
                                 </Typography>
                             </TableCell>
-                            <TableCell>--</TableCell>
+                            <TableCell>{new Date(currentTrackerInfo.timeStamp).toLocaleDateString('en-US', {timeZone: this.props.timeZone})}</TableCell>
                         </TableRow>
                         </TableBody>
                     </Table>
@@ -104,10 +104,11 @@ class TrackerDetails extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { currentTrackerInfo } = state.app
+    const { currentTrackerInfo, timeZone } = state.app
 
     return {
-        currentTrackerInfo
+        currentTrackerInfo,
+        timeZone
     }
 }
 
