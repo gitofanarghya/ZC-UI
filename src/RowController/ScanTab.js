@@ -200,6 +200,13 @@ const mapDispatchToProps = (dispatch) => ({
         appService.addTrackers(devices)
             .then(json => {
                 dispatch({type: 'ADD_TRACKERS_SUCCESS', devices})
+                dispatch({type: 'GET_COMMISSIONING_DATA_REQUEST'})
+                appService.getCommissioningData()
+                    .then(json => {
+                        dispatch({type: 'GET_COMMISSIONING_DATA_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_COMMISSIONING_DATA_FAILURE', error})
+                    })
             }, error => {
                 dispatch({type: 'ADD_TRACKERS_FAILURE'})
             })
