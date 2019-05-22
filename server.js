@@ -17,11 +17,9 @@ app.listen(PORT, () => {
 
 const socket = io(`http://localhost:5000`)
 
-socket.on('connect', sock => {
+socket.on('connect', () => {
   console.log('connected')
-  sock.on('message', data => console.log(data))
-  sock.on('discovery', data => console.log(data))
 })
 
-socket.on('message', data => console.log(data))
-socket.on('discovery', data => console.log(data))
+socket.on('message', (data) => console.log(data))
+socket.on('discovery', (data) => console.log(data))
