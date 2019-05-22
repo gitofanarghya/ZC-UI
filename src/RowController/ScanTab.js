@@ -38,13 +38,13 @@ class ScanTab extends React.Component {
     }
 
     selectAll = () => {
-        if(this.state.selectedTrackers.length === rows.length) {
+        if(this.state.selectedTrackers.length === this.props.xbeeResponse.length) {
             this.setState({
                 selectedTrackers: []
             })
         } else {
             this.setState({
-                selectedTrackers: [...rows]
+                selectedTrackers: [...this.props.xbeeResponse]
             })
         }
     }
@@ -134,7 +134,7 @@ class ScanTab extends React.Component {
                                 style={{cursor: 'pointer'}}
                             >
                                 <Checkbox 
-                                    checked={this.state.selectedTrackers.length === rows.length}
+                                    checked={this.state.selectedTrackers.length === xbeeResponse.length}
                                     color='primary'
                                 />
                                     </TableCell>
@@ -146,12 +146,12 @@ class ScanTab extends React.Component {
                         <TableBody>
                         {xbeeResponse.map(res => (
                             <TableRow key={res.DID}
-                                onClick={() => this.selectRow(row)}
+                                onClick={() => this.selectRow(res)}
                                 style={{cursor: 'pointer'}}
                             >
                             <TableCell>
                                 <Checkbox 
-                                    checked={this.state.selectedTrackers.indexOf(row) !== -1}
+                                    checked={this.state.selectedTrackers.indexOf(res) !== -1}
                                     color='primary'
                                 />
                             </TableCell>
