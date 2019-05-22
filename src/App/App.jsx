@@ -39,7 +39,7 @@ class App extends React.Component {
             socket.emit('connectedOrNot', 'connected')
         })
         socket.on('discovery', data => console.log(data))
-        socket.on('messages', data => console.log(data))
+        socket.on('message', data => console.log(data))
     }
 
     componentWillReceiveProps = (nextProps) => {
