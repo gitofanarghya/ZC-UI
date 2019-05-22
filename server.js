@@ -13,14 +13,11 @@ client.on('connect', function () {
 })
 
 client.on('message', function (topic, message) {
-  console.log(message.toString())
-  console.log(topic.toString())
-  client.end()
+  console.log('inside on message', message.toString(), topic.toString())
 })
 
 client.on('xbee/response', function (topic, message) {
-  console.log(message.toString())
-  console.log(topic.toString())
+  console.log('inside xbee/response', message.toString(), topic.toString())
 })
 
 app.use(express.static(path.join(__dirname, 'build')));
