@@ -41,7 +41,7 @@ export function app(state, action) {
         }
 
         case 'GET_COMMISSIONING_DATA_SUCCESS':
-        if(action.json.staticData === null) {
+        if(action.json.staticData === null || action.json.staticData.length === 0) {
             return {
                 ...state,
                 fetchingCommissioningData: false,
@@ -141,7 +141,7 @@ export function app(state, action) {
         }
 
         case 'ADD_TRACKERS_SUCCESS':
-        const newXbeeResponse2 = state.xbeeResponse.map(r => action.devices.indexOf(r) === -1)
+        const newXbeeResponse2 = state.xbeeResponse.map(r => action.devices.map(d => d.DID).indexOf(r.DID) === -1)
         return {
             ...state,
             xbeeResponse: newXbeeResponse2
