@@ -32,14 +32,11 @@ class App extends React.Component {
         this.props.init()
 
         const io = socketIOClient(`http://${window.location.hostname}:5000`);
-        io.on('connect', socket => {
+        io.on('connect', () => {
             console.log('connected')
-            socket.emit('connectedOrNot', {connectedOrNot: 'connected'})
-            socket.on('discovery', data => console.log(data))
-            socket.on('message', data => console.log(data))
         })
-        io.on('discovery', data => console.log(data))
-        io.on('message', data => console.log(data))
+        io.on('discovery', data => console.log('discovery'))
+        io.on('message', data => console.log('message'))
     }
 
     componentWillReceiveProps = (nextProps) => {
