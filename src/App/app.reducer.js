@@ -81,7 +81,7 @@ export function app(state, action) {
                 timeZone: action.json.timeZone
             }
         } else {
-            break
+            return state
         }
 
         case 'GET_TIMEZONE_FAILURE':
