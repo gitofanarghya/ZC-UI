@@ -19,7 +19,7 @@ io.on('connection', function(socket) {
   console.log('client connected to socket server')
   client.on('message', function(topic, message) {
     console.log(`received message from mqtt broker topic = ${topic} and message = ${message}`)
-    socket.emit('message', message)
+    socket.emit('message', message.toString())
   })
 })
 
