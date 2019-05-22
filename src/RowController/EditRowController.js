@@ -16,9 +16,8 @@ const styles = theme => ({
         overflow: 'auto'
     },
     field: {
-        width: 300,
-        marginLeft: 1,
-        marginRight: 1
+        width: '23%',
+        margin: '10px 0px 1% 1%'
     }
 })
 

@@ -1,38 +1,58 @@
 import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Divider, Grid, TextField, Typography, FormControlLabel, FormControl, Radio, RadioGroup, Button } from '@material-ui/core';
+import { Grid, TextField, Typography, FormControlLabel, FormControl, Radio, RadioGroup, Button } from '@material-ui/core';
+import { connect } from 'react-redux'
+import { appService } from '../App/app.services';
 
 const styles = theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    height: '100%'
+    [theme.breakpoints.up('md')]: {
+        height: '660px'
+    }
   },
-  grid: {
-    height: '100%', 
-    padding: 10,
+  grid2: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '90%',
+    [theme.breakpoints.up('md')]: {
+        width: '30%',
+    }
   },
   field: {
-      width: 300
+    width: '90%',
+    [theme.breakpoints.up('md')]: {
+        margin: '10px 0 0 0'
+    }
+  },
+  saveButton: {
+    margin: '10px 10px 10px 5%',
+    alignSelf: 'start',
+    [theme.breakpoints.down('sm')]: {
+        width: '90%',
+        margin: 10,
+        alignSelf: 'center'
+    }
   }
 });
 
 class ZoneController extends React.Component {
+
     state = {
 
     }
+
 
     render() {
         const { classes } = this.props
         return (
             <Fragment>
-                <Grid container style={{height: '100%', backgroundColor: 'white'}}>
-                    <Grid item xs={12} container style={{height: 'calc(100% - 64px)'}}>
-                    <Grid item md={4} className={classes.grid}>
+                    <Grid item xs={12} container direction='column' justify='center' alignItems='center' className={classes.root}>
+                        <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Wifi
+                            Network
                         </Typography>
                         <TextField
                             className={classes.field}
@@ -54,7 +74,6 @@ class ZoneController extends React.Component {
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
                         />
-                        <Divider style={{width: '90%'}} />
                         <TextField
                             className={classes.field}
                             id='staticIP'
@@ -65,18 +84,9 @@ class ZoneController extends React.Component {
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
                         />
-                        <Divider style={{width: '90%'}} />
-                        <TextField
-                            className={classes.field}
-                            id='bqKey'
-                            label='Big Query key'
-                            value={this.state.bqKey}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <Divider style={{width: '90%'}} />
+                        <Button variant='contained' color='primary' className={classes.saveButton}>Save</Button>
+                        </div>
+                        <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
                             Heart Beat
                         </Typography>
@@ -100,8 +110,41 @@ class ZoneController extends React.Component {
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
                         />
-                    </Grid>
-                    <Grid item md={4} className={classes.grid}>
+                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                        </div>
+                        <div className={classes.grid2}>
+                        <Typography variant='h6' style={{textAlign: 'center'}}>
+                            Big Query
+                        </Typography>
+                        <TextField
+                            className={classes.field}
+                            id='bqKey'
+                            label='Big Query key'
+                            value={this.state.bqKey}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant='outlined'
+                            InputLabelProps={{ shrink: true }}
+                        />
+                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                        </div>
+                        <div className={classes.grid2}>
+                        <Typography variant='h6' style={{textAlign: 'center'}}>
+                            PAN ID
+                        </Typography>
+                        <TextField
+                            className={classes.field}
+                            id='panID'
+                            label='PAN ID'
+                            value={this.state.panID}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant='outlined'
+                            InputLabelProps={{ shrink: true }}
+                        />
+                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                        </div>
+                        <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
                             Wind Sensor
                         </Typography>
@@ -135,7 +178,9 @@ class ZoneController extends React.Component {
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
                         />
-                        <Divider style={{width: '90%'}} />
+                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                        </div>
+                        <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
                             Flood Sensor
                         </Typography>
@@ -159,20 +204,9 @@ class ZoneController extends React.Component {
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
                         />
-                        <Divider style={{width: '90%'}} />
-                        <TextField
-                            className={classes.field}
-                            id='panID'
-                            label='PAN ID'
-                            value={this.state.panID}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <Grid item md={4} className={classes.grid}>
-                        
+                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                        </div>
+                        <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
                             Snow Sensor
                         </Typography>
@@ -196,7 +230,9 @@ class ZoneController extends React.Component {
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
                         />
-                        <Divider style={{width: '90%'}} />
+                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                        </div>
+                        <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
                             Rain Sensor
                         </Typography>
@@ -220,8 +256,10 @@ class ZoneController extends React.Component {
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
                         />
-                        <Divider style={{width: '90%'}} />
-                        <FormControl component="fieldset" className={classes.formControl}>
+                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                        </div>
+                        <div className={classes.grid2}>
+                        <FormControl component="fieldset" className={classes.field}>
                             <RadioGroup
                                 row
                                 aria-label="Sync"
@@ -234,15 +272,29 @@ class ZoneController extends React.Component {
                             </RadioGroup>
                             <Button variant='contained' color='primary' style={{marginBottom: 10}}>Sync</Button>
                         </FormControl>
+                        </div>
                     </Grid>
-                    </Grid>
-                    <Grid xs={12} item style={{textAlign: 'center'}} >
-                        <Button variant='contained' color='primary'>Save</Button>
-                    </Grid>
-                </Grid>
             </Fragment>
         )
     }
 }
 
-export default withStyles(styles)(ZoneController)
+
+function mapStateToProps(state) {
+    const { commissioningData } = state.app
+
+    return {
+        commissioningData
+    }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    setWifiInfo: (ssid, pass, staticIP) => {
+        dispatch({type: 'SET_WIFI_INFO'}) 
+        appService.setWifiInfo(ssid, pass)
+    }
+})
+
+
+const connectedZoneController = connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ZoneController))
+export {connectedZoneController as ZoneController}

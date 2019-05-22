@@ -5,38 +5,38 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import RowControllerTab from './RowControllerTab'
-import ScanTab from './ScanTab'
+import { ScanTab } from './ScanTab'
+import { connect } from 'react-redux'
 
 const styles = theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     height: '100%'
   },
+  tabsIndicator: {
+    backgroundColor: 'white',
+  },
 });
 
 class RowController extends React.Component {
-  state = {
-    value: 0,
-  };
 
   handleChange = (event, value) => {
-    this.setState({ value });
+    this.props.changeTab({ value });
   };
 
   render() {
-    const { classes } = this.props;
-    const { value } = this.state;
+    const { classes, currentTab } = this.props;
 
     return (
       <div className={classes.root}>
         <AppBar position="static">
-          <Tabs value={value} onChange={this.handleChange}>
+          <Tabs value={currentTab} onChange={this.handleChange} classes={{ indicator: classes.tabsIndicator}}>
             <Tab label="Row Controller" />
             <Tab label="Scan" />
           </Tabs>
         </AppBar>
-        {value === 0 && <RowControllerTab />}
-        {value === 1 && <ScanTab />}
+        {currentTab === 0 && <RowControllerTab />}
+        {currentTab === 1 && <ScanTab />}
       </div>
     );
   }
@@ -46,4 +46,21 @@ RowController.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(RowController);
+
+function mapStateToProps(state) {
+    const { currentTab } = state.app
+
+    return {
+        currentTab
+    }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    changeTab: (value) => {
+        dispatch({type: 'CHANGE_TAB', value})
+    }
+})
+
+
+const connectedRowController = (connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(RowController)))
+export {connectedRowController as RowController}

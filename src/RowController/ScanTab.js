@@ -10,6 +10,8 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import { appService } from '../App/app.services';
+import {connect} from 'react-redux'
 
 const styles = theme => ({
     root: {
@@ -43,7 +45,7 @@ const rows = [
 class ScanTab extends React.Component {
     state = {
         selectedTrackers: [],
-        scanSelection: 'panID'
+        scanSelection: 'PAN ID'
     }
 
     selectAll = () => {
@@ -82,6 +84,14 @@ class ScanTab extends React.Component {
         })
     }
 
+    scan = () => {
+        if(this.state.scanSelection === 'PAN ID') {
+            this.props.discover('00000')
+        } else {
+            this.props.discover(this.state.scanParameter)
+        }
+    } 
+
     render() {
         const { classes } = this.props
 
@@ -97,22 +107,34 @@ class ScanTab extends React.Component {
                                 value={this.state.scanSelection}
                                 onChange={this.handleChange}
                             >
-                                <FormControlLabel value="panID" control={<Radio color='primary'/>} label="PAN ID" />
-                                <FormControlLabel value="DeviceID" control={<Radio color='primary'/>} label="Device ID" />
+                                <FormControlLabel value="PAN ID" control={<Radio color='primary'/>} label="PAN ID" />
+                                <FormControlLabel value="Device ID" control={<Radio color='primary'/>} label="Device ID" />
                             </RadioGroup>
                         </FormControl>
                     </Grid>
                     <Grid item>
+                    {
+                        this.state.scanSelection === 'PAN ID' ?
                         <TextField
                             id="scanParameter"
-                            label={this.state.scanSelection}
                             className={classes.textField}
                             value={this.state.scanParameter}
                             onChange={this.inputChange}
+                            placeholder='PAN ID'
+                            margin="none"
+                            variant='outlined'
+                        /> :
+                        <TextField
+                            id="scanParameter"
+                            className={classes.textField}
+                            value={this.state.scanParameter}
+                            onChange={this.inputChange}
+                            placeholder='Device ID'
                             margin="none"
                             variant='outlined'
                         />
-                        <Button color='primary' variant='contained' style={{marginLeft: 24, verticalAlign: 'bottom'}}>Scan</Button>
+                    }
+                        <Button color='primary' onClick={() => this.scan()} variant='contained' style={{marginLeft: 24, verticalAlign: 'bottom'}}>Scan</Button>
                     </Grid>
                     <Grid item style={{marginTop: 24}}>
                     <Table className={classes.table}>
@@ -161,4 +183,27 @@ class ScanTab extends React.Component {
     }
 }
 
-export default withStyles(styles)(ScanTab)
+
+function mapStateToProps(state) {
+    const { commissioningData } = state.app
+
+    return {
+        commissioningData
+    }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    discover : (did) => {
+        dispatch({type: 'DISCOVER_REQUEST'})
+        appService.discover(did)
+            .then(json => {
+                dispatch({type: 'DISCOVER_SUCCESS'})
+            }, error => {
+                dispatch({type: 'DISCOVER_FAILURE'})
+            })
+    }
+})
+
+
+const connectedScanTab = connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ScanTab))
+export {connectedScanTab as ScanTab}
