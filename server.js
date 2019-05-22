@@ -1,7 +1,27 @@
 const express = require('express');
-const io = require('socket.io-client');
 const path = require('path');
 const app = express();
+const mqtt = require('mqtt')
+const client = mqtt.connect('mqtt://localhost:1883')
+
+client.on('connect', function () {
+  client.subscribe('xbee/response', function (err) {
+    if(!err) {
+      console.log('subscribed to xbee/response')
+    }
+  })
+})
+
+client.on('message', function (topic, message) {
+  console.log(message.toString())
+  console.log(topic.toString())
+  client.end()
+})
+
+client.on('xbee/response', function (topic, message) {
+  console.log(message.toString())
+  console.log(topic.toString())
+})
 
 app.use(express.static(path.join(__dirname, 'build')));
 
@@ -14,12 +34,3 @@ app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
 });
-
-const socket = io(`http://localhost:5000`)
-
-socket.on('connect', () => {
-  console.log('connected')
-})
-
-socket.on('message', (data) => console.log('message'))
-socket.on('discovery', (data) => console.log('discovery'))
