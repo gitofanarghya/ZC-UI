@@ -134,7 +134,7 @@ export function app(state, action) {
         }
 
         case 'XBEE_RESPONSE':
-        const newXbeeResponse = [...state.xbeeResponse, state.commissioningData.filter(r => action.json.macID === r.macID) && action.json]
+        const newXbeeResponse = [...state.xbeeResponse, state.commissioningData.filter(r => action.json.macID === r.macID).length === 0 && action.json]
         return {
             ...state,
             xbeeResponse: newXbeeResponse
