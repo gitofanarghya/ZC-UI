@@ -35,8 +35,8 @@ class App extends React.Component {
         io.on('connect', () => {
             console.log('connected')
         })
-        io.on('discovery', data => console.log('discovery'))
-        io.on('message', data => console.log('message'))
+        io.on('discovery', data => console.log(data))
+        io.on('message', data => console.log(data))
     }
 
     componentWillReceiveProps = (nextProps) => {
