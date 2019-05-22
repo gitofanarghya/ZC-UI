@@ -35,7 +35,7 @@ class App extends React.Component {
         io.on('connect', () => {
             console.log('connected')
         })
-        io.on('xbee/response', data => data.json().then(json => {
+        io.on('xbee/response', data => JSON.parse(data).then(json => {
             this.props.receivedXbeeResponse(json)
         }))
     }
