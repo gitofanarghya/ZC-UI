@@ -4,7 +4,10 @@ const initialState = {
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     alert: null,
     time: Date.now(),
-    commissioningData: null
+    commissioningData: null,
+    fetchingCommissioningData: false,
+    currentTracker: null,
+    currentTrackerInfo: null
 }
 
 export function app(state, action) {
@@ -30,10 +33,17 @@ export function app(state, action) {
             alert: null           
         }
 
+        case 'GET_COMMISSIONING_DATA_REQUEST':
+        return {
+            ...state,
+            fetchingCommissioningData: true
+        }
+
         case 'GET_COMMISSIONING_DATA_SUCCESS':
-        if(action.json.staticData === []) {
+        if(action.json.staticData === null) {
             return {
                 ...state,
+                fetchingCommissioningData: false,
                 currentPage: 'Row Controller',
                 currentTab: 1,
                 alert: {
@@ -44,6 +54,7 @@ export function app(state, action) {
         } else {
             return {
                 ...state,
+                fetchingCommissioningData: false,
                 currentPage: 'Dashboard',
                 currentTab: 0,
                 commissioningData: action.json.staticData
@@ -53,6 +64,7 @@ export function app(state, action) {
         case 'GET_COMMISSIONING_DATA_FAILURE':
         return {
             ...state,
+            fetchingCommissioningData: false,
             currentPage: 'Row Controller',
             currentTab: 1,
             alert: {
@@ -91,6 +103,27 @@ export function app(state, action) {
             ...state,
             currentPage: 'Row Controller',
             currentTab: 1
+        }
+
+        case 'GET_CURRENT_TRACKER_INFO_REQUEST':
+        return {
+            ...state,
+            currentTracker: action.trackerID
+        }
+
+        case 'GET_CURRENT_TRACKER_INFO_SUCCESS':
+        return {
+            ...state,
+            currentTrackerInfo: action.json
+        }
+
+        case 'GET_CURRENT_TRACKER_INFO_FAILURE':
+        return {
+            ...state,
+            alert: {
+                type: 'error',
+                message: 'Error getting current tracker info!'
+            }
         }
 
         default:

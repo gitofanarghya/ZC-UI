@@ -4,17 +4,33 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import { Typography, Grid } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
+import { connect } from 'react-redux'
+import {withStyles} from '@material-ui/core/styles'
+import { appService } from '../App/app.services';
 
+const styles = theme => ({
+    root: {
+        height: '100%', width: '100%', padding: 24, flexWrap: 'nowrap'
+    }
+})
 
-export class TrackerDetails extends React.Component {
+const noCurrentTrackerInfo = () =>
+    <div 
+        style={{height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#54aab3', color: 'white'}}>
+            No Info Found For Selected Tracker...
+    </div>
+
+class TrackerDetails extends React.Component {
 
     state = {
 
     }
 
     render() {
-        return (
-                <Grid container direction='column' style={{height: '100%', width: '100%', padding: 24, flexWrap: 'nowrap'}}>
+        const { classes, currentTrackerInfo } = this.props
+        
+        return (currentTrackerInfo === null ? <noCurrentTrackerInfo /> :
+                <Grid container direction='column' className={classes.root}>
                     <Typography variant='h5' style={{height: '48px'}}>
                         Tracker Details
                     </Typography>
@@ -85,3 +101,28 @@ export class TrackerDetails extends React.Component {
         )
     }
 } 
+
+
+function mapStateToProps(state) {
+    const { currentTrackerInfo } = state.app
+
+    return {
+        currentTrackerInfo
+    }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    getCurrentTrackerInfo : (trackerID) => {
+        dispatch({type: 'GET_CURRENT_TRACKER_INFO_REQUEST'})
+        appService.getCurrentTrackerInfo(trackerID)
+            .then(json => {
+                dispatch({type: 'GET_CURRENT_TRACKER_INFO_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_CURRENT_TRACKER_INFO_FAILURE'})
+            })
+    }
+})
+
+
+const connectedTrackerDetails = connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(TrackerDetails))
+export {connectedTrackerDetails as TrackerDetails}

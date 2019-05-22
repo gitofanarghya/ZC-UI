@@ -24,8 +24,8 @@ export const appService = {
     getTime,
     discover
 };
-/* const hostName = 'https://inclino.serveo.net' */
-const hostName = `http://${window.location.hostname}:5000`;
+const hostName = 'https://patruus.serveo.net'
+/* const hostName = `http://${window.location.hostname}:5000`; */
 const hostName2 = `http://${window.location.hostname}:5001`;
 
 function discover(did) {

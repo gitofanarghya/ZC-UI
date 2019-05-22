@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { connect } from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
+import { appService } from '../App/app.services';
 
 const styles = theme => ({
     root: {
@@ -15,6 +16,12 @@ const styles = theme => ({
 })
 
 class TrackerList extends React.Component {
+
+    componentDidMount = () => {
+        if(this.props.commissioningData) {
+            this.props.getCurrentTrackerInfo(this.props.commissioningData[0].trackerID)
+        }
+    }
 
     render() {
         const {classes, commissioningData} = this.props
@@ -38,7 +45,8 @@ class TrackerList extends React.Component {
                                 <TableRow
                                     hover
                                     //className={classNames(n.trackerID === selectedTrackerID ? classes.selected : classes.row, classes.tableRow)}
-                                    key={n.id}
+                                    key={n.trackerID}
+                                    onClick={() => this.props.getCurrentTrackerInfo(n.trackerID)}
                                     style={{cursor: 'pointer'}}
                                 >
                                     <TableCell>
@@ -65,8 +73,14 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    clearAlert : () => {
-        dispatch({type: 'CLEAR_ALERT'})
+    getCurrentTrackerInfo : (trackerID) => {
+        dispatch({type: 'GET_CURRENT_TRACKER_INFO_REQUEST'})
+        appService.getCurrentTrackerInfo(trackerID)
+            .then(json => {
+                dispatch({type: 'GET_CURRENT_TRACKER_INFO_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_CURRENT_TRACKER_INFO_FAILURE'})
+            })
     }
 })
 

@@ -44,14 +44,14 @@ const Fetching = () =>
             FETCHING...
     </div>
 
+
+
 class Dashboard extends React.Component {
 
     state = {
-        fetching: false
     }
 
     getCommissioningData = () => {
-        this.setState({fetching: true})
         this.props.getCommissioningData()
     }
 
@@ -60,8 +60,8 @@ class Dashboard extends React.Component {
     }
 
     render() {
-        const { classes, commissioningData } = this.props
-        return ( this.state.fetching ? <Fetching /> : commissioningData === null ? <Initializing scan={() => this.scan()} getCommissioningData={() => this.getCommissioningData()}/> :
+        const { classes, commissioningData, fetchingCommissioningData } = this.props
+        return ( fetchingCommissioningData ? <Fetching /> : commissioningData === null ? <Initializing scan={() => this.scan()} getCommissioningData={() => this.getCommissioningData()}/> :
             <Grid container direction="column" className={classes.root}>
                 <Grid item className={classes.trackerList}>
                     <Paper style={{height: '100%'}}>
@@ -79,10 +79,11 @@ class Dashboard extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { commissioningData } = state.app
+    const { commissioningData, fetchingCommissioningData } = state.app
 
     return {
-        commissioningData
+        commissioningData,
+        fetchingCommissioningData
     }
 }
 
