@@ -134,10 +134,15 @@ export function app(state, action) {
         }
 
         case 'XBEE_RESPONSE':
-        const newXbeeResponse = [...state.xbeeResponse, state.commissioningData.filter(r => action.json.macID === r.macID).length === 0 && action.json]
+        let a = null
+        if(state.commissioningData.filter(r => action.json.macID === r.macID).length === 0) {
+            a = [...state.xbeeResponse, action.json]    
+        } else {
+            a = []
+        }
         return {
             ...state,
-            xbeeResponse: newXbeeResponse
+            xbeeResponse: a
         }
 
         case 'ADD_TRACKERS_SUCCESS':
