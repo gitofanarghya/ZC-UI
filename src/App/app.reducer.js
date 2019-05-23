@@ -1,5 +1,5 @@
 const initialState = {
-    currentPage: 'Dashboard',
+    currentPage: '',
     currentTab: 0,
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     alert: null,
@@ -8,7 +8,9 @@ const initialState = {
     fetchingCommissioningData: false,
     currentTracker: null,
     currentTrackerInfo: null,
-    xbeeResponse: []
+    xbeeResponse: [],
+    controlledTrackers: [],
+    editedTrackers: []
 }
 
 export function app(state, action) {
@@ -45,16 +47,18 @@ export function app(state, action) {
             return {
                 ...state,
                 fetchingCommissioningData: false,
+                currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
                 commissioningData: null,
                 alert: {
-                    type: 'error',
-                    message: 'Please add trackers!'
+                    type: 'warning',
+                    message: 'Please add trackers.'
                 }
             }
         } else {
             return {
                 ...state,
                 fetchingCommissioningData: false,
+                currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
                 commissioningData: action.json.staticData
             }
         }
@@ -63,9 +67,10 @@ export function app(state, action) {
         return {
             ...state,
             fetchingCommissioningData: false,
+            currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
             alert: {
                 type: 'error',
-                message: 'Error loading commissioning data. Please add trackers!'
+                message: 'Error loading commissioning data!'
             }
         }
 
@@ -149,6 +154,18 @@ export function app(state, action) {
         return {
             ...state,
             xbeeResponse: newXbeeResponse2
+        }
+
+        case 'SET_EDITED_TRACKERS':
+        return {
+            ...state,
+            editedTrackers: action.trackers
+        }
+
+        case 'SET_EDITED_TRACKERS':
+        return {
+            ...state,
+            controlledTrackers: action.trackers
         }
 
         default:

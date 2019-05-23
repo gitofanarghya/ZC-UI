@@ -91,7 +91,7 @@ class ScanTab extends React.Component {
         return (
             <Fragment>
                 <Grid container direction='column'>
-                    <Grid item style={{marginTop: 24}}>
+                    <Grid item>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <RadioGroup
                                 row
@@ -105,7 +105,7 @@ class ScanTab extends React.Component {
                             </RadioGroup>
                         </FormControl>
                     </Grid>
-                    <Grid item>
+                    <Grid item style={{marginBottom: 24}}>
                     {
                         this.state.scanSelection === 'PAN ID' ?
                         <TextField
@@ -128,8 +128,8 @@ class ScanTab extends React.Component {
                         />
                     }
                         <Button color='primary' onClick={() => this.scan()} variant='contained' style={{marginLeft: 24, verticalAlign: 'bottom'}}>Scan</Button>
-                    </Grid>
-                    <Grid item style={{marginTop: 24}}>
+                    </Grid>{xbeeResponse.length !== 0 && xbeeResponse !== undefined &&
+                    <Grid item>
                     <Table className={classes.table}>
                         <TableHead>
                         <TableRow>
@@ -166,10 +166,10 @@ class ScanTab extends React.Component {
                         ))}
                         </TableBody>
                     </Table>
-                    </Grid>
+                    </Grid>}{xbeeResponse.length !== 0 && xbeeResponse !== undefined &&
                     <Grid item style={{textAlign: 'end'}}>
-                        <Button color='primary' onClick={() => this.addTrackers()} variant='contained' style={{margin: 10}}>Add</Button>
-                    </Grid>
+                        <Button color='primary' disabled={this.state.selectedTrackers.length === 0} onClick={() => this.addTrackers()} variant='contained' style={{margin: 10}}>Add</Button>
+                    </Grid>}
                 </Grid>
             </Fragment>
         )

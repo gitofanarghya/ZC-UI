@@ -11,7 +11,6 @@ import { connect } from 'react-redux'
 const styles = theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    height: '100%'
   },
   tabsIndicator: {
     backgroundColor: 'white',

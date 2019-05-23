@@ -6,7 +6,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
-import EditRowController from './EditRowController';
+import { EditRowController } from './EditRowController';
 import ControlRowController from './ControlRowController'
 import { appService } from '../App/app.services';
 import {connect} from 'react-redux'
@@ -62,6 +62,7 @@ class RowControllerTab extends React.Component {
     }
 
     editTracker = () => {
+        this.props.setEditedTrackers(this.state.selectedTrackers)
         this.setState({
             ...this.state,
             location: 'edit'
@@ -69,6 +70,7 @@ class RowControllerTab extends React.Component {
     }
 
     controlTracker = () => {
+        this.props.setControlledTrackers(this.state.selectedTrackers)
         this.setState({
             ...this.state,
             location: 'control'
@@ -98,8 +100,8 @@ class RowControllerTab extends React.Component {
                     <ControlRowController back={this.back}/> :
                     <Grid container direction='column' style={{ height: 'calc(100% - 48px)'}}>
                         <Grid item style={{textAlign: 'end'}}>
-                            <Button color='primary' variant='contained' className={classes.buttons} onClick={() => this.editTracker()}>Edit</Button>
-                            <Button color='primary' variant='contained' className={classes.buttons} onClick={() => this.controlTracker()}>Control</Button>
+                            <Button color='primary' variant='contained' disabled={this.state.selectedTrackers.length === 0} className={classes.buttons} onClick={() => this.editTracker()}>Edit</Button>
+                            <Button color='primary' variant='contained' disabled={this.state.selectedTrackers.length === 0} className={classes.buttons} onClick={() => this.controlTracker()}>Control</Button>
                         </Grid>
                         <Grid item>
                         <Table className={classes.table}>
@@ -138,10 +140,10 @@ class RowControllerTab extends React.Component {
                             ))}
                             </TableBody>
                         </Table>
-                        </Grid>
+                        </Grid>{commissioningData !== null &&
                         <Grid item style={{textAlign: 'end'}}>
                             <Button variant='contained' color='primary' className={classes.buttons} disabled={this.state.selectedTrackers.length === 0} onClick={() => this.removeTrackers()}>Remove</Button>
-                        </Grid>
+                        </Grid>}
                     </Grid>
                     
                 }
@@ -177,6 +179,12 @@ const mapDispatchToProps = (dispatch) => ({
             }, error => {
                 dispatch({type: 'REMOVE_TRACKERS_FAILURE'})
             })
+    },
+    setEditedTrackers: (trackers) => {
+        dispatch({type: 'SET_EDITED_TRACKERS', trackers})
+    },
+    setControlledTrackers: (trackers) => {
+        dispatch({type: 'SET_CONTROLLED_TRACKERS', trackers})
     }
 })
 
