@@ -21,7 +21,9 @@ io.on('connection', function(socket) {
     console.log(`received message from mqtt broker topic = ${topic} and message = ${message}`)
     socket.emit(topic, message.toString())
   })
+  socket.on('disconnect', reason => socket.disconnect(true))
 })
+
 
 app.use(express.static(path.join(__dirname, 'build')));
 
