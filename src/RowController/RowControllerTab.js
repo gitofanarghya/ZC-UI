@@ -139,7 +139,9 @@ class RowControllerTab extends React.Component {
                             </TableBody>
                         </Table>
                         </Grid>
-                        <Button variant='contained' color='primary' disabled={this.state.selectedTrackers.length === 0} onClick={() => this.removeTrackers()}>Remove</Button>
+                        <Grid item style={{textAlign: 'end'}}>
+                            <Button variant='contained' color='primary' className={classes.buttons} disabled={this.state.selectedTrackers.length === 0} onClick={() => this.removeTrackers()}>Remove</Button>
+                        </Grid>
                     </Grid>
                     
                 }

@@ -1,5 +1,5 @@
 const initialState = {
-    currentPage: '',
+    currentPage: 'Dashboard',
     currentTab: 0,
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     alert: null,
@@ -45,8 +45,6 @@ export function app(state, action) {
             return {
                 ...state,
                 fetchingCommissioningData: false,
-                currentPage: 'Row Controller',
-                currentTab: 1,
                 alert: {
                     type: 'error',
                     message: 'Please add trackers!'
@@ -56,8 +54,6 @@ export function app(state, action) {
             return {
                 ...state,
                 fetchingCommissioningData: false,
-                currentPage: 'Dashboard',
-                currentTab: 0,
                 commissioningData: action.json.staticData
             }
         }
@@ -66,8 +62,6 @@ export function app(state, action) {
         return {
             ...state,
             fetchingCommissioningData: false,
-            currentPage: 'Row Controller',
-            currentTab: 1,
             alert: {
                 type: 'error',
                 message: 'Error loading commissioning data. Please add trackers!'
