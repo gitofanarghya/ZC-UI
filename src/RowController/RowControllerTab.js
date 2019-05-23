@@ -105,10 +105,10 @@ class RowControllerTab extends React.Component {
                                     onClick={() => this.selectAll()}
                                     style={{cursor: 'pointer'}}
                                 >
-                                    <Checkbox 
+                                    {commissioningData !== null && <Checkbox 
                                         checked={this.state.selectedTrackers.length === commissioningData.length}
                                         color='primary'
-                                    />
+                                    />}
                                         </TableCell>
                                 <TableCell >Row #</TableCell>
                                 <TableCell >Device ID</TableCell>
