@@ -23,11 +23,25 @@ export const appService = {
     getTimeZone,
     getTime,
     discover,
-    addTrackers
+    addTrackers,
+    removeTrackers
 };
 /* const hostName = 'https://patruus.serveo.net' */
 const hostName = `http://${window.location.hostname}:5000`;
 const hostName2 = `http://${window.location.hostname}:5001`;
+
+function removeTrackers(DIDs) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            DIDs: DIDs
+        })
+    }
+
+    return fetch(`${hostName}/removePairedDevices`, requestOptions)
+        .then(handleResponse)
+}
 
 function addTrackers(devices) {
     const requestOptions = {

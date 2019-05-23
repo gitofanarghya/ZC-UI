@@ -82,6 +82,10 @@ class RowControllerTab extends React.Component {
         })
     }
 
+    removeTrackers = () => {
+        this.props.removeTrackers(this.state.selectedTrackers.map(s => s.deviceID))
+    }
+
     render() {
         const { classes, commissioningData } = this.props
 
@@ -135,6 +139,7 @@ class RowControllerTab extends React.Component {
                             </TableBody>
                         </Table>
                         </Grid>
+                        <Button variant='contained' color='primary' disabled={this.state.selectedTrackers.length === 0} onClick={() => this.removeTrackers()}>Remove</Button>
                     </Grid>
                     
                 }
@@ -155,13 +160,20 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    discover : (did) => {
-        dispatch({type: 'DISCOVER_REQUEST'})
-        appService.discover(did)
+    removeTrackers : (DIDs) => {
+        dispatch({type: 'REMOVE_TRACKERS_REQUEST'})
+        appService.removeTrackers(DIDs)
             .then(json => {
-                dispatch({type: 'DISCOVER_SUCCESS'})
+                dispatch({type: 'REMOVE_TRACKERS_SUCCESS', DIDs})
+                dispatch({type: 'GET_COMMISSIONING_DATA_REQUEST'})
+                appService.getCommissioningData()
+                    .then(json => {
+                        dispatch({type: 'GET_COMMISSIONING_DATA_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_COMMISSIONING_DATA_FAILURE', error})
+                    })
             }, error => {
-                dispatch({type: 'DISCOVER_FAILURE'})
+                dispatch({type: 'REMOVE_TRACKERS_FAILURE'})
             })
     }
 })
