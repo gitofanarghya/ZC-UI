@@ -137,10 +137,10 @@ class ScanTab extends React.Component {
                                 onClick={() => this.selectAll()}
                                 style={{cursor: 'pointer'}}
                             >
-                                <Checkbox 
+                                {xbeeResponse.length !== 0 && xbeeResponse !== undefined && <Checkbox 
                                     checked={this.state.selectedTrackers.length === xbeeResponse.length && this.state.selectedTrackers.length !== 0}
                                     color='primary'
-                                />
+                                />}
                                     </TableCell>
                             <TableCell >Row #</TableCell>
                             <TableCell >Device ID</TableCell>
