@@ -26,9 +26,10 @@ export const appService = {
     addTrackers,
     removeTrackers
 };
-/* const hostName = 'https://patruus.serveo.net' */
-const hostName = `http://${window.location.hostname}:5000`;
-const hostName2 = `http://${window.location.hostname}:5001`;
+/*
+const hostName = 'https://ille.serveo.net' */
+const hostName = `http://${window.location.hostname}:5000`; 
+const hostName2 = `http://${window.location.hostname}:5001`; 
 
 function removeTrackers(DIDs) {
     const requestOptions = {

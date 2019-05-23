@@ -45,6 +45,7 @@ export function app(state, action) {
             return {
                 ...state,
                 fetchingCommissioningData: false,
+                commissioningData: null,
                 alert: {
                     type: 'error',
                     message: 'Please add trackers!'
