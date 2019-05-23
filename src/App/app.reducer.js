@@ -135,7 +135,7 @@ export function app(state, action) {
 
         case 'XBEE_RESPONSE':
         let a = null
-        if(state.commissioningData.filter(r => action.json.macID === r.macID).length === 0) {
+        if(state.commissioningData === null || state.commissioningData.filter(r => action.json.macID === r.macID).length === 0) {
             a = [...state.xbeeResponse, action.json]    
         } else {
             a = []
