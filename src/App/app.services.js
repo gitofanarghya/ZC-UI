@@ -40,7 +40,7 @@ function sendSPAParameters(DID, Lattitude, Longitude, Altitude, EastLimit, WestL
         body: JSON.stringify({
             DID: DID,
             CMD: "HSPA",
-            VALUES: `${Lattitude}, ${Longitude}, ${Altitude}, ${EastLimit}, ${WestLimit}, ${TrackerWidth}, ${Pitch}, ${TrackingAccuracy}, ${AzimuthDeviation}, ${AltitudeTrackeronEast}, ${AltitudeTrackeronWest}, ${StartTimeLead}, ${EndTimeLag}, ${backtracking}`
+            VALUES: `${Lattitude}, ${Longitude}, ${Altitude}, ${EastLimit}, ${WestLimit}, ${TrackerWidth}, ${Pitch}, ${TrackingAccuracy}, ${AzimuthDeviation}, ${AltitudeTrackeronEast}, ${AltitudeTrackeronWest}, ${StartTimeLead}, ${EndTimeLag}, 0, ${backtracking}`
         })
     }
 

@@ -11,6 +11,7 @@ import { Snackbar } from '@material-ui/core';
 import { SnackbarContentWrapper } from '../util/SnackbarContentWrapper';
 import {withStyles} from '@material-ui/core/styles'
 import socketIOClient from "socket.io-client";
+import { store } from '../util/store'
 
 const styles = theme => ({
     root: {
@@ -108,11 +109,12 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { currentPage, alert } = state.app
+    const { currentPage, alert, timeZone } = state.app
 
     return {
         currentPage,
-        alert
+        alert,
+        timeZone
     }
 }
 
@@ -129,6 +131,15 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({type: 'GET_TIMEZONE_REQUEST'})
         appService.getTimeZone()
             .then(json => {
+                if(json.timeZone === null) {
+                    dispatch({type: 'SET_TIMEZONE_REQUEST'})
+                    appService.setTimeZone(store.getState().app.timeZone)
+                        .then(json => {
+                            dispatch({type: 'SET_TIMEZONE_SUCCESS'})
+                        }, error => {
+                            dispatch({type: 'SET_TIMEZONE_FAILURE'})
+                        })
+                }
                 dispatch({type: 'GET_TIMEZONE_SUCCESS', json})
             }, error => {
                 dispatch({type: 'GET_TIMEZONE_FAILURE', error})
