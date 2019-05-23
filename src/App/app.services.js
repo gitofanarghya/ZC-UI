@@ -25,12 +25,29 @@ export const appService = {
     discover,
     addTrackers,
     removeTrackers,
-    sendSPAParameters
+    sendSPAParameters,
+    sendStowAngles
 };
-
-const hostName = 'https://cowardly-walrus-73.localtunnel.me' /*
-const hostName = `http://${window.location.hostname}:5000`; */
+/*
+const hostName = 'https://cowardly-walrus-73.localtunnel.me' */
+const hostName = `http://${window.location.hostname}:5000`; 
 const hostName2 = `http://${window.location.hostname}:5001`; 
+
+
+function sendStowAngles(DID, WindStowAngle, SnowStowAngle, CleanStowAngle, NightStowAngle, EmergencyStowAngle) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            DID: DID,
+            CMD: 'HSTO',
+            VALUES: `${WindStowAngle}, ${SnowStowAngle}, ${CleanStowAngle}, ${NightStowAngle}, ${EmergencyStowAngle}`
+        })
+    }
+
+    return fetch(`${hostName}/roverParams/set`, requestOptions)
+        .then(handleResponse)
+}
 
 
 function sendSPAParameters(DID, Lattitude, Longitude, Altitude, EastLimit, WestLimit, TrackerWidth, Pitch, TrackingAccuracy, AzimuthDeviation, AltitudeTrackeronEast, AltitudeTrackeronWest, StartTimeLead, EndTimeLag, backtracking) {

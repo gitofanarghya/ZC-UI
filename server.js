@@ -4,11 +4,11 @@ const app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 const mqtt = require('mqtt')
-const client = mqtt.connect('http://159.89.169.50:2000')
+const client = mqtt.connect('mqtt://localhost:1883')
 
 client.on('connect', function () {
   console.log('connected to mqtt broker')
-  client.subscribe('ui/rover/scan', function (err) {
+  client.subscribe('xbee/response', function (err) {
     if(!err) {
       console.log('subscribed to mqtt topic xbee/response')
     }
@@ -30,7 +30,6 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {

@@ -59,6 +59,11 @@ class EditRowController extends React.Component {
         this.props.sendSPAParameters(this.props.editedTrackers, Lattitude, Longitude, Altitude, EastLimit, WestLimit, TrackerWidth, Pitch, TrackingAccuracy, AzimuthDeviation, AltitudeTrackeronEast, AltitudeTrackeronWest, StartTimeLead, EndTimeLag, backTracking)
     }
 
+    sendStowAngles = () => {
+        const { WindStowAngle, SnowStowAngle, CleanStowAngle, NightStowAngle, EmergencyStowAngle } = this.state
+        this.props.sendStowAngles(this.props.editedTrackers, WindStowAngle, SnowStowAngle, CleanStowAngle, NightStowAngle, EmergencyStowAngle)
+    }
+
     render() {
         const {classes} = this.props
         return (
@@ -127,7 +132,7 @@ class EditRowController extends React.Component {
                     }
                     </Grid>
                     <Grid item style={{height: 64, textAlign: 'center'}}>
-                        <Button color='primary' variant='contained' style={{ margin: 10 }}>Save</Button>
+                        <Button color='primary' variant='contained' onClick={() => this.sendStowAngles()} style={{ margin: 10 }}>Save</Button>
                     </Grid>
                 </Grid>
             </Fragment>
@@ -144,7 +149,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    sendSPAParameters : (editedTrackers, Lattitude, Longitude, Altitude, EastLimit, WestLimit, TrackerWidth, Pitch, TrackingAccuracy, AzimuthDeviation, AltitudeTrackeronEast, AltitudeTrackeronWest, StartTimeLead, EndTimeLag, backTracking) => {
+    sendSPAParameters: (editedTrackers, Lattitude, Longitude, Altitude, EastLimit, WestLimit, TrackerWidth, Pitch, TrackingAccuracy, AzimuthDeviation, AltitudeTrackeronEast, AltitudeTrackeronWest, StartTimeLead, EndTimeLag, backTracking) => {
         editedTrackers.map(t => {
             dispatch({type: 'SEND_SPA_PARAMETERS_REQUEST', t})
             appService.sendSPAParameters(t.deviceID, Lattitude, Longitude, Altitude, EastLimit, WestLimit, TrackerWidth, Pitch, TrackingAccuracy, AzimuthDeviation, AltitudeTrackeronEast, AltitudeTrackeronWest, StartTimeLead, EndTimeLag, backTracking)
@@ -155,6 +160,17 @@ const mapDispatchToProps = (dispatch) => ({
                 })
         })
         
+    },
+    sendStowAngles: (editedTrackers, WindStowAngle, SnowStowAngle, CleanStowAngle, NightStowAngle, EmergencyStowAngle) => {
+        editedTrackers.map(t => {
+            dispatch({type: 'SEND_STOW_ANGLES_REQUEST', t})
+            appService.sendStowAngles(t.deviceID, WindStowAngle, SnowStowAngle, CleanStowAngle, NightStowAngle, EmergencyStowAngle)
+                .then(json => {
+                    dispatch({type: 'SEND_STOW_ANGLES_SUCCESS'})
+                }, error => {
+                    dispatch({type: 'SEND_STOW_ANGLES_FAILURE'})
+                })
+        })
     }
 })
 
