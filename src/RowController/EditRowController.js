@@ -147,7 +147,7 @@ class EditRowController extends React.Component {
                         <Button color='primary' disabled variant='contained' style={{ margin: 10 }}>Sync time with Zone Controller</Button>    
                     </Grid>
                     <Grid item style={{height: 64, textAlign: 'center', borderBottom: '0.1px solid lightgrey'}}>
-                        <Button color='primary' disabled={this.props.sendSPAParameters || this.props.gettingSPAParameters} variant='contained' onClick={() => this.sendSPAParameters()} style={{ margin: 10 }}>Save</Button>
+                        <Button color='primary' disabled={this.props.sendingSPAParameters || this.props.gettingSPAParameters} variant='contained' onClick={() => this.sendSPAParameters()} style={{ margin: 10 }}>Save</Button>
                     </Grid>
                     <Typography variant='h6' style={{paddingLeft: 'calc(1% + 10px)'}}>
                         Stow Angle Settings

@@ -113,11 +113,11 @@ class ResponsiveDrawer extends React.Component {
             <Typography variant="h5" color="inherit" noWrap>
               Voyager Zone Controller
             </Typography>
-            <Chip
+            {/* <Chip
               icon={<Time />}
               style={{marginLeft: 'auto', backgroundColor: 'white'}}
               label={`${new Date(new Date(Number(this.props.time)).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getHours()} : ${new Date(new Date(Number(this.props.time)).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getMinutes()}`}
-            />
+            /> */}
           </Toolbar>
         </AppBar>
         <nav className={classes.drawer}>
