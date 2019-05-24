@@ -87,7 +87,6 @@ class ScanTab extends React.Component {
 
     render() {
         const { classes, xbeeResponse } = this.props
-        console.log(xbeeResponse)
 
         return (
             <Fragment>

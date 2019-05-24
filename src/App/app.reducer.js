@@ -172,7 +172,7 @@ export function app(state, action) {
             if(b.length === 0) {
                 a = [...state.xbeeResponse, action.json]
             } else {
-                a = []
+                a = [...state.xbeeResponse]
             }
                 
         }

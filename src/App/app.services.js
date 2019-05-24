@@ -43,7 +43,7 @@ function getStowAngles(DID) {
         mode: 'cors',
         body: JSON.stringify({
             DID: DID,
-            CMD: 'QSPA'
+            CMD: 'QSTO'
         })
     }
 
@@ -58,7 +58,7 @@ function getSPAParameters(DID) {
         mode: 'cors',
         body: JSON.stringify({
             DID: DID,
-            CMD: "QSTO"
+            CMD: "QSPA"
         })
     }
 
