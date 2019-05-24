@@ -103,7 +103,7 @@ class EditRowController extends React.Component {
         this.props.sendStowAngles(this.props.editedTrackers, WindStowAngle, SnowStowAngle, CleanStowAngle, NightStowAngle, EmergencyStowAngle)
     }
 
-    render() {console.log(this.state)
+    render() {
         const {classes} = this.props
         return (
             <Fragment>
@@ -134,10 +134,11 @@ class EditRowController extends React.Component {
                                 margin="normal"
                                 variant='outlined'
                                 InputLabelProps={{ shrink: true }}
+                                disabled={this.props.sendSPAParameters || this.props.gettingSPAParameters}
                             />
                         })
                     }
-                        <FormControlLabel style={{ margin: 10, marginLeft: 'auto' }}
+                        <FormControlLabel disabled={this.props.sendSPAParameters || this.props.gettingSPAParameters} style={{ margin: 10, marginLeft: 'auto' }}
                             control={
                                 <Checkbox color='primary' checked={this.state.backTracking} onClick={() => this.setState({...this.state, backTracking: !this.state.backTracking})}/>
                             }
@@ -146,7 +147,7 @@ class EditRowController extends React.Component {
                         <Button color='primary' disabled variant='contained' style={{ margin: 10 }}>Sync time with Zone Controller</Button>    
                     </Grid>
                     <Grid item style={{height: 64, textAlign: 'center', borderBottom: '0.1px solid lightgrey'}}>
-                        <Button color='primary' variant='contained' onClick={() => this.sendSPAParameters()} style={{ margin: 10 }}>Save</Button>
+                        <Button color='primary' disabled={this.props.sendSPAParameters || this.props.gettingSPAParameters} variant='contained' onClick={() => this.sendSPAParameters()} style={{ margin: 10 }}>Save</Button>
                     </Grid>
                     <Typography variant='h6' style={{paddingLeft: 'calc(1% + 10px)'}}>
                         Stow Angle Settings
@@ -166,12 +167,13 @@ class EditRowController extends React.Component {
                                 margin="normal"
                                 variant='outlined'
                                 InputLabelProps={{ shrink: true }}
+                                disabled={this.props.sendingStowAngles || this.props.gettingStowAngles}
                             />
                         })
                     }
                     </Grid>
                     <Grid item style={{height: 64, textAlign: 'center'}}>
-                        <Button color='primary' variant='contained' onClick={() => this.sendStowAngles()} style={{ margin: 10 }}>Save</Button>
+                        <Button color='primary' disabled={this.props.sendingStowAngles || this.props.gettingStowAngles} variant='contained' onClick={() => this.sendStowAngles()} style={{ margin: 10 }}>Save</Button>
                     </Grid>
                 </Grid>
             </Fragment>
@@ -180,12 +182,16 @@ class EditRowController extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { editedTrackers, SPAParameters, stowAngles } = state.app
+    const { editedTrackers, SPAParameters, stowAngles, sendingSPAParameters, sendingStowAngles, gettingSPAParameters, gettingStowAngles } = state.app
 
     return {
         editedTrackers,
         SPAParameters,
-        stowAngles
+        stowAngles,
+        sendingSPAParameters,
+        sendingSPAParameters,
+        gettingSPAParameters,
+        gettingStowAngles
     }
 }
 

@@ -12,7 +12,12 @@ const initialState = {
     controlledTrackers: [],
     editedTrackers: [],
     SPAParameters: null,
-    stowAngles: null
+    stowAngles: null,
+    sendingSPAParameters: false,
+    sendingStowAngles: false,
+    gettingSPAParameters: false,
+    gettingStowAngles: false,
+    addingTrackers: false
 }
 
 const difference = (a1, a2) => {
@@ -63,7 +68,7 @@ export function app(state, action) {
                 commissioningData: null,
                 alert: {
                     type: 'warning',
-                    message: 'Please add trackers.'
+                    message: 'Please add trackers'
                 }
             }
         } else {
@@ -82,7 +87,7 @@ export function app(state, action) {
             currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
             alert: {
                 type: 'error',
-                message: 'Error loading commissioning data!'
+                message: 'Error loading commissioning data'
             }
         }
 
@@ -101,7 +106,7 @@ export function app(state, action) {
             ...state,
             alert: {
                 type: 'error',
-                message: 'Error getting timezone!'
+                message: 'Error getting timezone'
             }
         }
 
@@ -135,17 +140,30 @@ export function app(state, action) {
             ...state,
             alert: {
                 type: 'error',
-                message: 'Error getting current tracker info!'
+                message: 'Error getting current tracker info'
             }
         }
 
         case 'DISCOVER_SUCCESS':
         return {
             ...state,
-            xbeeResponse: []
+            xbeeResponse: [],
+            alert: {
+                type: 'success',
+                message: 'Started Scanning'
+            }
         }
 
-        case 'XBEE_RESPONSE':
+        case 'DISCOVER_FAILURE':
+        return {
+            ...state,
+            alert: {
+                type: 'error',
+                message: 'Error starting scan'
+            }
+        }
+
+        case 'ui/rover/scan':
         let a = null
         if(state.commissioningData === null) {
             a = [...state.xbeeResponse, action.json]
@@ -163,11 +181,32 @@ export function app(state, action) {
             xbeeResponse: a
         }
 
+        case 'ADD_TRACKERS_REQUEST':
+        return {
+            ...state,
+            addingTrackers: true
+        }
+
         case 'ADD_TRACKERS_SUCCESS':
         const newXbeeResponse = difference(state.xbeeResponse, action.devices)
         return {
             ...state,
-            xbeeResponse: newXbeeResponse
+            xbeeResponse: newXbeeResponse,
+            addingTrackers: false,
+            alert: {
+                type: 'success',
+                message: 'Tracker(s) added'
+            }
+        }
+
+        case 'ADD_TRACKERS_FAILURE':
+        return {
+            ...state,
+            addingTrackers: false,
+            alert: {
+                type: 'error',
+                message: 'Error adding trackers'
+            }
         }
 
         case 'SET_EDITED_TRACKERS':
@@ -182,16 +221,94 @@ export function app(state, action) {
             controlledTrackers: action.trackers
         }
 
-        case 'RECEIVED_SPA':
+        case 'ui/rover/spa':
         return {
             ...state,
-            SPAParameters: action.json
+            SPAParameters: action.json,
+            gettingSPAParameters: false
         }
 
-        case 'RECEIVED_STOW_ANGLES':
+        case 'ui/rover/stowangles':
         return {
             ...state,
-            stowAngles: action.json
+            stowAngles: action.json,
+            gettingStowAngles: false
+        }
+
+        case 'GET_STOW_ANGLES_REQUEST':
+        return {
+            ...state,
+            gettingStowAngles: true
+        }
+
+        case 'GET_STOW_ANGLES_FAILURE':
+        return {
+            ...state,
+            gettingStowAngles: false,
+            alert: {
+                type: 'error',
+                message: 'Error getting stow angles'
+            }
+        }
+
+        case 'GET_SPA_PARAMETERS_REQUEST':
+        return {
+            ...state,
+            gettingSPAParameters: true
+        }
+
+        case 'GET_SPA_PARAMETERS_FAILURE':
+        return {
+            ...state,
+            gettingSPAParameters: false,
+            alert: {
+                type: 'error',
+                message: 'Error getting SPA parameters'
+            }
+        }
+
+        case 'SEND_SPA_PARAMETERS_REQUEST':
+        return {
+            ...state,
+            sendingSPAParameters: true
+        }
+
+        case 'SEND_SPA_PARAMETERS_FAILURE':
+        return {
+            ...state,
+            sendingSPAParameters: false,
+            alert: {
+                type: 'error',
+                message: 'Error setting SPA parameters'
+            }
+        }
+
+        case 'SEND_SPA_PARAMETERS_SUCCESS':
+        return {
+            ...state,
+            sendingSPAParameters: false
+        }
+
+        case 'SEND_STOW_ANGLES_REQUEST':
+        return {
+            ...state,
+            sendingStowAngles: true
+        }
+
+        case 'SEND_STOW_ANGLES_FAILURE':
+        return {
+            ...state,
+            sendingStowAngles: false,
+            alert: {
+                type: 'error',
+                message: 'Error setting stow angles'
+            }
+        }
+
+        case 'SEND_STOW_ANGLES_SUCCESS':
+        return {
+            ...state,
+            sendingStowAngles: false
         }
 
         default:

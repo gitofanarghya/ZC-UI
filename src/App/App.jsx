@@ -38,15 +38,15 @@ class App extends React.Component {
         })
         io.on('ui/rover/scan', data => {
             const json = JSON.parse(data)
-            this.props.receivedXbeeResponse(json)
+            this.props.received('ui/rover/scan', json)
         })
         io.on('ui/rover/spa', data => {
             const json = JSON.parse(data)
-            this.props.receivedSPAParameters(json)
+            this.props.received('ui/rover/spa', json)
         })
         io.on('ui/rover/stowangles', data => {
             const json = JSON.parse(data)
-            this.props.receivedStowAngles(json)
+            this.props.received('ui/rover/stowangles', json)
         })
     }
 
@@ -163,14 +163,8 @@ const mapDispatchToProps = (dispatch) => ({
     clearAlert : () => {
         dispatch({type: 'CLEAR_ALERT'})
     },
-    receivedXbeeResponse: (json) => {
-        dispatch({type: 'XBEE_RESPONSE', json})
-    },
-    receivedSPAParameters: (json) => {
-        dispatch({type: 'RECEIVED_SPA', json})
-    },
-    receivedStowAngles: (json) => {
-        dispatch({type: 'RECEIVED_STOW_ANGLES', json})
+    received: (topic, json) => {
+        dispatch({type: topic, json})
     }
 })
 
