@@ -87,6 +87,7 @@ class ScanTab extends React.Component {
 
     render() {
         const { classes, xbeeResponse } = this.props
+        console.log(xbeeResponse)
 
         return (
             <Fragment>
@@ -148,7 +149,8 @@ class ScanTab extends React.Component {
                         </TableRow>
                         </TableHead>
                         <TableBody>
-                        {xbeeResponse.length !== 0 && xbeeResponse !== undefined && xbeeResponse.map(res => (
+                        {xbeeResponse.length !== 0 && xbeeResponse !== undefined && xbeeResponse.map(res => {
+                            return (
                             <TableRow key={res.DID}
                                 onClick={() => this.selectRow(res)}
                                 style={{cursor: 'pointer'}}
@@ -163,7 +165,7 @@ class ScanTab extends React.Component {
                                 <TableCell >{res.DID}</TableCell>
                                 <TableCell >{res.macID}</TableCell>
                             </TableRow>
-                        ))}
+                        )})}
                         </TableBody>
                     </Table>
                     </Grid>}{xbeeResponse.length !== 0 && xbeeResponse !== undefined &&

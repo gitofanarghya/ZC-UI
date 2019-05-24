@@ -13,6 +13,16 @@ const initialState = {
     editedTrackers: []
 }
 
+const difference = (a1, a2) => {
+    var result = [];
+    for (var i = 0; i < a1.length; i++) {
+    if (a2.indexOf(a1[i]) === -1) {
+        result.push(a1[i]);
+    }
+    }
+    return result;
+}
+
 export function app(state, action) {
     if (typeof state === 'undefined') {
       return initialState
@@ -135,10 +145,16 @@ export function app(state, action) {
 
         case 'XBEE_RESPONSE':
         let a = null
-        if(state.commissioningData === null || state.commissioningData.filter(r => action.json.macID === r.macID).length === 0) {
-            a = [...state.xbeeResponse, action.json]    
+        if(state.commissioningData === null) {
+            a = [...state.xbeeResponse, action.json]
         } else {
-            a = []
+            let b = state.commissioningData.filter(r => action.json.DID === r.deviceID)
+            if(b.length === 0) {
+                a = [...state.xbeeResponse, action.json]
+            } else {
+                a = []
+            }
+                
         }
         return {
             ...state,
@@ -146,14 +162,21 @@ export function app(state, action) {
         }
 
         case 'ADD_TRACKERS_SUCCESS':
-        const newXbeeResponse2 = state.xbeeResponse.length > 1 ? state.xbeeResponse.map(r => {
-            if(action.devices.indexOf(r) === -1) {
-                return r
+        const newXbeeResponse = difference(state.xbeeResponse, action.devices)
+        
+        
+        /* if(state.xbeeResponse.length > 1) {
+            for(var i = 0; i < state.xbeeResponse.length; i++ ) {
+                for(var j = 0; j < action.devices.length; j++ ) {
+                    if(state.xbeeResponse[i].DID !== action.devices[j].DID) {
+                        newXbeeResponse = [...newXbeeResponse, state.xbeeResponse[i]]
+                    }
+                }
             }
-        }) : []
+        } */
         return {
             ...state,
-            xbeeResponse: newXbeeResponse2
+            xbeeResponse: newXbeeResponse
         }
 
         case 'SET_EDITED_TRACKERS':
@@ -162,7 +185,7 @@ export function app(state, action) {
             editedTrackers: action.trackers
         }
 
-        case 'SET_EDITED_TRACKERS':
+        case 'SET_CONTROLLED_TRACKERS':
         return {
             ...state,
             controlledTrackers: action.trackers

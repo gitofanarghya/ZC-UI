@@ -15,7 +15,7 @@ const styles = theme => ({
         overflow: 'auto'
     },
     field: {
-        width: '47.5%',
+        width: '45%',
         margin: '10px 2.5% 0px 2.5%',
         [theme.breakpoints.up('md')]: {
             width: '23%',
@@ -64,7 +64,7 @@ class EditRowController extends React.Component {
         this.props.sendStowAngles(this.props.editedTrackers, WindStowAngle, SnowStowAngle, CleanStowAngle, NightStowAngle, EmergencyStowAngle)
     }
 
-    render() {
+    render() {console.log(this.state)
         const {classes} = this.props
         return (
             <Fragment>
@@ -88,9 +88,9 @@ class EditRowController extends React.Component {
                                 key={p}
                                 className={classes.field}
                                 id={p}
-                                name={p.replace(' ', '')}
+                                name={p.replace(/ /g, '')}
                                 label={p}
-                                value={this.state[p.replace(' ', '')]}
+                                value={this.state[p.replace(/ /g, '')]}
                                 onChange={(e) => this.handleChange(e)}
                                 margin="normal"
                                 variant='outlined'
@@ -120,9 +120,9 @@ class EditRowController extends React.Component {
                                 key={p}
                                 className={classes.field}
                                 id={p}
-                                name={p.replace(' ', '')}
+                                name={p.replace(/ /g, '')}
                                 label={p}
-                                value={this.state[p.replace(' ', '')]}
+                                value={this.state[p.replace(/ /g, '')]}
                                 onChange={(e) => this.handleChange(e)}
                                 margin="normal"
                                 variant='outlined'

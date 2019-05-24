@@ -29,7 +29,7 @@ export const appService = {
     sendStowAngles
 };
 /*
-const hostName = 'https://cowardly-walrus-73.localtunnel.me' */
+const hostName = 'https://loud-bingo-92.localtunnel.me' */
 const hostName = `http://${window.location.hostname}:5000`; 
 const hostName2 = `http://${window.location.hostname}:5001`; 
 
