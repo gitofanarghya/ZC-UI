@@ -189,7 +189,7 @@ function mapStateToProps(state) {
         SPAParameters,
         stowAngles,
         sendingSPAParameters,
-        sendingSPAParameters,
+        sendingStowAngles,
         gettingSPAParameters,
         gettingStowAngles
     }
