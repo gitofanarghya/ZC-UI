@@ -17,6 +17,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import Time from '@material-ui/icons/AccessTime';
+import { Chip } from '@material-ui/core';
+
 
 const drawerWidth = 240;
 
@@ -110,6 +113,11 @@ class ResponsiveDrawer extends React.Component {
             <Typography variant="h5" color="inherit" noWrap>
               Voyager Zone Controller
             </Typography>
+            <Chip
+              icon={<Time />}
+              style={{marginLeft: 'auto', backgroundColor: 'white'}}
+              label={`${new Date(new Date(this.props.time).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getHours()} : ${new Date(new Date(this.props.time).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getMinutes()}`}
+            />
           </Toolbar>
         </AppBar>
         <nav className={classes.drawer}>
@@ -154,10 +162,12 @@ ResponsiveDrawer.propTypes = {
 
  
 function mapStateToProps(state) {
-    const { currentPage } = state.app;
+    const { currentPage, time, timeZone } = state.app;
     
     return {
-        currentPage
+        currentPage,
+        time,
+        timeZone
     };
 }
 

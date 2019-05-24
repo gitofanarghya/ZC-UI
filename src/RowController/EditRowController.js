@@ -134,11 +134,11 @@ class EditRowController extends React.Component {
                                 margin="normal"
                                 variant='outlined'
                                 InputLabelProps={{ shrink: true }}
-                                disabled={this.props.sendSPAParameters || this.props.gettingSPAParameters}
+                                disabled={this.props.sendingSPAParameters || this.props.gettingSPAParameters}
                             />
                         })
                     }
-                        <FormControlLabel disabled={this.props.sendSPAParameters || this.props.gettingSPAParameters} style={{ margin: 10, marginLeft: 'auto' }}
+                        <FormControlLabel disabled={this.props.sendingSPAParameters || this.props.gettingSPAParameters} style={{ margin: 10, marginLeft: 'auto' }}
                             control={
                                 <Checkbox color='primary' checked={this.state.backTracking} onClick={() => this.setState({...this.state, backTracking: !this.state.backTracking})}/>
                             }

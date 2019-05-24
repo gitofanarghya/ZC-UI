@@ -31,7 +31,7 @@ class App extends React.Component {
 
     componentDidMount = () => {
         this.props.init()
-
+        this.getTime()
         const io = socketIOClient(`http://${window.location.hostname}:8080`);
         io.on('connect', () => {
             console.log('connected')
@@ -81,6 +81,14 @@ class App extends React.Component {
     handleExited = () => {
         this.processQueue();
     };
+
+    
+    getTime = (continueInterval = true) => {
+        this.props.getTime()
+        if(continueInterval) {
+            setTimeout(this.getTime, 60000)
+        }
+    }
 
     render() {
         const {classes} = this.props
@@ -152,6 +160,8 @@ const mapDispatchToProps = (dispatch) => ({
             }, error => {
                 dispatch({type: 'GET_TIMEZONE_FAILURE', error})
             })
+    },
+    getTime: () => {
         dispatch({type: 'GET_TIME_REQUEST'})
         appService.getTime()
             .then(json => {
