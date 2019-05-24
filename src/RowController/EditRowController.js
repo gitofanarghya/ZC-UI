@@ -47,6 +47,45 @@ class EditRowController extends React.Component {
         backTracking: false
     }
 
+    componentDidMount = () => {
+        if(this.props.editedTrackers.length === 1) {
+            this.props.getSPAParameters(this.props.editedTrackers[0].deviceID)
+            this.props.getStowAngles(this.props.editedTrackers[0].deviceID)
+        }
+    }
+
+    componentWillReceiveProps = (nextProps) => {
+        if(nextProps.SPAParameters !== this.props.SPAParameters) {
+            const values = nextProps.SPAParameters.VALUES.split(',')
+            this.setState({
+                Lattitude: values[0],
+                Longitude: values[1],
+                Altitude: values[2],
+                EastLimit: values[3],
+                WestLimit: values[4],
+                TrackerWidth: values[5],
+                Pitch: values[6],
+                TrackingAccuracy: values[7],
+                AzimuthDeviation: values[8],
+                AltitudeTrackeronEast: values[9],
+                AltitudeTrackeronWest: values[10],
+                StartTimeLead: values[11],
+                EndTimeLag: values[12],
+                backTracking: values[14] === '1' ? true : false
+            })
+        }
+        if(nextProps.stowAngles !== this.props.stowAngles) {
+            const values = nextProps.stowAngles.VALUES.split(',')
+            this.setState({
+                WindStowAngle: values[0],
+                SnowStowAngle: values[1],
+                NightStowAngle: values[2],
+                EmergencyStowAngle: values[3],
+                CleanStowAngle: values[4]
+            })
+        }
+    }
+
     handleChange = event => {
         this.setState({
             ...this.state,
@@ -141,10 +180,12 @@ class EditRowController extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { editedTrackers } = state.app
+    const { editedTrackers, SPAParameters, stowAngles } = state.app
 
     return {
-        editedTrackers
+        editedTrackers,
+        SPAParameters,
+        stowAngles
     }
 }
 
@@ -155,6 +196,14 @@ const mapDispatchToProps = (dispatch) => ({
             appService.sendSPAParameters(t.deviceID, Lattitude, Longitude, Altitude, EastLimit, WestLimit, TrackerWidth, Pitch, TrackingAccuracy, AzimuthDeviation, AltitudeTrackeronEast, AltitudeTrackeronWest, StartTimeLead, EndTimeLag, backTracking)
                 .then(json => {
                     dispatch({type: 'SEND_SPA_PARAMETERS_SUCCESS'})
+                    dispatch({type: 'GET_SPA_PARAMETERS_REQUEST'})
+                    appService.getSPAParameters(t.deviceID)
+                        .then(json => {
+                            dispatch({type: 'GET_SPA_PARAMETERS_SUCCESS'})
+                        }, error => {
+                            dispatch({type: 'GET_SPA_PARAMETERS_FAILURE'})
+                        })
+
                 }, error => {
                     dispatch({type: 'SEND_SPA_PARAMETERS_FAILURE'})
                 })
@@ -167,10 +216,35 @@ const mapDispatchToProps = (dispatch) => ({
             appService.sendStowAngles(t.deviceID, WindStowAngle, SnowStowAngle, CleanStowAngle, NightStowAngle, EmergencyStowAngle)
                 .then(json => {
                     dispatch({type: 'SEND_STOW_ANGLES_SUCCESS'})
+                    dispatch({type: 'GET_STOW_ANGLES_REQUEST'})
+                    appService.getStowAngles(t.deviceID)
+                        .then(json => {
+                            dispatch({type: 'GET_STOW_ANGLES_SUCCESS'})
+                        }, error => {
+                            dispatch({type: 'GET_STOW_ANGLES_FAILURE'})
+                        })
                 }, error => {
                     dispatch({type: 'SEND_STOW_ANGLES_FAILURE'})
                 })
         })
+    },
+    getStowAngles: (DID) => {
+        dispatch({type: 'GET_STOW_ANGLES_REQUEST'})
+        appService.getStowAngles(DID)
+            .then(json => {
+                dispatch({type: 'GET_STOW_ANGLES_SUCCESS'})
+            }, error => {
+                dispatch({type: 'GET_STOW_ANGLES_FAILURE'})
+            })
+    },
+    getSPAParameters: (DID) => {
+        dispatch({type: 'GET_SPA_PARAMETERS_REQUEST'})
+        appService.getSPAParameters(DID)
+            .then(json => {
+                dispatch({type: 'GET_SPA_PARAMETERS_SUCCESS'})
+            }, error => {
+                dispatch({type: 'GET_SPA_PARAMETERS_FAILURE'})
+            })
     }
 })
 

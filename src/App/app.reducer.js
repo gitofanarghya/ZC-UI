@@ -10,7 +10,9 @@ const initialState = {
     currentTrackerInfo: null,
     xbeeResponse: [],
     controlledTrackers: [],
-    editedTrackers: []
+    editedTrackers: [],
+    SPAParameters: null,
+    stowAngles: null
 }
 
 const difference = (a1, a2) => {
@@ -163,17 +165,6 @@ export function app(state, action) {
 
         case 'ADD_TRACKERS_SUCCESS':
         const newXbeeResponse = difference(state.xbeeResponse, action.devices)
-        
-        
-        /* if(state.xbeeResponse.length > 1) {
-            for(var i = 0; i < state.xbeeResponse.length; i++ ) {
-                for(var j = 0; j < action.devices.length; j++ ) {
-                    if(state.xbeeResponse[i].DID !== action.devices[j].DID) {
-                        newXbeeResponse = [...newXbeeResponse, state.xbeeResponse[i]]
-                    }
-                }
-            }
-        } */
         return {
             ...state,
             xbeeResponse: newXbeeResponse
@@ -189,6 +180,18 @@ export function app(state, action) {
         return {
             ...state,
             controlledTrackers: action.trackers
+        }
+
+        case 'RECEIVED_SPA':
+        return {
+            ...state,
+            SPAParameters: action.json
+        }
+
+        case 'RECEIVED_STOW_ANGLES':
+        return {
+            ...state,
+            stowAngles: action.json
         }
 
         default:

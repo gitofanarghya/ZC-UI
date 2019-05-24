@@ -4,25 +4,42 @@ const app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 const mqtt = require('mqtt')
-const client = mqtt.connect(/* 'http://159.89.169.50:2000' */'http://localhost:1883')
+const mqttServerURL = /* 'http://159.89.169.50:2000' */ 'http://localhost:1883'
+const client = mqtt.connect(mqttServerURL)
 
 client.on('connect', function () {
-  console.log('connected to mqtt broker')
+  console.log('\x1B[32m connected to mqtt broker')
   client.subscribe('ui/rover/scan', function (err) {
     if(!err) {
-      console.log('subscribed to mqtt topic ui/rover/scan')
+      console.log("\x1B[32m subscribed to mqtt topic ui/rover/scan")
+    } else {
+      console.log("\x1b[31m error subscribing to mqtt topic ui/rover/stowangles")
+    }
+  })
+  client.subscribe('ui/rover/spa', function (err) {
+    if(!err) {
+      console.log("\x1B[32m subscribed to mqtt topic ui/rover/spa")
+    } else {
+      console.log("\x1b[31m error subscribing to mqtt topic ui/rover/stowangles")
+    }
+  })
+  client.subscribe('ui/rover/stowangles', function (err) {
+    if(!err) {
+      console.log("\x1B[32m subscribed to mqtt topic ui/rover/stowangles")
+    } else {
+      console.log("\x1b[31m error subscribing to mqtt topic ui/rover/stowangles")
     }
   })
 })
 
 io.on('connection', function(socket) {
-  console.log(`client ${socket.id} connected to socket server`)
+  console.log(`\x1B[32m client ${socket.id} connected to socket server`)
   client.on('message', function(topic, message) {
-    console.log(`mqtt: ${topic} says ${message}`)
+    console.log(`\x1B[33m mqtt: ${topic} says ${message}`)
     socket.emit(topic, message.toString())
   })
   socket.on('disconnect', function(reason) {
-    console.log(`client ${socket.id} disconnected from socket server`)
+    console.log(`\x1B[31m client ${socket.id} disconnected from socket server`)
     socket.disconnect(true)
   })
 })
@@ -36,6 +53,6 @@ app.get('/*', function (req, res) {
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-  console.log('Press Ctrl+C to quit.');
+  console.log(`\x1B[33m App listening on port ${PORT}`);
+  console.log('\x1B[33m Press Ctrl+C to quit.');
 });

@@ -40,6 +40,14 @@ class App extends React.Component {
             const json = JSON.parse(data)
             this.props.receivedXbeeResponse(json)
         })
+        io.on('ui/rover/spa', data => {
+            const json = JSON.parse(data)
+            this.props.receivedSPAParameters(json)
+        })
+        io.on('ui/rover/stowangles', data => {
+            const json = JSON.parse(data)
+            this.props.receivedStowAngles(json)
+        })
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -157,6 +165,12 @@ const mapDispatchToProps = (dispatch) => ({
     },
     receivedXbeeResponse: (json) => {
         dispatch({type: 'XBEE_RESPONSE', json})
+    },
+    receivedSPAParameters: (json) => {
+        dispatch({type: 'RECEIVED_SPA', json})
+    },
+    receivedStowAngles: (json) => {
+        dispatch({type: 'RECEIVED_STOW_ANGLES', json})
     }
 })
 

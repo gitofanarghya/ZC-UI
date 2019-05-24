@@ -26,13 +26,45 @@ export const appService = {
     addTrackers,
     removeTrackers,
     sendSPAParameters,
-    sendStowAngles
+    sendStowAngles,
+    getSPAParameters,
+    getStowAngles
 };
-/*
-const hostName = 'https://loud-bingo-92.localtunnel.me' */
-const hostName = `http://${window.location.hostname}:5000`; 
+
+/* const hostName = 'https://selfish-husky-25.localtunnel.me' */ 
+const hostName = `http://${window.location.hostname}:5000`;
 const hostName2 = `http://${window.location.hostname}:5001`; 
 
+
+
+function getStowAngles(DID) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            DID: DID,
+            CMD: 'QSPA'
+        })
+    }
+
+    return fetch(`${hostName}/roverParams/get`, requestOptions)
+        .then(handleResponse)
+}
+
+
+function getSPAParameters(DID) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            DID: DID,
+            CMD: "QSTO"
+        })
+    }
+
+    return fetch(`${hostName}/roverParams/get`, requestOptions)
+        .then(handleResponse)
+}
 
 function sendStowAngles(DID, WindStowAngle, SnowStowAngle, CleanStowAngle, NightStowAngle, EmergencyStowAngle) {
     const requestOptions = {
