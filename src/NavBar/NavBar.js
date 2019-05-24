@@ -116,7 +116,7 @@ class ResponsiveDrawer extends React.Component {
             <Chip
               icon={<Time />}
               style={{marginLeft: 'auto', backgroundColor: 'white'}}
-              label={`${new Date(new Date(this.props.time).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getHours()} : ${new Date(new Date(this.props.time).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getMinutes()}`}
+              label={`${new Date(new Date(Number(this.props.time)).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getHours()} : ${new Date(new Date(Number(this.props.time)).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getMinutes()}`}
             />
           </Toolbar>
         </AppBar>
