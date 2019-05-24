@@ -44,7 +44,7 @@ class EditRowController extends React.Component {
         NightStowAngle: '',
         EmergencyStowAngle: '',
         CleanStowAngle: '',
-        backTracking: false
+        backTracking: '0'
     }
 
     componentDidMount = () => {
@@ -71,7 +71,7 @@ class EditRowController extends React.Component {
                 AltitudeTrackeronWest: values[10],
                 StartTimeLead: values[11],
                 EndTimeLag: values[12],
-                backTracking: values[14] === '1' ? true : false
+                backTracking: values[14]
             })
         }
         if(nextProps.stowAngles !== this.props.stowAngles) {
@@ -140,7 +140,7 @@ class EditRowController extends React.Component {
                     }
                         <FormControlLabel disabled={this.props.sendingSPAParameters || this.props.gettingSPAParameters} style={{ margin: 10, marginLeft: 'auto' }}
                             control={
-                                <Checkbox color='primary' checked={this.state.backTracking} onClick={() => this.setState({...this.state, backTracking: !this.state.backTracking})}/>
+                                <Checkbox color='primary' checked={this.state.backTracking === '0'} onClick={() => this.setState({...this.state, backTracking: !this.state.backTracking})}/>
                             }
                             label="Backtracking"
                         />
