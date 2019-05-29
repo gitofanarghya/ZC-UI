@@ -31,7 +31,7 @@ export const appService = {
     getStowAngles
 };
 
-/*const hostName = 'https://dry-frog-16.localtunnel.me' */
+/*const hostName = 'https://swift-bear-94.localtunnel.me' */
 const hostName = `http://${window.location.hostname}:5000`; 
 const hostName2 = `http://${window.location.hostname}:5001`; 
 
@@ -47,7 +47,7 @@ function getStowAngles(DID) {
         })
     }
 
-    return fetch(`${hostName}/roverParams/get`, requestOptions)
+    return fetch(`${hostName}/rover/params/get`, requestOptions)
         .then(handleResponse)
 }
 
@@ -62,7 +62,7 @@ function getSPAParameters(DID) {
         })
     }
 
-    return fetch(`${hostName}/roverParams/get`, requestOptions)
+    return fetch(`${hostName}/rover/params/get`, requestOptions)
         .then(handleResponse)
 }
 
@@ -77,7 +77,7 @@ function sendStowAngles(DID, WindStowAngle, SnowStowAngle, CleanStowAngle, Night
         })
     }
 
-    return fetch(`${hostName}/roverParams/set`, requestOptions)
+    return fetch(`${hostName}/rover/params/set`, requestOptions)
         .then(handleResponse)
 }
 
@@ -93,7 +93,7 @@ function sendSPAParameters(DID, Lattitude, Longitude, Altitude, EastLimit, WestL
         })
     }
 
-    return fetch(`${hostName}/roverParams/set`, requestOptions)
+    return fetch(`${hostName}/rover/params/set`, requestOptions)
         .then(handleResponse)
 }
 

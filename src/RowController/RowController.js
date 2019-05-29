@@ -13,8 +13,14 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
   },
   tabsIndicator: {
-    backgroundColor: 'white',
+    backgroundColor: '#54AAB3',
   },
+  selected: {
+    backgroundColor: '#54AAB3',
+    color: '#ffffff',
+    fontWeight: 600,
+    fontSize: 14
+  }
 });
 
 class RowController extends React.Component {
@@ -28,10 +34,10 @@ class RowController extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
-          <Tabs value={currentTab} onChange={this.handleChange} classes={{ indicator: classes.tabsIndicator}}>
-            <Tab label="Row Controller" />
-            <Tab label="Scan" />
+        <AppBar position="static" color='secondary'>
+          <Tabs value={currentTab} onChange={this.handleChange} classes={{indicator: classes.tabsIndicator}}>
+            <Tab label="Paired Rows" classes={{selected: classes.selected}}/>
+            <Tab label="Scan" classes={{selected: classes.selected}}/>
           </Tabs>
         </AppBar>
         {currentTab === 0 && <RowControllerTab />}

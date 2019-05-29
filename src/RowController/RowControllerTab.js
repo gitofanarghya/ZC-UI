@@ -14,7 +14,7 @@ import {connect} from 'react-redux'
 const styles = theme => ({
     root: {
       width: '100%',
-      marginTop: theme.spacing.unit * 3,
+      marginTop: theme.spacing(3),
       overflowX: 'auto',
     },
     table: {
@@ -86,6 +86,7 @@ class RowControllerTab extends React.Component {
 
     removeTrackers = () => {
         this.props.removeTrackers(this.state.selectedTrackers.map(s => s.deviceID))
+        this.setState({...this.state, selectedTrackers: []})
     }
 
     render() {
@@ -111,7 +112,7 @@ class RowControllerTab extends React.Component {
                                     onClick={() => this.selectAll()}
                                     style={{cursor: 'pointer'}}
                                 >
-                                    {commissioningData !== null && <Checkbox 
+                                    {commissioningData !== null && commissioningData.length > 1 && <Checkbox 
                                         checked={this.state.selectedTrackers.length === commissioningData.length}
                                         color='primary'
                                     />}
@@ -142,7 +143,7 @@ class RowControllerTab extends React.Component {
                         </Table>
                         </Grid>{commissioningData !== null &&
                         <Grid item style={{textAlign: 'end'}}>
-                            <Button variant='contained' color='primary' className={classes.buttons} disabled={this.state.selectedTrackers.length === 0} onClick={() => this.removeTrackers()}>Remove</Button>
+                            <Button variant='contained' color='primary' className={classes.buttons} disabled={this.state.selectedTrackers.length === 0} onClick={() => this.removeTrackers()}>Forget</Button>
                         </Grid>}
                     </Grid>
                     

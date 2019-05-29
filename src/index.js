@@ -28,6 +28,10 @@ import './index.css'
         main: '#54AAB3',
         dark: '#3c8f98',
         contrastText: '#ffffff'
+      },
+      secondary: {
+        main: '#ffffff',
+        contrastText: '#000000'
       }
     }/* ,
     overrides: {

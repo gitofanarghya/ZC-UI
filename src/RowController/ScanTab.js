@@ -16,7 +16,7 @@ import {connect} from 'react-redux'
 const styles = theme => ({
     root: {
       width: '100%',
-      marginTop: theme.spacing.unit * 3,
+      marginTop: theme.spacing(3),
       overflowX: 'auto',
     },
     table: {
@@ -137,7 +137,7 @@ class ScanTab extends React.Component {
                                 onClick={() => this.selectAll()}
                                 style={{cursor: 'pointer'}}
                             >
-                                {xbeeResponse.length !== 0 && xbeeResponse !== undefined && <Checkbox 
+                                {xbeeResponse.length > 1 && xbeeResponse !== undefined && <Checkbox 
                                     checked={this.state.selectedTrackers.length === xbeeResponse.length && this.state.selectedTrackers.length !== 0}
                                     color='primary'
                                 />}

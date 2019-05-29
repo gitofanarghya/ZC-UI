@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import LeftIcon from '@material-ui/icons/ArrowBack'
-import { IconButton, Typography, Grid, Button, TextField, FormControlLabel, Checkbox } from '@material-ui/core';
+import { IconButton, Typography, Grid, Button, TextField, FormControlLabel, Checkbox, InputAdornment } from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles'
 import { appService } from '../App/app.services';
 import {connect} from 'react-redux'
@@ -29,16 +29,29 @@ class EditRowController extends React.Component {
         Lattitude: '',
         Longitude: '',
         Altitude: '',
-        EastLimit: '',
-        WestLimit: '',
-        TrackerWidth: '',
-        Pitch: '',
-        TrackingAccuracy: '',
+        TrackingLimitEast: '',
+        TrackingLimitWest: '',
+        RowWidth: '',
+        RowPitch: '',
+        TrackingResolution: '',
         AzimuthDeviation: '',
-        AltitudeTrackeronEast: '',
-        AltitudeTrackeronWest: '',
-        StartTimeLead: '',
-        EndTimeLag: '',
+        AltitudeofTrackerontheEast: '',
+        AltitudeofTrackerontheWest: '',
+        EarlyStartMinutes: '',
+        LateFinishMinutes: '',
+        LattitudeError: '',
+        LongitudeError: '',
+        AltitudeError: '',
+        TrackingLimitEastError: '',
+        TrackingLimitWestError: '',
+        RowWidthError: '',
+        RowPitchError: '',
+        TrackingResolutionError: '',
+        AzimuthDeviationError: '',
+        AltitudeofTrackerontheEastError: '',
+        AltitudeofTrackerontheWestError: '',
+        EarlyStartMinutesError: '',
+        LateFinishMinutesError: '',
         WindStowAngle: '',
         SnowStowAngle: '',
         NightStowAngle: '',
@@ -61,16 +74,16 @@ class EditRowController extends React.Component {
                 Lattitude: values[0],
                 Longitude: values[1],
                 Altitude: values[2],
-                EastLimit: values[3],
-                WestLimit: values[4],
-                TrackerWidth: values[5],
-                Pitch: values[6],
-                TrackingAccuracy: values[7],
+                TrackingLimitEast: values[3],
+                TrackingLimitWest: values[4],
+                RowWidth: values[5],
+                RowPitch: values[6],
+                TrackingResolution: values[7],
                 AzimuthDeviation: values[8],
-                AltitudeTrackeronEast: values[9],
-                AltitudeTrackeronWest: values[10],
-                StartTimeLead: values[11],
-                EndTimeLag: values[12],
+                AltitudeofTrackerontheEast: values[9],
+                AltitudeofTrackerontheWest: values[10],
+                EarlyStartMinutes: values[11],
+                LateFinishMinutes: values[12],
                 backTracking: values[14]
             })
         }
@@ -91,6 +104,71 @@ class EditRowController extends React.Component {
             ...this.state,
             [event.target.name]: event.target.value
         })
+    }
+
+    handleChangeSPA = (event, p) => {
+        const value = Number(event.target.value)
+        if(p.min && p.max) {
+            if(value < p.min || value > p.max) {
+                this.setState({
+                    ...this.state,
+                    [`${event.target.name}Error`]: `min: ${p.min} max: ${p.max}`
+                })
+            } else {
+                this.setState({
+                    ...this.state,
+                    [event.target.name]: event.target.value,
+                    [`${event.target.name}Error`]: ''
+                })
+            }
+        } else if(p.min) {
+            if(value < p.min) {
+                this.setState({
+                    ...this.state,
+                    [`${event.target.name}Error`]: `min: ${p.min}`
+                })
+            } else {
+                this.setState({
+                    ...this.state,
+                    [event.target.name]: event.target.value,
+                    [`${event.target.name}Error`]: ''
+                })
+            }
+        } else if(p.max) {
+            if(value > p.max) {
+                this.setState({
+                    ...this.state,
+                    [`${event.target.name}Error`]: `max: ${p.max}`
+                })
+            } else {
+                this.setState({
+                    ...this.state,
+                    [event.target.name]: event.target.value,
+                    [`${event.target.name}Error`]: ''
+                })
+            }
+        } else {
+            this.setState({
+                ...this.state,
+                [event.target.name]: event.target.value,
+                [`${event.target.name}Error`]: ''
+            })
+        }
+    }
+
+    handleBlur = (e, p) => {
+        if(e.target.value === '') {
+            this.setState({
+                ...this.state,
+                [e.target.name]: this.props.SPAParameters.VALUES.split(',')[p.value],
+                [`${e.target.name}Error`]: ''
+            })
+        } else {
+            this.setState({
+                ...this.state,
+                [`${e.target.name}Error`]: ''
+            })
+        }
     }
 
     sendSPAParameters = () => {
@@ -122,19 +200,105 @@ class EditRowController extends React.Component {
                     <Grid item className={classes.fieldGrid}>
                         
                     {
-                        ['Lattitude', 'Longitude', 'Altitude', 'East Limit', 'West Limit', 'Tracker Width', 'Pitch', 'Tracking Accuracy', 'Azimuth Deviation', 'Altitude Tracker on East', 'Altitude Tracker on West', 'Start Time Lead', 'End Time Lag'].map(p => {
+                        [
+                            {
+                                key: 'Lattitude',
+                                adornment: 'Deg',
+                                min: -90,
+                                max: +90,
+                                value: 0
+                            },
+                            {
+                                key: 'Longitude', 
+                                adornment: 'Deg',
+                                min: -180,
+                                max: +180,
+                                value: 1
+                            }, 
+                            { 
+                                key: 'Altitude',
+                                adornment: 'm',
+                                value: 2
+                            }, 
+                            { 
+                                key: 'Tracking Limit - East', 
+                                adornment: 'Deg',
+                                min: -60,
+                                max: 0,
+                                value: 3
+                            }, 
+                            { 
+                                key: 'Tracking Limit - West', 
+                                adornment: 'Deg',
+                                min: 0,
+                                max: +60,
+                                value: 4 
+                            }, 
+                            { 
+                                key: 'Row Width', 
+                                adornment: 'm',
+                                min: 0,
+                                value: 5
+                            }, 
+                            { 
+                                key: 'Row Pitch', 
+                                adornment: 'm',
+                                min: 0,
+                                value: 6
+                            }, 
+                            { 
+                                key: 'Tracking Resolution', 
+                                adornment: 'Deg',
+                                min: +0.50,
+                                max: +30.0,
+                                value: 7 
+                            }, 
+                            { 
+                                key: 'Azimuth Deviation', 
+                                adornment: 'Deg',
+                                min: -90,
+                                max: +90,
+                                value: 8  
+                            }, 
+                            { 
+                                key: 'Altitude of Tracker on the East', 
+                                adornment: 'm',
+                                value: 9 
+                            }, 
+                            { 
+                                key: 'Altitude of Tracker on the West', 
+                                adornment: 'm',
+                                value: 10
+                            }, 
+                            { 
+                                key: 'Early Start Minutes', 
+                                adornment: 'Minutes',
+                                value: 11
+                            }, 
+                            { 
+                                key: 'Late Finish Minutes',
+                                adornment: 'Minutes',
+                                value: 12
+                            }
+                        ].map(p => {
                             return <TextField
-                                key={p}
+                                key={p.key}
                                 className={classes.field}
-                                id={p}
-                                name={p.replace(/ /g, '')}
-                                label={p}
-                                value={this.state[p.replace(/ /g, '')]}
-                                onChange={(e) => this.handleChange(e)}
+                                id={p.key}
+                                name={p.key.replace(/ /g, '').replace(/-/g, '')}
+                                label={p.key}
+                                value={this.state[p.key.replace(/ /g, '').replace(/-/g, '')]}
+                                onChange={(e) => this.handleChangeSPA(e, p)}
                                 margin="normal"
                                 variant='outlined'
                                 InputLabelProps={{ shrink: true }}
                                 disabled={this.props.sendingSPAParameters || this.props.gettingSPAParameters}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">{p.adornment}</InputAdornment>,
+                                  }}
+                                error={this.state[`${p.key.replace(/ /g, '').replace(/-/g, '')}Error`] !== ''}
+                                helperText={this.state[`${p.key.replace(/ /g, '').replace(/-/g, '')}Error`]}
+                                onBlur={(e) => this.handleBlur(e, p)}
                             />
                         })
                     }
@@ -142,7 +306,7 @@ class EditRowController extends React.Component {
                             control={
                                 <Checkbox color='primary' checked={this.state.backTracking === '1'} onClick={() => this.setState({...this.state, backTracking: !this.state.backTracking})}/>
                             }
-                            label="Backtracking"
+                            label="Enable Backtracking"
                         />
                         <Button color='primary' disabled variant='contained' style={{ margin: 10 }}>Sync time with Zone Controller</Button>    
                     </Grid>
@@ -168,6 +332,9 @@ class EditRowController extends React.Component {
                                 variant='outlined'
                                 InputLabelProps={{ shrink: true }}
                                 disabled={this.props.sendingStowAngles || this.props.gettingStowAngles}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">Deg</InputAdornment>,
+                                  }}
                             />
                         })
                     }
