@@ -108,50 +108,57 @@ class EditRowController extends React.Component {
 
     handleChangeSPA = (event, p) => {
         const value = Number(event.target.value)
-        if(p.min && p.max) {
-            if(value < p.min || value > p.max) {
-                this.setState({
-                    ...this.state,
-                    [`${event.target.name}Error`]: `min: ${p.min} max: ${p.max}`
-                })
+        if(!isNaN(value)) {
+            if(p.min && p.max) {
+                if(value < p.min || value > p.max) {
+                    this.setState({
+                        ...this.state,
+                        [`${event.target.name}Error`]: `min: ${p.min} max: ${p.max}`
+                    })
+                } else {
+                    this.setState({
+                        ...this.state,
+                        [event.target.name]: value,
+                        [`${event.target.name}Error`]: ''
+                    })
+                }
+            } else if(p.min) {
+                if(value < p.min) {
+                    this.setState({
+                        ...this.state,
+                        [`${event.target.name}Error`]: `min: ${p.min}`
+                    })
+                } else {
+                    this.setState({
+                        ...this.state,
+                        [event.target.name]: value,
+                        [`${event.target.name}Error`]: ''
+                    })
+                }
+            } else if(p.max) {
+                if(value > p.max) {
+                    this.setState({
+                        ...this.state,
+                        [`${event.target.name}Error`]: `max: ${p.max}`
+                    })
+                } else {
+                    this.setState({
+                        ...this.state,
+                        [event.target.name]: value,
+                        [`${event.target.name}Error`]: ''
+                    })
+                }
             } else {
                 this.setState({
                     ...this.state,
-                    [event.target.name]: event.target.value,
-                    [`${event.target.name}Error`]: ''
-                })
-            }
-        } else if(p.min) {
-            if(value < p.min) {
-                this.setState({
-                    ...this.state,
-                    [`${event.target.name}Error`]: `min: ${p.min}`
-                })
-            } else {
-                this.setState({
-                    ...this.state,
-                    [event.target.name]: event.target.value,
-                    [`${event.target.name}Error`]: ''
-                })
-            }
-        } else if(p.max) {
-            if(value > p.max) {
-                this.setState({
-                    ...this.state,
-                    [`${event.target.name}Error`]: `max: ${p.max}`
-                })
-            } else {
-                this.setState({
-                    ...this.state,
-                    [event.target.name]: event.target.value,
+                    [event.target.name]: value,
                     [`${event.target.name}Error`]: ''
                 })
             }
         } else {
             this.setState({
                 ...this.state,
-                [event.target.name]: event.target.value,
-                [`${event.target.name}Error`]: ''
+                [`${event.target.name}Error`]: 'Floating point only'
             })
         }
     }
@@ -169,6 +176,10 @@ class EditRowController extends React.Component {
                 [`${e.target.name}Error`]: ''
             })
         }
+    }
+
+    isFloat = (n) => {
+        return n === +n && n !== (n|0);
     }
 
     sendSPAParameters = () => {

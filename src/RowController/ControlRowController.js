@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import LeftIcon from '@material-ui/icons/ArrowBack'
-import {withStyles} from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import { IconButton, Typography, Grid, Button, Menu, MenuItem } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
