@@ -7,7 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 import { EditRowController } from './EditRowController';
-import ControlRowController from './ControlRowController'
+import { ControlRowController } from './ControlRowController'
 import { appService } from '../App/app.services';
 import {connect} from 'react-redux'
 

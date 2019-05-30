@@ -372,7 +372,7 @@ class EditRowController extends React.Component {
                     }
                         <FormControlLabel disabled={this.props.sendingSPAParameters || this.props.gettingSPAParameters} style={{ margin: 10, marginLeft: 'auto' }}
                             control={
-                                <Checkbox color='primary' checked={this.state.backTracking === '1'} onClick={() => this.setState({...this.state, backTracking: !this.state.backTracking})}/>
+                                <Checkbox color='primary' checked={this.state.backTracking === '1'} onClick={() => this.setState({...this.state, backTracking: this.state.backTracking === '0' ? '1' : '0'})}/>
                             }
                             label="Enable Backtracking"
                         />

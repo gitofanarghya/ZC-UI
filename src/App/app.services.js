@@ -8,6 +8,7 @@ export const appService = {
     getWindAddress,
     caliberate,
     sendCommand,
+    sendStow,
     getCommissioningData,
     getCurrentTrackerInfo,
     triggerDiscovery,
@@ -31,7 +32,7 @@ export const appService = {
     getStowAngles
 };
 
-/* const hostName = 'https://white-snail-36.localtunnel.me'; */
+/*const hostName = 'http://159.89.169.50:4000';*/
 const hostName = `http://${window.location.hostname}:5000`;
 const hostName2 = `http://${window.location.hostname}:5001`; 
 
@@ -256,169 +257,37 @@ function caliberate(sensor) {
 
 //control
 
-function sendCommand(deviceID, command, macID) {
+function sendCommand(deviceID, value) {
 
     const requestOptions = {
         method: "POST",
-        mode: 'cors'
+        mode: 'cors',
+        body: JSON.stringify({
+            "DID": deviceID,
+            "CMD": "HMNM",
+            "VALUES": value
+        })
     };
 
-    if(command === "WE" && macID === '00000'){
-            requestOptions["body"] = JSON.stringify({
-                "CMD" : "HMNM",
-                "DID": deviceID,
-                "VALUES": "NEGATIVE",
-            });
-        }
-
-    if(command === "WIND" && macID === '00000'){
-        requestOptions["body"] = JSON.stringify({
-                "CMD" : "HMOD",
-                "DID": deviceID,
-                "MODE": "WIND",
-            });
-    }
-
-    if(command === "EMERGENCY" && macID === '00000'){
-        requestOptions["body"] = JSON.stringify({
-                "CMD" : "HMOD",
-                "DID": deviceID,
-                "MODE": "EMERGENCY",
-            });
-    }
-
-    if(command === "CLEAN" && macID === '00000'){
-        requestOptions["body"] = JSON.stringify({
-                "CMD" : "HMOD",
-                "DID": deviceID,
-                "MODE": "CLEAN",
-            });
-    }
-
-    if(command === "SNOW" && macID === '00000'){
-        requestOptions["body"] = JSON.stringify({
-                "CMD" : "HMOD",
-                "DID": deviceID,
-                "MODE": "SNOW",
-            });
-    }
-
-    if(command === "NIGHT" && macID === '00000'){
-        requestOptions["body"] = JSON.stringify({
-                "CMD" : "HMOD",
-                "DID": deviceID,
-                "MODE": "NIGHT",
-            });
-    }
-
-    if(command === "SMTALStop" && macID === '00000'){
-        requestOptions["body"] = JSON.stringify({
-                "CMD" : "HMNM",
-                "DID": deviceID,
-                "VALUES": "STOP",
-            });
-    }
-
-    if(command === "ES" && macID === '00000'){
-        requestOptions["body"] = JSON.stringify({
-                "CMD" : "HMNM",
-                "DID": deviceID,
-                "VALUES": "POSITIVE",
-            });
-    }
-
-    if(command === "WE" && macID !== '00000'){
-        requestOptions["body"] = JSON.stringify({
-            "CMD" : "HMNM",
-            "DID": deviceID,
-            "VALUES": "NEGATIVE",
-            "macID": macID,
-        });
-    }
-
-if(command === "NIGHT" && macID !== '00000'){
-    requestOptions["body"] = JSON.stringify({
-            "CMD" : "HMOD",
-            "DID": deviceID,
-            "MODE": "NIGHT",
-            "macID": macID,
-        });
-}
-
-if(command === "CLEAN" && macID !== '00000'){
-    requestOptions["body"] = JSON.stringify({
-            "CMD" : "HMOD",
-            "DID": deviceID,
-            "MODE": "CLEAN",
-            "macID": macID,
-        });
-}
-
-if(command === "EMERGENCY" && macID !== '00000'){
-    requestOptions["body"] = JSON.stringify({
-            "CMD" : "HMOD",
-            "DID": deviceID,
-            "MODE": "EMERGENCY",
-            "macID": macID,
-        });
-}
-
-if(command === "WIND" && macID !== '00000'){
-    requestOptions["body"] = JSON.stringify({
-            "CMD" : "HMOD",
-            "DID": deviceID,
-            "MODE": "WIND",
-            "macID": macID,
-        });
-}
-
-if(command === "SNOW" && macID !== '00000'){
-    requestOptions["body"] = JSON.stringify({
-            "CMD" : "HMOD",
-            "DID": deviceID,
-            "MODE": "SNOW",
-            "macID": macID,
-        });
-}
-
-if(command === "SMTALStop" && macID !== '00000'){
-    requestOptions["body"] = JSON.stringify({
-            "CMD" : "HMNM",
-            "DID": deviceID,
-            "VALUES": "STOP",
-            "macID": macID,
-        });
-}
-
-if(command === "ES" && macID !== '00000'){
-    requestOptions["body"] = JSON.stringify({
-            "CMD" : "HMNM",
-            "DID": deviceID,
-            "VALUES": "POSITIVE",
-            "macID": macID,
-        });
-}
-
-if(command === "SMTALReset" && macID === '00000'){
-    requestOptions["body"] = JSON.stringify({
-            "CMD" : "RESET",
-            "DID": "00000",
-        });
-}
-
-if(command === "SMTALReset" && macID !== '00000'){
-    requestOptions["body"] = JSON.stringify({
-            "CMD" : "RESET",
-            "DID": deviceID,
-            "macID": macID,
-        });
-}
-
-
-    return fetch(`http://${hostName2}/sendCommand`, requestOptions)
+    return fetch(`http://${hostName}/rover/control`, requestOptions)
         .then(handleResponse)
 }
 
+function sendStow(deviceID, mode) {
+
+    const requestOptions = {
+        method: "POST",
+        mode: 'cors',
+        body: JSON.stringify({
+            "DID": deviceID,
+            "CMD": "HMOD",
+            "MODE": mode
+        })
+    };
+
+    return fetch(`http://${hostName}/rover/control`, requestOptions)
+        .then(handleResponse)
+}
 //dashboard
 
 
