@@ -31,9 +31,9 @@ export const appService = {
     getSPAParameters,
     getStowAngles
 };
-
-/*const hostName = 'http://159.89.169.50:4000';*/
+/* const hostName = 'http://159.89.169.50:4000'; */
 const hostName = `http://${window.location.hostname}:5000`;
+
 const hostName2 = `http://${window.location.hostname}:5001`; 
 
 
@@ -269,7 +269,7 @@ function sendCommand(deviceID, value) {
         })
     };
 
-    return fetch(`http://${hostName}/rover/control`, requestOptions)
+    return fetch(`${hostName}/rover/control`, requestOptions)
         .then(handleResponse)
 }
 
@@ -285,7 +285,7 @@ function sendStow(deviceID, mode) {
         })
     };
 
-    return fetch(`http://${hostName}/rover/control`, requestOptions)
+    return fetch(`${hostName}/rover/control`, requestOptions)
         .then(handleResponse)
 }
 //dashboard
