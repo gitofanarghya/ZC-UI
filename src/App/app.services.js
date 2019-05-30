@@ -31,7 +31,7 @@ export const appService = {
     getStowAngles
 };
 
-/*const hostName = 'https://swift-bear-94.localtunnel.me' */
+/*const hostName = 'https://old-snake-29.localtunnel.me' */
 const hostName = `http://${window.location.hostname}:5000`; 
 const hostName2 = `http://${window.location.hostname}:5001`; 
 

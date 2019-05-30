@@ -57,7 +57,8 @@ class EditRowController extends React.Component {
         NightStowAngle: '',
         EmergencyStowAngle: '',
         CleanStowAngle: '',
-        backTracking: '0'
+        backTracking: '0',
+        submit: true
     }
 
     componentDidMount = () => {
@@ -102,12 +103,20 @@ class EditRowController extends React.Component {
     handleChange = event => {
         this.setState({
             ...this.state,
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.value,
+            [`${event.target.name}Error`]: '',
+            submit: true
         })
     }
 
-    handleChangeSPA = (event, p) => {
-        const value = Number(event.target.value)
+    handleChangeSPA = (event) => {
+        this.setState({
+            ...this.state,
+            [event.target.name]: event.target.value,
+            [`${event.target.name}Error`]: '',
+            submit: true
+        })
+        /* const value = Number(event.target.value)
         if(!isNaN(value)) {
             if(p.min && p.max) {
                 if(value < p.min || value > p.max) {
@@ -155,12 +164,18 @@ class EditRowController extends React.Component {
                     [`${event.target.name}Error`]: ''
                 })
             }
+        } else if(event.target.value === '-' || event.target.value === '.') {
+            this.setState({
+                ...this.state,
+                [event.target.name]: event.target.value,
+                [`${event.target.name}Error`]: ''
+            })
         } else {
             this.setState({
                 ...this.state,
-                [`${event.target.name}Error`]: 'Floating point only'
+                [`${event.target.name}Error`]: 'Please enter valid number'
             })
-        }
+        } */
     }
 
     handleBlur = (e, p) => {
@@ -168,23 +183,53 @@ class EditRowController extends React.Component {
             this.setState({
                 ...this.state,
                 [e.target.name]: this.props.SPAParameters.VALUES.split(',')[p.value],
-                [`${e.target.name}Error`]: ''
+                [`${e.target.name}Error`]: '',
+                submit: false
             })
         } else {
-            this.setState({
-                ...this.state,
-                [`${e.target.name}Error`]: ''
-            })
+            const regex = new RegExp("^[-+]?[0-9]*\.?[0-9]+$")
+            const regexTest = regex.test(e.target.value)
+            if(!regexTest) {
+                this.setState({
+                    ...this.state,
+                    [`${e.target.name}Error`]: `Please enter a number.`,
+                    submit: false
+                })
+            } else {
+                const value = Number(e.target.value)
+                if(p.min && p.max) {
+                    if(value < p.min || value > p.max) {
+                        this.setState({
+                            ...this.state,
+                            [`${e.target.name}Error`]: `min: ${p.min} max: ${p.max}`,
+                            submit: false
+                        })
+                    }
+                } else if(p.min) {
+                    if(value < p.min) {
+                        this.setState({
+                            ...this.state,
+                            [`${e.target.name}Error`]: `min: ${p.min}`,
+                            submit: false
+                        })
+                    }
+                } else if(p.max) {
+                    if(value > p.max) {
+                        this.setState({
+                            ...this.state,
+                            [`${e.target.name}Error`]: `max: ${p.max}`,
+                            submit: false
+                        })
+                    }
+                }
+            }
+            
         }
     }
 
-    isFloat = (n) => {
-        return n === +n && n !== (n|0);
-    }
-
     sendSPAParameters = () => {
-        const { Lattitude, Longitude, Altitude, EastLimit, WestLimit, TrackerWidth, Pitch, TrackingAccuracy, AzimuthDeviation, AltitudeTrackeronEast, AltitudeTrackeronWest, StartTimeLead, EndTimeLag, backTracking } = this.state
-        this.props.sendSPAParameters(this.props.editedTrackers, Lattitude, Longitude, Altitude, EastLimit, WestLimit, TrackerWidth, Pitch, TrackingAccuracy, AzimuthDeviation, AltitudeTrackeronEast, AltitudeTrackeronWest, StartTimeLead, EndTimeLag, backTracking)
+        const { Lattitude, Longitude, Altitude, TrackingLimitEast, TrackingLimitWest, RowWidth, RowPitch, TrackingResolution, AzimuthDeviation, AltitudeofTrackerontheEast, AltitudeofTrackerontheWest, EarlyStartMinutes, LateFinishMinutes, backTracking } = this.state
+        this.props.sendSPAParameters(this.props.editedTrackers, Lattitude, Longitude, Altitude, TrackingLimitEast, TrackingLimitWest, RowWidth, RowPitch, TrackingResolution, AzimuthDeviation, AltitudeofTrackerontheEast, AltitudeofTrackerontheWest, EarlyStartMinutes, LateFinishMinutes, backTracking)
     }
 
     sendStowAngles = () => {
@@ -299,7 +344,7 @@ class EditRowController extends React.Component {
                                 name={p.key.replace(/ /g, '').replace(/-/g, '')}
                                 label={p.key}
                                 value={this.state[p.key.replace(/ /g, '').replace(/-/g, '')]}
-                                onChange={(e) => this.handleChangeSPA(e, p)}
+                                onChange={(e) => this.handleChange(e)}
                                 margin="normal"
                                 variant='outlined'
                                 InputLabelProps={{ shrink: true }}
@@ -322,7 +367,7 @@ class EditRowController extends React.Component {
                         <Button color='primary' disabled variant='contained' style={{ margin: 10 }}>Sync time with Zone Controller</Button>    
                     </Grid>
                     <Grid item style={{height: 64, textAlign: 'center', borderBottom: '0.1px solid lightgrey'}}>
-                        <Button color='primary' disabled={this.props.sendingSPAParameters || this.props.gettingSPAParameters} variant='contained' onClick={() => this.sendSPAParameters()} style={{ margin: 10 }}>Save</Button>
+                        <Button color='primary' disabled={this.props.sendingSPAParameters || this.props.gettingSPAParameters || !this.state.submit} variant='contained' onClick={() => this.sendSPAParameters()} style={{ margin: 10 }}>Save</Button>
                     </Grid>
                     <Typography variant='h6' style={{paddingLeft: 'calc(1% + 10px)'}}>
                         Stow Angle Settings
