@@ -197,7 +197,7 @@ class EditRowController extends React.Component {
                 })
             } else {
                 const value = Number(e.target.value)
-                if(p.min && p.max) {
+                if(p.min !== null && p.max !== null) {
                     if(value < p.min || value > p.max) {
                         this.setState({
                             ...this.state,
@@ -205,7 +205,7 @@ class EditRowController extends React.Component {
                             submit: false
                         })
                     }
-                } else if(p.min) {
+                } else if(p.min !== null) {
                     if(value < p.min) {
                         this.setState({
                             ...this.state,
@@ -213,7 +213,7 @@ class EditRowController extends React.Component {
                             submit: false
                         })
                     }
-                } else if(p.max) {
+                } else if(p.max != null) {
                     if(value > p.max) {
                         this.setState({
                             ...this.state,
@@ -237,7 +237,7 @@ class EditRowController extends React.Component {
         this.props.sendStowAngles(this.props.editedTrackers, WindStowAngle, SnowStowAngle, CleanStowAngle, NightStowAngle, EmergencyStowAngle)
     }
 
-    render() {
+    render() {console.log(this.state)
         const {classes} = this.props
         return (
             <Fragment>
@@ -274,6 +274,8 @@ class EditRowController extends React.Component {
                             { 
                                 key: 'Altitude',
                                 adornment: 'm',
+                                min: 0,
+                                max: null,
                                 value: 2
                             }, 
                             { 
@@ -294,12 +296,14 @@ class EditRowController extends React.Component {
                                 key: 'Row Width', 
                                 adornment: 'm',
                                 min: 0,
+                                max: null,
                                 value: 5
                             }, 
                             { 
                                 key: 'Row Pitch', 
                                 adornment: 'm',
                                 min: 0,
+                                max: null,
                                 value: 6
                             }, 
                             { 
@@ -319,21 +323,29 @@ class EditRowController extends React.Component {
                             { 
                                 key: 'Altitude of Tracker on the East', 
                                 adornment: 'm',
+                                min: 0,
+                                max: null,
                                 value: 9 
                             }, 
                             { 
                                 key: 'Altitude of Tracker on the West', 
                                 adornment: 'm',
+                                min: 0,
+                                max: null,
                                 value: 10
                             }, 
                             { 
                                 key: 'Early Start Minutes', 
                                 adornment: 'Minutes',
+                                min: 0,
+                                max: null,
                                 value: 11
                             }, 
                             { 
                                 key: 'Late Finish Minutes',
                                 adornment: 'Minutes',
+                                min: 0,
+                                max: null,
                                 value: 12
                             }
                         ].map(p => {
