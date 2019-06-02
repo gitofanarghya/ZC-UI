@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 import { EditRowController } from './EditRowController';
+import { EditRowController1 } from './_EditRowController'
 import { ControlRowController } from './ControlRowController'
 import { appService } from '../App/app.services';
 import {connect} from 'react-redux'
@@ -96,7 +97,8 @@ class RowControllerTab extends React.Component {
             <Fragment>
                 {
                     this.state.location === 'edit' ? 
-                    <EditRowController back={this.back}/> :
+                        this.state.selectedTrackers.length > 1 ?
+                        <EditRowController back={this.back}/> : <EditRowController1 back={this.back}/> :
                     this.state.location === 'control' ?
                     <ControlRowController back={this.back}/> :
                     <Grid container direction='column' style={{ height: 'calc(100% - 48px)'}}>

@@ -1,6 +1,7 @@
 const initialState = {
     currentPage: '',
     currentTab: 0,
+    currentEditTab: 0,
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     alert: null,
     time: Date.now(),
@@ -17,7 +18,10 @@ const initialState = {
     sendingStowAngles: false,
     gettingSPAParameters: false,
     gettingStowAngles: false,
-    addingTrackers: false
+    addingTrackers: false,
+    sensors: [],
+    responseQueue: [],
+    listen: false
 }
 
 const difference = (a1, a2) => {
@@ -35,16 +39,95 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
+        case 'SET_CURRENT_TRACKER':
+        return {
+            ...state,
+            currentTracker: action.trackerID
+        }
+
+        case 'SET_RESPONSE_LISTENER':
+        return {
+            ...state,
+            listen: true
+        }
+
+        case 'SEND_SPA_PARAMETERS_REQUEST':
+        return {
+            ...state,
+            sendingSPAParameters: true,
+            responseQueue: []
+        }
+
+        case 'SEND_STOW_ANGLES_REQUEST':
+        return {
+            ...state,
+            sendingStowAngles: true,
+            responseQueue: []
+        }
+
+        case 'ui/rover/response':
+        if(state.listen) {
+            if(state.editedTrackers.length === state.responseQueue.length + 1) {
+                return {
+                    ...state,
+                    responseQueue: [...state.responseQueue, action.json],
+                    listen: false
+                }
+            }
+            return {
+                ...state,
+                responseQueue: [...state.responseQueue, action.json]
+            }
+        }
+        
+
+        case 'GET_SENSORS_SUCCESS':
+        return {
+            ...state,
+            sensors: action.json.Result
+        }
+
+        case 'REMOVE_SENSOR_SUCCESS':
+        return {
+            ...state,
+            alert: {
+                type: 'success',
+                message: 'Removed Sensor Successfully'
+            }
+        }
+
+        case 'ADD_SENSORS_SUCCESS':
+        return {
+            ...state,
+            alert: {
+                type: 'success',
+                message: 'Added Sensor Successfully'
+            }
+        }
+        
         case 'CHANGE_PAGE':
         return {
             ...state,
-            currentPage: action.page
+            currentPage: action.page,
+            responseQueue: [],
+            commandQueue: []
         }
 
         case 'CHANGE_TAB':
         return {
             ...state,
-            currentTab: action.value.value
+            currentTab: action.value.value,
+            responseQueue: [],
+            commandQueue: []
+        }
+
+        
+        case 'CHANGE_EDIT_TAB':
+        return {
+            ...state,
+            currentEditTab: action.value.value,
+            responseQueue: [],
+            commandQueue: []
         }
 
         case 'CLEAR_ALERT':
@@ -76,7 +159,8 @@ export function app(state, action) {
                 ...state,
                 fetchingCommissioningData: false,
                 currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
-                commissioningData: action.json.staticData
+                commissioningData: action.json.staticData,
+                currentTracker: action.json.staticData[0].trackerID
             }
         }
 
@@ -125,8 +209,7 @@ export function app(state, action) {
 
         case 'GET_CURRENT_TRACKER_INFO_REQUEST':
         return {
-            ...state,
-            currentTracker: action.trackerID
+            ...state
         }
 
         case 'GET_CURRENT_TRACKER_INFO_SUCCESS':
@@ -267,12 +350,6 @@ export function app(state, action) {
             }
         }
 
-        case 'SEND_SPA_PARAMETERS_REQUEST':
-        return {
-            ...state,
-            sendingSPAParameters: true
-        }
-
         case 'SEND_SPA_PARAMETERS_FAILURE':
         return {
             ...state,
@@ -287,12 +364,6 @@ export function app(state, action) {
         return {
             ...state,
             sendingSPAParameters: false
-        }
-
-        case 'SEND_STOW_ANGLES_REQUEST':
-        return {
-            ...state,
-            sendingStowAngles: true
         }
 
         case 'SEND_STOW_ANGLES_FAILURE':

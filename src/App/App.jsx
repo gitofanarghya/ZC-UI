@@ -3,11 +3,11 @@ import { NavBar } from '../NavBar/NavBar'
 import {Dashboard} from '../Dashboard/Dashboard'
 import { RowController }  from '../RowController/RowController'
 import { ZoneController } from '../ZoneController/ZoneController'
-import Sensors from '../Sensors/Sensors'
+import { Sensors } from '../Sensors/Sensors'
 import { About } from '../About/About'
 import { connect } from 'react-redux'
 import { appService } from './app.services';
-import { Snackbar } from '@material-ui/core';
+import { Snackbar, DialogActions, DialogTitle, Dialog, DialogContent, Button, DialogContentText, Slide } from '@material-ui/core';
 import { SnackbarContentWrapper } from '../util/SnackbarContentWrapper';
 import {withStyles} from '@material-ui/core/styles'
 import socketIOClient from "socket.io-client";
@@ -16,6 +16,9 @@ import { store } from '../util/store'
 const styles = theme => ({
     root: {
         height: '100%'
+    },
+    topCenter: {
+        top: 75
     }
 })
 
@@ -23,6 +26,7 @@ const Initializing = () => <div style={{height: '100%', width: '100%', display: 
 
 class App extends React.Component {
     queue = [];
+    timer = null
 
     state = {
         open: false,
@@ -47,6 +51,10 @@ class App extends React.Component {
         io.on('ui/rover/stowangles', data => {
             const json = JSON.parse(data)
             this.props.received('ui/rover/stowangles', json)
+        })
+        io.on('ui/rover/response', data => {
+            const json = JSON.parse(data)
+            this.props.received('ui/rover/response', json)
         })
     }
 
@@ -86,8 +94,12 @@ class App extends React.Component {
     getTime = (continueInterval = true) => {
         this.props.getTime()
         if(continueInterval) {
-            setTimeout(this.getTime, 60000)
+            this.timer = setTimeout(this.getTime, 60000)
         }
+    }
+
+    componentWillUnmount = () => {
+        clearTimeout(this.timer)
     }
 
     render() {
@@ -105,20 +117,40 @@ class App extends React.Component {
                     </NavBar>
                     <Snackbar
                         anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
+                            vertical: 'top',
+                            horizontal: 'center',
                         }}
                         open={this.state.open}
-                        autoHideDuration={3000}
+                        //autoHideDuration={3000}
                         onClose={this.handleClose}
                         onExited={this.handleExited}
-                        >
+                        classes={{anchorOriginTopCenter: classes.topCenter}}
+                    >
                         <SnackbarContentWrapper
                             onClose={this.handleClose}
                             variant={this.state.alert === null ? 'info' : this.state.alert.type}
                             message={this.state.alert === null ? '' : this.state.alert.message}
                         />
                     </Snackbar>
+                    {/* <Dialog
+                        open={this.state.open}
+                        onClose={this.handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        style={{ minWidth: 300 }}
+                    >
+                        <DialogTitle id="alert-dialog-title" style={{color:'white', background: this.state.alert !== null ? this.state.alert.type==='success' ? 'green' : this.state.alert.type === 'warning' ? 'orange' : 'red' : 'blue'}}>{this.state.alert === null ? 'info' : this.state.alert.type}</DialogTitle>
+                        <DialogContent style={{color:'white', background: this.state.alert !== null ? this.state.alert.type==='success' ? 'green' : this.state.alert.type === 'warning' ? 'orange' : 'red' : 'blue'}}>
+                        <DialogContentText id="alert-dialog-description" style={{color:'white'}}>
+                            {this.state.alert === null ? '' : this.state.alert.message}
+                        </DialogContentText>
+                        </DialogContent>
+                        <DialogActions style={{color:'white', background: this.state.alert !== null ? this.state.alert.type==='success' ? 'green' : this.state.alert.type === 'warning' ? 'orange' : 'red' : 'blue'}}>
+                        <Button onClick={this.handleClose} color="primary" variant='contained'>
+                            Close
+                        </Button>
+                        </DialogActions>
+                    </Dialog> */}
                 </div>
         )
     }

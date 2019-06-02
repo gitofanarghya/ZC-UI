@@ -22,8 +22,28 @@ const NoCurrentTrackerInfo = () =>
 
 class TrackerDetails extends React.Component {
 
+    timer = null
+
     state = {
 
+    }
+
+    componentDidMount = () => {
+        this.refresh()
+    }
+
+    componentWillReceiveProps = (nextProps) => {
+        if(nextProps.currentTracker !== this.props.currentTracker) {
+            this.props.getCurrentTrackerInfo(nextProps.currentTracker)
+        }
+    }
+
+    refresh = (c = true) => {
+        this.props.getCurrentTrackerInfo(this.props.currentTracker)
+
+        if(c) {
+            this.timer = setTimeout(this.refresh, 30000)
+        }
     }
 
     render() {
@@ -171,11 +191,12 @@ class TrackerDetails extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { currentTrackerInfo, timeZone } = state.app
+    const { currentTrackerInfo, timeZone, currentTracker } = state.app
 
     return {
         currentTrackerInfo,
-        timeZone
+        timeZone,
+        currentTracker
     }
 }
 

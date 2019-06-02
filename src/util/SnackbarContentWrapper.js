@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -73,13 +72,5 @@ function MySnackbarContent(props) {
     />
   );
 }
-
-MySnackbarContent.propTypes = {
-  classes: PropTypes.object.isRequired,
-  className: PropTypes.string,
-  message: PropTypes.node,
-  onClose: PropTypes.func,
-  variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
-};
 
 export const SnackbarContentWrapper = withStyles(styles1)(MySnackbarContent);

@@ -3,7 +3,6 @@ export const appService = {
     upload,
     selectSensor,
     uploadKey,
-    getSensors,
     setWindAddress,
     getWindAddress,
     caliberate,
@@ -29,14 +28,86 @@ export const appService = {
     sendSPAParameters,
     sendStowAngles,
     getSPAParameters,
-    getStowAngles
+    getStowAngles,
+    getSensors,
+    addSensor,
+    removeSensor,
+    enableSensor,
+    disableSensor
 };
 /* const hostName = 'http://159.89.169.50:4000'; */
 const hostName = `http://${window.location.hostname}:5000`;
 
 const hostName2 = `http://${window.location.hostname}:5001`; 
 
+function disableSensor(type, model) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            type: type, 
+            model: model
+        })
+    }
 
+    return fetch(`${hostName}/sensors/disable`, requestOptions)
+        .then(handleResponse)
+}
+
+function enableSensor(type, model) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            type: type, 
+            model: model
+        })
+    }
+
+    return fetch(`${hostName}/sensors/enable`, requestOptions)
+        .then(handleResponse)
+}
+
+function removeSensor(model, type) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            type: type, 
+            model: model
+        })
+    }
+
+    return fetch(`${hostName}/sensors/remove`, requestOptions)
+        .then(handleResponse)
+}
+
+function addSensor(port, type, model, samplingPeriod) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            port: port, 
+            type: type, 
+            samplingPeriod: samplingPeriod,
+            model: model
+        })
+    }
+
+    return fetch(`${hostName}/sensors/setParams`, requestOptions)
+        .then(handleResponse)
+}
+
+function getSensors() {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors',
+        body: null
+    }
+
+    return fetch(`${hostName}/sensors/getParams`, requestOptions)
+        .then(handleResponse)
+}
 
 function getStowAngles(DID) {
     const requestOptions = {
@@ -227,17 +298,6 @@ function getWindAddress() {
     };
 
     return fetch(`${hostName}/get/windSensorSettings`, requestOptions)
-        .then(handleResponse)
-}
-
-function getSensors() {
-    const requestOptions = {
-        method: "GET",
-        mode: 'cors',
-        body: null
-    };
-
-    return fetch(`${hostName}/get/sensors`, requestOptions)
         .then(handleResponse)
 }
 

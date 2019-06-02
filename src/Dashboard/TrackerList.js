@@ -7,24 +7,21 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { connect } from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
-import { appService } from '../App/app.services';
 
 const styles = theme => ({
     root: {
         height: '100%', width: '100%', padding: 24
+    },
+    selected: {
+        backgroundColor: '#54aab3 !important',
+        color: 'white'
     }
 })
 
 class TrackerList extends React.Component {
 
-    componentDidMount = () => {
-        if(this.props.commissioningData) {
-            this.props.getCurrentTrackerInfo(this.props.commissioningData[0].trackerID)
-        }
-    }
-
     render() {
-        const {classes, commissioningData} = this.props
+        const {classes, commissioningData, currentTracker} = this.props
 
         return (
             <Fragment>
@@ -44,10 +41,12 @@ class TrackerList extends React.Component {
                                 return (
                                 <TableRow
                                     hover
-                                    //className={classNames(n.trackerID === selectedTrackerID ? classes.selected : classes.row, classes.tableRow)}
+                                    //className={[n.trackerID === currentTracker ? classes.selected : classes.row, classes.tableRow]}
                                     key={n.trackerID}
-                                    onClick={() => this.props.getCurrentTrackerInfo(n.trackerID)}
+                                    onClick={() => this.props.setCurrentTracker(n.trackerID)}
                                     style={{cursor: 'pointer'}}
+                                    selected={n.trackerID === currentTracker}
+                                    classes={{selected: classes.selected}}
                                 >
                                     <TableCell>
                                         {n.trackerID}
@@ -65,22 +64,17 @@ class TrackerList extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { commissioningData } = state.app
+    const { commissioningData, currentTracker } = state.app
 
     return {
-        commissioningData
+        commissioningData,
+        currentTracker
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    getCurrentTrackerInfo : (trackerID) => {
-        dispatch({type: 'GET_CURRENT_TRACKER_INFO_REQUEST'})
-        appService.getCurrentTrackerInfo(trackerID)
-            .then(json => {
-                dispatch({type: 'GET_CURRENT_TRACKER_INFO_SUCCESS', json})
-            }, error => {
-                dispatch({type: 'GET_CURRENT_TRACKER_INFO_FAILURE'})
-            })
+    setCurrentTracker: (trackerID) => {
+        dispatch({type: 'SET_CURRENT_TRACKER', trackerID})
     }
 })
 
