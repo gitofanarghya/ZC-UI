@@ -191,7 +191,7 @@ class Sensors extends React.Component {
                         </TableRow>
                     ))}
                     </TableBody>
-                </Table>{this.props.sensors.length > 0 &&
+                </Table>{sensors && sensors.length > 0 &&
                 <Grid item style={{textAlign: 'end'}}>
                     <Button color='primary' variant='contained' disabled={this.state.selectedSensors.length === 0} className={classes.buttons} onClick={() => this.removeSensor()}>Remove</Button>
                 </Grid>}
