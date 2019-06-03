@@ -47,7 +47,7 @@ class Sensors extends React.Component {
     }
 
     componentWillReceiveProps = (nextProps) => {
-        if(nextProps.sensors !== this.props.sensors && nextProps.sensors.length !== 0) {
+        if(nextProps.sensors !== this.props.sensors && nextProps.sensors !== undefined) {
             this.setState({...this.state, enabled: [...nextProps.sensors.filter(s => s.enabled === true)]})
         }
     }
