@@ -84,6 +84,10 @@ export function app(state, action) {
                 ...state,
                 responseQueue: [...state.responseQueue, action.json]
             }
+        } else {
+            return {
+                ...state
+            }
         }
         
 
