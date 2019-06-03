@@ -39,6 +39,12 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
+        case 'time':
+        return {
+            ...state,
+            time: action.json.time
+        }
+
         case 'SET_CURRENT_TRACKER':
         return {
             ...state,
@@ -194,12 +200,6 @@ export function app(state, action) {
             }
         }
 
-        case 'GET_TIME_SUCCESS':
-        return {
-            ...state,
-            time: action.json.message
-        }
-
         case 'SCAN':
         return {
             ...state,
@@ -305,9 +305,11 @@ export function app(state, action) {
         }
 
         case 'ui/rover/spa':
+        let DID = action.json.DID
+        let newSPAParameters = {...state.SPAParameters, [DID]: action.json}
         return {
             ...state,
-            SPAParameters: action.json,
+            SPAParameters: newSPAParameters,
             gettingSPAParameters: false
         }
 

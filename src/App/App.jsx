@@ -35,7 +35,6 @@ class App extends React.Component {
 
     componentDidMount = () => {
         this.props.init()
-        this.getTime()
         const io = socketIOClient(`http://${window.location.hostname}:8080`);
         io.on('connect', () => {
             console.log('connected')
@@ -55,6 +54,10 @@ class App extends React.Component {
         io.on('ui/rover/response', data => {
             const json = JSON.parse(data)
             this.props.received('ui/rover/response', json)
+        })
+        io.on('time', data => {
+            const json = JSON.parse(data)
+            this.props.received('time', json)
         })
     }
 
@@ -89,18 +92,6 @@ class App extends React.Component {
     handleExited = () => {
         this.processQueue();
     };
-
-    
-    getTime = (continueInterval = true) => {
-        this.props.getTime()
-        if(continueInterval) {
-            this.timer = setTimeout(this.getTime, 60000)
-        }
-    }
-
-    componentWillUnmount = () => {
-        clearTimeout(this.timer)
-    }
 
     render() {
         const {classes} = this.props

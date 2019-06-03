@@ -70,23 +70,25 @@ class EditRowController extends React.Component {
 
     componentWillReceiveProps = (nextProps) => {
         if(nextProps.SPAParameters !== this.props.SPAParameters) {
-            const values = nextProps.SPAParameters.VALUES.split(',')
-            this.setState({
-                Lattitude: values[0],
-                Longitude: values[1],
-                Altitude: values[2],
-                TrackingLimitEast: values[3],
-                TrackingLimitWest: values[4],
-                RowWidth: values[5],
-                RowPitch: values[6],
-                TrackingResolution: values[7],
-                AzimuthDeviation: values[8],
-                AltitudeofTrackerontheEast: values[9],
-                AltitudeofTrackerontheWest: values[10],
-                EarlyStartMinutes: values[11],
-                LateFinishMinutes: values[12],
-                backTracking: values[14]
-            })
+            if(nextProps.SPAParameters[this.props.editedTrackers[0].deviceID]) {
+                const values = nextProps.SPAParameters[this.props.editedTrackers[0].deviceID].VALUES.split(',')
+                this.setState({
+                    Lattitude: values[0],
+                    Longitude: values[1],
+                    Altitude: values[2],
+                    TrackingLimitEast: values[3],
+                    TrackingLimitWest: values[4],
+                    RowWidth: values[5],
+                    RowPitch: values[6],
+                    TrackingResolution: values[7],
+                    AzimuthDeviation: values[8],
+                    AltitudeofTrackerontheEast: values[9],
+                    AltitudeofTrackerontheWest: values[10],
+                    EarlyStartMinutes: values[11],
+                    LateFinishMinutes: values[12],
+                    backTracking: values[14]
+                })
+            }
         }
         if(nextProps.stowAngles !== this.props.stowAngles) {
             const values = nextProps.stowAngles.VALUES.split(',')

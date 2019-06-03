@@ -107,10 +107,10 @@ class Sensors extends React.Component {
         if(this.state.which === 'edit') {
             this.props.softRemoveSensor(this.state.selectedSensors)
             this.props.addSensor(this.state.port, this.state.type, this.state.model, this.state.samplingPeriod)
-            //this.props.addDriverFile(this.state.driverFile)   
+            this.props.uploadDriver(this.state.driverFile, this.state.type, this.state.model)   
         } else {
             this.props.addSensor(this.state.port, this.state.type, this.state.model, this.state.samplingPeriod)
-            //this.props.addDriverFile(this.state.driverFile)
+            this.props.uploadDriver(this.state.driverFile, this.state.type, this.state.model)
         }
             
         
@@ -394,6 +394,15 @@ const mapDispatchToProps = (dispatch) => ({
                     }) 
             }, error => {
                 dispatch({type: 'DISABLE_SENSOR_FAILURE'})
+            })
+    },
+    uploadDriver: (file, type, model) => {
+        dispatch({type: 'UPLOAD_DRIVER_FILE_REQUEST'})
+        appService.uploadDriver(file, type, model)
+            .then(json => {
+                dispatch({type: 'UPLOAD_DRIVER_FILE_SUCCESS'})
+            }, error => {
+                dispatch({type: 'UPLOAD_DRIVER_FILE_FAILURE'})
             })
     }
 })

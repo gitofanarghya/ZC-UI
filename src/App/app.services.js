@@ -1,6 +1,6 @@
 export const appService = {
     setWifiInfo,
-    upload,
+    uploadDriver,
     selectSensor,
     uploadKey,
     setWindAddress,
@@ -35,8 +35,8 @@ export const appService = {
     enableSensor,
     disableSensor
 };
-/* const hostName = 'http://159.89.169.50:4000'; */
-const hostName = `http://${window.location.hostname}:5000`;
+const hostName = 'http://159.89.169.50:4000'; 
+/*const hostName = `http://${window.location.hostname}:5000`;*/
 
 const hostName2 = `http://${window.location.hostname}:5001`; 
 
@@ -234,7 +234,7 @@ function setWifiInfo(ssid, pass) {
         .then(handleResponse)
 }
 
-function upload(file) {
+function uploadDriver(file, type, model) {
     var data = new FormData()
     data.append('file', file)
     const requestOptions = {
@@ -243,7 +243,7 @@ function upload(file) {
         body: data
     };
 
-    return fetch(`${hostName}/loadStaticData`, requestOptions)
+    return fetch(`${hostName}/sensors/addDriver?type=${type}&model=${model}`, requestOptions)
         .then(handleResponse)
 }
 
