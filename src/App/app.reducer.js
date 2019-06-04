@@ -112,21 +112,23 @@ export function app(state, action) {
         }
 
         case 'REMOVE_SENSOR_SUCCESS':
+                alert('Removed Sensor Successfully')
         return {
-            ...state,
+            ...state,/* 
             alert: {
                 type: 'success',
                 message: 'Removed Sensor Successfully'
-            }
+            } */
         }
 
         case 'ADD_SENSORS_SUCCESS':
+        alert('Added Sensor Successfully')
         return {
-            ...state,
+            ...state,/* 
             alert: {
                 type: 'success',
                 message: 'Added Sensor Successfully'
-            }
+            } */
         }
         
         case 'CHANGE_PAGE':
@@ -172,11 +174,7 @@ export function app(state, action) {
                 ...state,
                 fetchingCommissioningData: false,
                 currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
-                commissioningData: null,
-                alert: {
-                    type: 'warning',
-                    message: 'Please add trackers'
-                }
+                commissioningData: null
             }
         } else {
             return {
@@ -189,14 +187,15 @@ export function app(state, action) {
         }
 
         case 'GET_COMMISSIONING_DATA_FAILURE':
+        alert('Error loading commissioning data')
         return {
             ...state,
             fetchingCommissioningData: false,
-            currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
+            currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,/* 
             alert: {
                 type: 'error',
                 message: 'Error loading commissioning data'
-            }
+            } */
         }
 
         case 'GET_TIMEZONE_SUCCESS':
@@ -210,12 +209,13 @@ export function app(state, action) {
         }
 
         case 'GET_TIMEZONE_FAILURE':
+        alert('Error getting timezone')
         return {
-            ...state,
+            ...state,/* 
             alert: {
                 type: 'error',
                 message: 'Error getting timezone'
-            }
+            } */
         }
 
         case 'SCAN':
@@ -237,31 +237,34 @@ export function app(state, action) {
         }
 
         case 'GET_CURRENT_TRACKER_INFO_FAILURE':
+        alert('Error getting current tracker info')
         return {
-            ...state,
+            ...state,/* 
             alert: {
                 type: 'error',
                 message: 'Error getting current tracker info'
-            }
+            } */
         }
 
         case 'DISCOVER_SUCCESS':
+        alert('Started Scanning')
         return {
             ...state,
-            xbeeResponse: [],
+            xbeeResponse: [],/* 
             alert: {
                 type: 'success',
                 message: 'Started Scanning'
-            }
+            } */
         }
 
         case 'DISCOVER_FAILURE':
+        alert('Error Starting Scan')
         return {
-            ...state,
+            ...state,/* 
             alert: {
                 type: 'error',
                 message: 'Error starting scan'
-            }
+            } */
         }
 
         case 'ui/rover/scan':
@@ -289,25 +292,27 @@ export function app(state, action) {
         }
 
         case 'ADD_TRACKERS_SUCCESS':
+        alert('Tracker(s) added')
         const newXbeeResponse = difference(state.xbeeResponse, action.devices)
         return {
             ...state,
             xbeeResponse: newXbeeResponse,
-            addingTrackers: false,
+            addingTrackers: false,/* 
             alert: {
                 type: 'success',
                 message: 'Tracker(s) added'
-            }
+            } */
         }
 
         case 'ADD_TRACKERS_FAILURE':
+        alert('Error adding trackers')
         return {
             ...state,
-            addingTrackers: false,
+            addingTrackers: false,/* 
             alert: {
                 type: 'error',
                 message: 'Error adding trackers'
-            }
+            } */
         }
 
         case 'SET_EDITED_TRACKERS':
@@ -345,13 +350,14 @@ export function app(state, action) {
         }
 
         case 'GET_STOW_ANGLES_FAILURE':
+        alert('Error getting stow angles')
         return {
             ...state,
-            gettingStowAngles: false,
+            gettingStowAngles: false,/* 
             alert: {
                 type: 'error',
                 message: 'Error getting stow angles'
-            }
+            } */
         }
 
         case 'GET_SPA_PARAMETERS_REQUEST':
@@ -361,23 +367,25 @@ export function app(state, action) {
         }
 
         case 'GET_SPA_PARAMETERS_FAILURE':
+        alert('Error getting SPA parameters')
         return {
             ...state,
-            gettingSPAParameters: false,
+            gettingSPAParameters: false,/* 
             alert: {
                 type: 'error',
                 message: 'Error getting SPA parameters'
-            }
+            } */
         }
 
         case 'SEND_SPA_PARAMETERS_FAILURE':
+        alert('Error setting SPA parameters')
         return {
             ...state,
-            sendingSPAParameters: false,
+            sendingSPAParameters: false,/* 
             alert: {
                 type: 'error',
                 message: 'Error setting SPA parameters'
-            }
+            } */
         }
 
         case 'SEND_SPA_PARAMETERS_SUCCESS':
@@ -387,13 +395,14 @@ export function app(state, action) {
         }
 
         case 'SEND_STOW_ANGLES_FAILURE':
+        alert('Error setting stow angles')
         return {
             ...state,
-            sendingStowAngles: false,
+            sendingStowAngles: false,/* 
             alert: {
                 type: 'error',
                 message: 'Error setting stow angles'
-            }
+            } */
         }
 
         case 'SEND_STOW_ANGLES_SUCCESS':
