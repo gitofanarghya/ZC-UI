@@ -33,12 +33,24 @@ export const appService = {
     addSensor,
     removeSensor,
     enableSensor,
-    disableSensor
+    disableSensor,
+    scanWifi
 };
 const hostName = 'http://159.89.169.50:4000'; 
 /*const hostName = `http://${window.location.hostname}:5000`;*/
 
 const hostName2 = `http://${window.location.hostname}:5001`; 
+
+function scanWifi() {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors',
+        body: null
+    }
+
+    return fetch(`${hostName}/scanWifi`, requestOptions)
+        .then(handleResponse)
+}
 
 function disableSensor(type, model) {
     const requestOptions = {
@@ -220,13 +232,14 @@ function handleResponse(response) {
 }
 
 
-function setWifiInfo(ssid, pass) {
+function setWifiInfo(ssid, pass, staticIP) {
     const requestOptions = {
         method: "POST",
         mode: 'cors',
         body: JSON.stringify({
             "ssid": ssid,
-            "password": pass
+            "password": pass,
+            "staticIP": staticIP
         })
     };
 

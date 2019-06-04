@@ -51,13 +51,17 @@ class App extends React.Component {
             const json = JSON.parse(data)
             this.props.received('ui/rover/stowangles', json)
         })
-        io.on('ui/rover/response', data => {
+        io.on('ui/rover/response/multiple', data => {
             const json = JSON.parse(data)
-            this.props.received('ui/rover/response', json)
+            this.props.received('ui/rover/response/multiple', json)
         })
         io.on('time', data => {
             const json = JSON.parse(data)
             this.props.received('time', json)
+        })
+        io.on('sensorReadings/wind', data => {
+            const json = JSON.parse(data)
+            this.props.received('sensorReadings/wind', json)
         })
     }
 

@@ -21,15 +21,17 @@ const initialState = {
     addingTrackers: false,
     sensors: [],
     responseQueue: [],
-    listen: false
+    listen: false,
+    windSense: 0.0,
+    wifiList: []
 }
 
 const difference = (a1, a2) => {
     var result = [];
     for (var i = 0; i < a1.length; i++) {
-    if (a2.indexOf(a1[i]) === -1) {
-        result.push(a1[i]);
-    }
+        if (a2.indexOf(a1[i]) === -1) {
+            result.push(a1[i]);
+        }
     }
     return result;
 }
@@ -39,6 +41,18 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
+        case 'SCAN_WIFI_SUCCESS':
+        return {
+            ...state,
+            wifiList: action.json.Result
+        }
+
+        case 'sensorReadings/wind':
+        return {
+            ...state,
+            windSense: action.json.reading
+        }
+
         case 'time':
         return {
             ...state,
@@ -71,7 +85,7 @@ export function app(state, action) {
             responseQueue: []
         }
 
-        case 'ui/rover/response':
+        case 'ui/rover/response/multiple':
         if(state.listen) {
             if(state.editedTrackers.length === state.responseQueue.length + 1) {
                 return {

@@ -18,10 +18,11 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import Time from '@material-ui/icons/AccessTime';
+import Toys from '@material-ui/icons/Toys';
 import { Chip } from '@material-ui/core';
 
 
-const drawerWidth = 240;
+const drawerWidth = 190;
 
 const styles = theme => ({
   root: {
@@ -70,13 +71,19 @@ class ResponsiveDrawer extends React.Component {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
+  
+  checkTime = (i) => {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+  }
+
   render() {
     const { classes, theme, children } = this.props;
 
     const drawer = (
       <div>
         <div className={classes.toolbar} >
-            <img src='img/Voyager logo - large- no bg.png' height='60px' width='70%' alt=''></img>
+            <img src='img/voyager-logo-no bg.png' height='60px' width='90%' style={{marginLeft: '2.5%', marginRight: '2.5%'}} alt=''></img>
         </div>
         <Divider />
         <List>
@@ -87,8 +94,9 @@ class ResponsiveDrawer extends React.Component {
                 onClick={() => this.props.changePage(text)}
                 selected={this.props.currentPage === text}
                 classes={{selected: classes.selected}}
-            >
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                disabled={text === 'About'}
+            >{/* 
+              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
               <ListItemText disableTypography primary={text} />
             </ListItem>
           ))}
@@ -114,9 +122,14 @@ class ResponsiveDrawer extends React.Component {
               Voyager Zone Controller
             </Typography>
             <Chip
-              icon={<Time />}
+              icon={<Toys />}
               style={{marginLeft: 'auto', backgroundColor: 'white'}}
-              label={`${new Date(new Date(Number(this.props.time)).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getHours()} : ${new Date(new Date(Number(this.props.time)).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getMinutes()}`}
+              label={this.props.windSense.toFixed(2)}
+            />
+            <Chip
+              icon={<Time />}
+              style={{marginLeft: 10, backgroundColor: 'white'}}
+              label={`${this.checkTime(new Date(new Date(Number(this.props.time)).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getHours())} : ${this.checkTime(new Date(new Date(Number(this.props.time)).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getMinutes())}`}
             />
           </Toolbar>
         </AppBar>
@@ -162,12 +175,13 @@ ResponsiveDrawer.propTypes = {
 
  
 function mapStateToProps(state) {
-    const { currentPage, time, timeZone } = state.app;
+    const { currentPage, time, timeZone, windSense } = state.app;
     
     return {
         currentPage,
         time,
-        timeZone
+        timeZone,
+        windSense
     };
 }
 

@@ -30,11 +30,11 @@ client.on('connect', function () {
       console.log("\x1b[31m error subscribing to mqtt topic ui/rover/stowangles")
     }
   })
-  client.subscribe('ui/rover/response', function (err) {
+  client.subscribe('ui/rover/response/multiple', function (err) {
     if(!err) {
-      console.log("\x1B[32m subscribed to mqtt topic ui/rover/response")
+      console.log("\x1B[32m subscribed to mqtt topic ui/rover/response/multiple")
     } else {
-      console.log("\x1b[31m error subscribing to mqtt topic ui/rover/response")
+      console.log("\x1b[31m error subscribing to mqtt topic ui/rover/response/multiple")
     }
   })
   client.subscribe('time', function (err) {
@@ -44,11 +44,11 @@ client.on('connect', function () {
       console.log("\x1b[31m error subscribing to mqtt topic time")
     }
   })
-  client.subscribe('sensorReading/wind', function (err) {
+  client.subscribe('sensorReadings/wind', function (err) {
     if(!err) {
-      console.log("\x1B[32m subscribed to mqtt topic sensorReading/wind")
+      console.log("\x1B[32m subscribed to mqtt topic sensorReadings/wind")
     } else {
-      console.log("\x1b[31m error subscribing to mqtt topic sensorReading/wind")
+      console.log("\x1b[31m error subscribing to mqtt topic sensorReadings/wind")
     }
   })
 })

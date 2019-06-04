@@ -1,11 +1,13 @@
 import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, TextField, Typography, FormControlLabel, FormControl, Radio, RadioGroup, Button } from '@material-ui/core';
+import { Grid, TextField, Typography, IconButton, FormControlLabel, FormControl, Radio, RadioGroup, Button, MenuItem, OutlinedInput, Select, InputLabel, CircularProgress } from '@material-ui/core';
 import { connect } from 'react-redux'
 import { appService } from '../App/app.services';
+import Refresh from '@material-ui/icons/Refresh'
 
 const styles = theme => ({
   root: {
+    minWidth: 300,
     backgroundColor: theme.palette.background.paper,
     [theme.breakpoints.up('md')]: {
         height: '660px'
@@ -22,7 +24,7 @@ const styles = theme => ({
     }
   },
   field: {
-    width: '90%',
+    flexDirection: 'row',
     [theme.breakpoints.up('md')]: {
         margin: '10px 0 0 0'
     }
@@ -35,18 +37,41 @@ const styles = theme => ({
         margin: 10,
         alignSelf: 'center'
     }
+  },
+  button: {
+      width: '10%'
+  },
+  selectWifi: {
+      width: '90%'
   }
 });
 
 class ZoneController extends React.Component {
 
     state = {
+        ssid: '',
+        password: '',
+        staticIP: ''
+    }
 
+    componentDidMount = () => {
+        this.props.scanWifi()
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            ...this.state,
+            [event.target.name]: event.target.value
+        })
+    }
+
+    setWifiInfo = () => {
+        this.props.setWifiInfo(this.state.ssid, this.props.password, this.state.staticIP)
     }
 
 
     render() {
-        const { classes } = this.props
+        const { classes, wifiList } = this.props
         return (
             <Fragment>
                     <Grid item xs={12} container direction='column' justify='center' alignItems='center' className={classes.root}>
@@ -54,37 +79,47 @@ class ZoneController extends React.Component {
                         <Typography variant='h6' style={{textAlign: 'center'}}>
                             Network
                         </Typography>
+                        <FormControl variant="outlined" className={classes.field} fullWidth>
+                            <InputLabel htmlFor="ssid">
+                                SSID
+                            </InputLabel>
+                            <Select
+                                value={this.state.ssid}
+                                onChange={this.handleChange}
+                                autoWidth
+                                className={classes.selectWifi}
+                                input={<OutlinedInput labelWidth={50} name="ssid" id="ssid" />}
+                            >
+                                {
+                                    wifiList.length === 0 ? <MenuItem value={'none'}> <CircularProgress /></MenuItem> : wifiList.map(w => <MenuItem key={w} value={w}>{w}</MenuItem>)
+                                }
+                                
+                            </Select>
+                            <IconButton className={classes.button} onClick={() => this.props.scanWifi()} aria-label="Refresh Wifi list">
+                                <Refresh />
+                            </IconButton>
+                        </FormControl>
                         <TextField
                             className={classes.field}
-                            id='ssid'
-                            label='SSID'
-                            value={this.state.ssid}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                            className={classes.field}
-                            id='password'
+                            fullWidth
+                            name='password'
                             label='Password'
                             value={this.state.password}
                             onChange={this.handleChange}
-                            margin="normal"
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
                         />
                         <TextField
                             className={classes.field}
-                            id='staticIP'
+                            fullWidth
+                            name='staticIP'
                             label='Static IP'
                             value={this.state.staticIP}
                             onChange={this.handleChange}
-                            margin="normal"
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
                         />
-                        <Button variant='contained' color='primary' className={classes.saveButton}>Save</Button>
+                        <Button variant='contained' color='primary' onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
                         </div>
                         <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
@@ -92,6 +127,7 @@ class ZoneController extends React.Component {
                         </Typography>
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='heartbeatInterval'
                             label='Heart Beat Interval'
                             value={this.state.password}
@@ -102,6 +138,7 @@ class ZoneController extends React.Component {
                         />
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='heartbeatMaxMessages'
                             label='Heart Beat Max Messages'
                             value={this.state.password}
@@ -118,6 +155,7 @@ class ZoneController extends React.Component {
                         </Typography>
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='bqKey'
                             label='Big Query key'
                             value={this.state.bqKey}
@@ -134,6 +172,7 @@ class ZoneController extends React.Component {
                         </Typography>
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='panID'
                             label='PAN ID'
                             value={this.state.panID}
@@ -150,6 +189,7 @@ class ZoneController extends React.Component {
                         </Typography>
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='maxWindSpeed'
                             label='Max Wind Speed'
                             value={this.state.maxWindSpeed}
@@ -160,6 +200,7 @@ class ZoneController extends React.Component {
                         />
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='meanWindSpeed'
                             label='Mean Wind Speed'
                             value={this.state.meanWindSpeed}
@@ -170,6 +211,7 @@ class ZoneController extends React.Component {
                         />
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='windSpeedTimer'
                             label='Wind Speed Timer'
                             value={this.state.windSpeedTimer}
@@ -186,6 +228,7 @@ class ZoneController extends React.Component {
                         </Typography>
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='maxFloodLevel'
                             label='Max FLood Level'
                             value={this.state.maxFloodLevel}
@@ -196,6 +239,7 @@ class ZoneController extends React.Component {
                         />
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='floodLevelTimer'
                             label='Flood level Timer'
                             value={this.state.floodLevelTimer}
@@ -212,6 +256,7 @@ class ZoneController extends React.Component {
                         </Typography>
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='maxSnowLevel'
                             label='Max Snow Level'
                             value={this.state.maxSnowLevel}
@@ -222,6 +267,7 @@ class ZoneController extends React.Component {
                         />
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='snowLevelTimer'
                             label='Snow level Timer'
                             value={this.state.snowLevelTimer}
@@ -238,6 +284,7 @@ class ZoneController extends React.Component {
                         </Typography>
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='maxRainLevel'
                             label='Max Rain Level'
                             value={this.state.maxRainLevel}
@@ -248,6 +295,7 @@ class ZoneController extends React.Component {
                         />
                         <TextField
                             className={classes.field}
+                            fullWidth
                             id='rainLevelTimer'
                             label='Rain level Timer'
                             value={this.state.rainLevelTimer}
@@ -281,17 +329,31 @@ class ZoneController extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { commissioningData } = state.app
+    const { wifiList } = state.app
 
     return {
-        commissioningData
+        wifiList
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
     setWifiInfo: (ssid, pass, staticIP) => {
-        dispatch({type: 'SET_WIFI_INFO'}) 
-        appService.setWifiInfo(ssid, pass)
+        dispatch({type: 'SET_WIFI_INFO_REQUEST'}) 
+        appService.setWifiInfo(ssid, pass, staticIP)
+            .then(json => {
+                dispatch({type: 'SET_WIFI_INFO_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'SET_WIFI_INFO_FAILURE'})
+            })
+    },
+    scanWifi: () => {
+        dispatch({type: 'SCAN_WIFI_REQUEST'})
+        appService.scanWifi()
+            .then(json => {
+                dispatch({type: 'SCAN_WIFI_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'SCAN_WIFI_FAILURE'})
+            })
     }
 })
 
