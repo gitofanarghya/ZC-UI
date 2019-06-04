@@ -23,7 +23,11 @@ const initialState = {
     responseQueue: [],
     listen: false,
     windSense: 0.0,
-    wifiList: []
+    wifiList: [],
+    sensorEvents: {
+        wind: false
+    },
+    roverStatus: {}
 }
 
 const difference = (a1, a2) => {
@@ -41,6 +45,12 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
+        case 'changeEvent/rover':
+        return {
+            ...state,
+            roverStatus: {...state.roverStatus, [action.json.DID]: action.json.state}
+        }
+
         case 'SCAN_WIFI_SUCCESS':
         return {
             ...state,
@@ -106,9 +116,14 @@ export function app(state, action) {
         
 
         case 'GET_SENSORS_SUCCESS':
+        let temp = {}
+        action.json.Result.map(s => {
+            temp[s.type] = s.enabled
+        })
         return {
             ...state,
-            sensors: action.json.Result
+            sensors: action.json.Result,
+            sensorEvents: {...state.sensorEvents, ...temp}
         }
 
         case 'REMOVE_SENSOR_SUCCESS':
@@ -177,12 +192,17 @@ export function app(state, action) {
                 commissioningData: null
             }
         } else {
+            let newRoverStatus = {...state.roverStatus}
+            action.json.staticData.map(r => {
+                newRoverStatus[r.deviceID] = 'online'
+            })
             return {
                 ...state,
                 fetchingCommissioningData: false,
                 currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
                 commissioningData: action.json.staticData,
-                currentTracker: action.json.staticData[0].trackerID
+                currentTracker: action.json.staticData[0].trackerID,
+                roverStatus: newRoverStatus
             }
         }
 
@@ -328,18 +348,16 @@ export function app(state, action) {
         }
 
         case 'ui/rover/spa':
-        let DID = action.json.DID
-        let newSPAParameters = {...state.SPAParameters, [DID]: action.json}
         return {
             ...state,
-            SPAParameters: newSPAParameters,
+            SPAParameters: {...state.SPAParameters, [action.json.DID]: action.json},
             gettingSPAParameters: false
         }
 
         case 'ui/rover/stowangles':
         return {
             ...state,
-            stowAngles: action.json,
+            stowAngles: {...state.stowAngles, [action.json.DID]: action.json},
             gettingStowAngles: false
         }
 

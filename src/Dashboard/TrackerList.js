@@ -13,15 +13,14 @@ const styles = theme => ({
         height: '100%', width: '100%', padding: 24
     },
     selected: {
-        backgroundColor: '#54aab3 !important',
-        color: 'white'
+        backgroundColor: '#54aab3 !important'
     }
 })
 
 class TrackerList extends React.Component {
 
     render() {
-        const {classes, commissioningData, currentTracker} = this.props
+        const {classes, commissioningData, currentTracker, roverStatus} = this.props
 
         return (
             <Fragment>
@@ -48,10 +47,12 @@ class TrackerList extends React.Component {
                                     selected={n.trackerID === currentTracker}
                                     classes={{selected: classes.selected}}
                                 >
-                                    <TableCell>
+                                    <TableCell style={n.trackerID === currentTracker ? {color: 'white'} : {}}>
                                         {n.trackerID}
                                     </TableCell>
-                                    <TableCell>Reachable</TableCell>
+                                    <TableCell style={n.trackerID === currentTracker ? {color: 'white'} : {}}>
+                                        {roverStatus[n.deviceID] === 'online' ? 'Reachable' : 'Unreachable'}
+                                    </TableCell>
                                 </TableRow>
                                 );
                             })}
@@ -64,11 +65,12 @@ class TrackerList extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { commissioningData, currentTracker } = state.app
+    const { commissioningData, currentTracker, roverStatus } = state.app
 
     return {
         commissioningData,
-        currentTracker
+        currentTracker,
+        roverStatus
     }
 }
 

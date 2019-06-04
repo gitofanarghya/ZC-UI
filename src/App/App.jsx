@@ -63,6 +63,13 @@ class App extends React.Component {
             const json = JSON.parse(data)
             this.props.received('sensorReadings/wind', json)
         })
+        io.on('changeEvent/sensor', data => {
+            this.props.getSensors()
+        })
+        io.on('changeEvent/rover', data => {
+            const json = JSON.parse(data)
+            this.props.received('changeEvent/rover', json)
+        })
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -187,14 +194,12 @@ const mapDispatchToProps = (dispatch) => ({
             }, error => {
                 dispatch({type: 'GET_TIMEZONE_FAILURE', error})
             })
-    },
-    getTime: () => {
-        dispatch({type: 'GET_TIME_REQUEST'})
-        appService.getTime()
+        dispatch({type: 'GET_SENSORS_REQUEST'})
+        appService.getSensors()
             .then(json => {
-                dispatch({type: 'GET_TIME_SUCCESS', json})
+                dispatch({type: 'GET_SENSORS_SUCCESS', json})
             }, error => {
-                dispatch({type: 'GET_TIME_FAILURE', error})
+                dispatch({type: 'GET_SENSORS_FAILURE'})
             })
     },
     clearAlert : () => {

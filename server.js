@@ -51,6 +51,20 @@ client.on('connect', function () {
       console.log("\x1b[31m error subscribing to mqtt topic sensorReadings/wind")
     }
   })
+  client.subscribe('changeEvent/sensor', function (err) {
+    if(!err) {
+      console.log("\x1B[32m subscribed to mqtt topic changeEvent/sensor")
+    } else {
+      console.log("\x1b[31m error subscribing to mqtt topic changeEvent/sensor")
+    }
+  })
+  client.subscribe('changeEvent/rover', function (err) {
+    if(!err) {
+      console.log("\x1B[32m subscribed to mqtt topic changeEvent/rover")
+    } else {
+      console.log("\x1b[31m error subscribing to mqtt topic changeEvent/rover")
+    }
+  })
 })
 
 io.on('connection', function(socket) {

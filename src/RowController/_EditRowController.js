@@ -91,14 +91,16 @@ class EditRowController extends React.Component {
             }
         }
         if(nextProps.stowAngles !== this.props.stowAngles) {
-            const values = nextProps.stowAngles.VALUES.split(',')
-            this.setState({
-                WindStowAngle: values[0],
-                SnowStowAngle: values[1],
-                NightStowAngle: values[2],
-                EmergencyStowAngle: values[3],
-                CleanStowAngle: values[4]
-            })
+            if(nextProps.stowAngles[this.props.editedTrackers[0].deviceID]) {
+                const values = nextProps.stowAngles[this.props.editedTrackers[0].deviceID].VALUES.split(',')
+                this.setState({
+                    WindStowAngle: values[0],
+                    SnowStowAngle: values[1],
+                    NightStowAngle: values[2],
+                    EmergencyStowAngle: values[3],
+                    CleanStowAngle: values[4]
+                })
+            }
         }
     }
 
