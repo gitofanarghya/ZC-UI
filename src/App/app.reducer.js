@@ -22,7 +22,10 @@ const initialState = {
     sensors: [],
     responseQueue: [],
     listen: false,
-    windSense: 0.0,
+    windSense: {
+        speed: null,
+        direction: null
+    },
     wifiList: [],
     sensorEvents: {
         wind: false
@@ -60,7 +63,7 @@ export function app(state, action) {
         case 'sensorReadings/wind':
         return {
             ...state,
-            windSense: action.json.reading
+            windSense: action.json
         }
 
         case 'time':

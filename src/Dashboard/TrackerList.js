@@ -51,7 +51,7 @@ class TrackerList extends React.Component {
                                         {n.trackerID}
                                     </TableCell>
                                     <TableCell style={n.trackerID === currentTracker ? {color: 'white'} : {}}>
-                                        {roverStatus[n.deviceID] === 'online' ? 'Reachable' : 'Unreachable'}
+                                        {roverStatus[n.deviceID]}
                                     </TableCell>
                                 </TableRow>
                                 );
