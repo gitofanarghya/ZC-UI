@@ -131,7 +131,7 @@ class ResponsiveDrawer extends React.Component {
               classes={this.props.sensorEvents.wind ? this.props.windSense.direction !== null ? {} : {icon: classes.iconSVG} : {icon: classes.iconSVG}}
             />
             <Chip
-              icon={<Toys className={this.props.sensorEvents.wind ? this.props.windSense.speed !== null ? 'rotate' : {} : {}}/>}
+              icon={<Toys className={this.props.sensorEvents.wind ? this.props.windSense.speed !== null ? this.props.windSense.speed !== 0 ? 'rotate' : {} : {}: {}}/>}
               style={this.props.sensorEvents.wind ? this.props.windSense.speed !== null ? {marginLeft: 10, backgroundColor: 'white'} : {marginLeft: 10, backgroundColor: '#ff000080', color: 'white'} : {marginLeft: 10, backgroundColor: '#ff000080', color: 'white'}}
               label={this.props.sensorEvents.wind ? this.props.windSense.speed !== null ? `${this.props.windSense.speed.toFixed(2)} mph` : 'offline' : 'offline'}
               classes={this.props.sensorEvents.wind ? this.props.windSense.speed !== null ? {} : {icon: classes.icon} : {icon: classes.icon}}

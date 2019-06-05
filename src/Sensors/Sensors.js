@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Button, Checkbox, TextField, DialogActions, DialogTitle, Dialog, DialogContent, MenuItem, OutlinedInput, InputLabel, FormControl, Select, Tooltip, Switch } from '@material-ui/core';
+import { Grid, Button, Checkbox, TextField, DialogActions, DialogTitle, Dialog, DialogContent, MenuItem, OutlinedInput, InputLabel, FormControl, Select, Tooltip, Switch, InputAdornment } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -179,7 +179,7 @@ class Sensors extends React.Component {
                             <TableCell >{row.port}</TableCell>
                             <TableCell >{row.type}</TableCell>
                             <TableCell >{row.model}</TableCell>
-                            <TableCell >{row.samplingPeriod}</TableCell>
+                            <TableCell >{row.samplingPeriod}s</TableCell>
                             <TableCell>
                                 {/* <Checkbox 
                                     checked={this.state.enabled.filter(t => t.model === row.model && t.type === row.type).length !== 0}
@@ -261,6 +261,9 @@ class Sensors extends React.Component {
                             value={this.state.samplingPeriod}
                             onChange={this.handleChange}
                             margin="dense"
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                              }}
                             variant='outlined'
                         />
                         <div style={{display: 'flex', alignItems: 'baseline'}}>
