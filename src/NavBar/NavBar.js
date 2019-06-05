@@ -17,6 +17,8 @@ import { connect } from 'react-redux';
 import Time from '@material-ui/icons/AccessTime';
 import Toys from '@material-ui/icons/Toys';
 import { Chip } from '@material-ui/core';
+import { timezones } from '../util/timeZones'
+
 
 const drawerWidth = 190;
 
@@ -139,7 +141,7 @@ class ResponsiveDrawer extends React.Component {
             <Chip
               icon={<Time />}
               style={{marginLeft: 10, backgroundColor: 'white'}}
-              label={`${this.checkTime(new Date(new Date(Number(this.props.time)).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getHours())} : ${this.checkTime(new Date(new Date(Number(this.props.time)).toLocaleString('en-US', {timeZone:  this.props.timeZone})).getMinutes())}`}
+              label={`${this.checkTime(new Date(new Date(Number(this.props.time)).toLocaleString(navigator.language, {timeZone:  this.props.timeZone})).getHours())} : ${this.checkTime(new Date(new Date(Number(this.props.time)).toLocaleString(navigator.language, {timeZone:  this.props.timeZone})).getMinutes())} ${timezones.filter(t => t.utc.indexOf(this.props.timeZone) !== -1)[0].abbr}`}
             />
           </Toolbar>
         </AppBar>
