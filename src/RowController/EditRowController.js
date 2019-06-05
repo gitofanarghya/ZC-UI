@@ -55,7 +55,7 @@ class EditRowController extends React.Component {
         this.props.changeTab({ value });
     };
     
-    render() {console.log(this.props)
+    render() {
         const { classes, currentEditTab, editedTrackers, responseQueue } = this.props;
     
         return (

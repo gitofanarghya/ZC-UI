@@ -40,35 +40,69 @@ class App extends React.Component {
             console.log('connected')
         })
         io.on('ui/rover/scan', data => {
-            const json = JSON.parse(data)
-            this.props.received('ui/rover/scan', json)
+            try {
+                const json = JSON.parse(data)
+                this.props.received('ui/rover/scan', json)
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
         })
         io.on('ui/rover/spa', data => {
-            const json = JSON.parse(data)
-            this.props.received('ui/rover/spa', json)
+            try {
+                const json = JSON.parse(data)
+                this.props.received('ui/rover/spa', json)
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
         })
         io.on('ui/rover/stowangles', data => {
-            const json = JSON.parse(data)
-            this.props.received('ui/rover/stowangles', json)
+            try {
+                const json = JSON.parse(data)
+                this.props.received('ui/rover/stowangles', json)
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
         })
         io.on('ui/rover/response/multiple', data => {
-            const json = JSON.parse(data)
-            this.props.received('ui/rover/response/multiple', json)
+            try {
+                const json = JSON.parse(data)
+                this.props.received('ui/rover/response/multiple', json)
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
         })
         io.on('time', data => {
-            const json = JSON.parse(data)
-            this.props.received('time', json)
+            try {
+                const json = JSON.parse(data)
+                this.props.received('time', json)
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
         })
         io.on('sensorReadings/wind', data => {
-            const json = JSON.parse(data)
-            this.props.received('sensorReadings/wind', json)
+            try {
+                const json = JSON.parse(data)
+                if(json.speed && json.direction) {
+                    this.props.received('sensorReadings/wind', json)
+                }
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
         })
         io.on('changeEvent/sensor', data => {
-            this.props.getSensors()
+            try {
+                if(data === '') this.props.getSensors()
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
         })
         io.on('changeEvent/rover', data => {
-            const json = JSON.parse(data)
-            this.props.received('changeEvent/rover', json)
+            try {
+                const json = JSON.parse(data)
+                this.props.received('changeEvent/rover', json)
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
         })
     }
 
@@ -202,11 +236,20 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'GET_SENSORS_FAILURE'})
             })
     },
-    clearAlert : () => {
+    clearAlert: () => {
         dispatch({type: 'CLEAR_ALERT'})
     },
     received: (topic, json) => {
         dispatch({type: topic, json})
+    },
+    getSensors: () => {
+        dispatch({type: 'GET_SENSORS_REQUEST'})
+        appService.getSensors()
+            .then(json => {
+                dispatch({type: 'GET_SENSORS_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_SENSORS_FAILURE'})
+            })
     }
 })
 
