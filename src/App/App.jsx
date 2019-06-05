@@ -82,7 +82,7 @@ class App extends React.Component {
         io.on('sensorReadings/wind', data => {
             try {
                 const json = JSON.parse(data)
-                if(json.speed && json.direction) {
+                if(typeof json.speed !== undefined && typeof json.direction !== undefined) {
                     this.props.received('sensorReadings/wind', json)
                 }
             } catch(e) {
