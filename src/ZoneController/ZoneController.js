@@ -9,8 +9,16 @@ const styles = theme => ({
   root: {
     minWidth: 300,
     backgroundColor: theme.palette.background.paper,
+    flexDirection: 'column',
     [theme.breakpoints.up('md')]: {
-        height: '1000px'
+        flexDirection: 'row'
+    },
+    marginBottom: 10
+  },
+  grid: {
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+        width: '50%'
     }
   },
   grid2: {
@@ -20,9 +28,8 @@ const styles = theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: '90%',
-    [theme.breakpoints.up('md')]: {
-        width: '30%',
-    }
+    marginRight: '5%',
+    marginLeft: '5%',
   },
   field: {
     flexDirection: 'row',
@@ -44,6 +51,11 @@ const styles = theme => ({
   },
   selectWifi: {
       width: '90%'
+  },
+  specialBorder: {
+    [theme.breakpoints.up('md')]: {
+        borderRight: '0.5px solid black'
+    }
   }
 });
 
@@ -142,340 +154,357 @@ class ZoneController extends React.Component {
         const { classes, wifiList } = this.props
         return (
             <Fragment>
-                    <Grid item xs={12} container direction='column' justify='flex-start' alignItems='center' className={classes.root}>
-                        <div className={classes.grid2}>
-                        <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Wifi Configuration
-                        </Typography>
-                        <FormControl variant="outlined" className={classes.field} fullWidth>
-                            <InputLabel htmlFor="ssid">
-                                SSID
-                            </InputLabel>
-                            <Select
-                                value={this.state.ssid}
+                    <Grid item xs={12} container justify='center' alignItems='flex-start' className={classes.root}>
+                        <Grid item className={[classes.grid, classes.specialBorder]}>
+                            <Typography variant='h5' style={{textAlign: 'left', marginLeft: '5%', marginTop: 10, marginBottom: 10}}>
+                                Zone Configuration
+                            </Typography>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{textAlign: 'center'}}>
+                                Wifi Configuration
+                            </Typography>
+                            <FormControl variant="outlined" className={classes.field} fullWidth>
+                                <InputLabel htmlFor="ssid">
+                                    SSID
+                                </InputLabel>
+                                <Select
+                                    value={this.state.ssid}
+                                    onChange={this.handleChange}
+                                    autoWidth
+                                    className={classes.selectWifi}
+                                    input={<OutlinedInput labelWidth={50} name="ssid" id="ssid" />}
+                                >
+                                    {
+                                        wifiList.length === 0 ? <MenuItem value={'none'}> <CircularProgress /></MenuItem> : wifiList.map(w => <MenuItem key={w} value={w}>{w}</MenuItem>)
+                                    }
+                                    
+                                </Select>
+                                <IconButton className={classes.button} onClick={() => this.props.scanWifi()} aria-label="Refresh Wifi list">
+                                    <Refresh />
+                                </IconButton>
+                            </FormControl>
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='password'
+                                label='Password'
+                                value={this.state.password}
                                 onChange={this.handleChange}
-                                autoWidth
-                                className={classes.selectWifi}
-                                input={<OutlinedInput labelWidth={50} name="ssid" id="ssid" />}
-                            >
-                                {
-                                    wifiList.length === 0 ? <MenuItem value={'none'}> <CircularProgress /></MenuItem> : wifiList.map(w => <MenuItem key={w} value={w}>{w}</MenuItem>)
+                                margin="normal"
+                                variant='outlined'
+                            />
+                            <Button variant='contained' color='primary' onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
+                            </div>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{textAlign: 'center'}}>
+                                Ethernet Configuration
+                            </Typography>
+                            <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
+                                control={
+                                    <Switch color='primary' checked={this.state.DHCP} onClick={() => this.DHCPToggle()} />
                                 }
-                                
-                            </Select>
-                            <IconButton className={classes.button} onClick={() => this.props.scanWifi()} aria-label="Refresh Wifi list">
-                                <Refresh />
-                            </IconButton>
-                        </FormControl>
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='password'
-                            label='Password'
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            variant='outlined'
-                        />
-                        <Button variant='contained' color='primary' onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
-                        </div>
-                        <div className={classes.grid2}>
-                        <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Ethernet Configuration
-                        </Typography>
-                        <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
-                            control={
-                                <Switch color='primary' checked={this.state.DHCP} onClick={() => this.DHCPToggle()} />
-                            }
-                            label='Enable DHCP'
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='staticIP'
-                            label='Static IP'
-                            value={this.state.staticIP}
-                            onChange={this.handleChange}
-                            disabled={!this.state.DHCP}
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <Button variant='contained' color='primary' onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
-                        </div>
-                        <div className={classes.grid2}>
-                        <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Big Query Configuration
-                        </Typography>
-                        <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
-                            control={
-                                <Switch color='primary' checked={this.state.BQ} onClick={() => this.BQToggle()} />
-                            }
-                            label='Enable Big Query'
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='bqKey'
-                            label='Big Query key'
-                            value={this.state.bqKey}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
-                        </div>
-                        <div className={classes.grid2}>
-                        <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Heart Beat
-                        </Typography>
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='heartbeatInterval'
-                            label='Heart Beat Interval'
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='heartbeatMaxMessages'
-                            label='Heart Beat Max Messages'
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
-                        </div>
-                        <div className={classes.grid2}>
-                        <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Wind Sensor
-                        </Typography>
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='lowerSpeedLimit'
-                            label='Lower Speed Limit'
-                            value={this.state.lowerSpeedLimit}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-                              }}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='upperSpeedLimit'
-                            label='Upper Speed Limit'
-                            value={this.state.upperSpeedLimit}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-                              }}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='minBreachTime'
-                            label='Min Breach Time'
-                            value={this.state.minBreachTime}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">s</InputAdornment>,
-                              }}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='maxBreachTime'
-                            label='Max Breach Time'
-                            value={this.state.maxBreachTime}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">s</InputAdornment>,
-                              }}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='maxBreachCount'
-                            label='Max Breach Count'
-                            value={this.state.maxBreachCount}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
-                        />
-                        <Button disabled={this.props.gettingWindLimits || this.props.settingWindLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setWindLimits()}>{this.props.settingWindLimits ? 'Saving...' : 'Save'}</Button>
-                        </div>
-                        <div className={classes.grid2}>
-                        <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Flood Sensor
-                        </Typography>
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='maxFloodLevel'
-                            label='Max FLood Level'
-                            value={this.state.maxFloodLevel}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            disabled={this.props.gettingFloodLimits || this.props.settingFloodLimits}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">mm</InputAdornment>,
-                              }}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='floodMovingAveragePeriod'
-                            label='Moving Average Period'
-                            value={this.state.floodMovingAveragePeriod}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            disabled={this.props.gettingFloodLimits || this.props.settingFloodLimits}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">s</InputAdornment>,
-                              }}
-                        />
-                        <Button disabled={this.props.gettingFloodLimits || this.props.settingFloodLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setFloodLimits()}>{this.props.settingFloodLimits ? 'Saving...': 'Save'}</Button>
-                        </div>
-                        <div className={classes.grid2}>
-                        <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Snow Sensor
-                        </Typography>
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='maxSnowLevel'
-                            label='Max Snow Level'
-                            value={this.state.maxSnowLevel}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">mm</InputAdornment>,
-                              }}
-                            disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='snowMovingAveragePeriod'
-                            label='Moving Average Period'
-                            value={this.state.snowMovingAveragePeriod}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">s</InputAdornment>,
-                              }}
-                            disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='rowHeight'
-                            label='Row Height'
-                            value={this.state.rowHeight}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">mm</InputAdornment>,
-                              }}
-                            disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='rowWidth'
-                            label='Row Width'
-                            value={this.state.rowWidth}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">mm</InputAdornment>,
-                              }}
-                            disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='stepSize'
-                            label='Step Size'
-                            value={this.state.stepSize}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                            disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
-                        />
-                        <Button disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setSnowLimits()}>{this.props.settingSnowLimits ? 'Saving...' : 'Save'}</Button>
-                        </div>
-                        <div className={classes.grid2}>
-                        <Typography variant='h6' style={{textAlign: 'center'}}>
-                            PAN ID
-                        </Typography>
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            name='panID'
-                            label='PAN ID'
-                            value={this.state.panID}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
-                        </div>
-                        <div className={classes.grid2}>
-                        <FormControl component="fieldset" className={classes.field}>
-                            <RadioGroup
-                                row
-                                aria-label="Sync"
-                                name="sync"
-                                value={this.state.syncTime}
+                                label='Enable DHCP'
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='staticIP'
+                                label='Static IP'
+                                value={this.state.staticIP}
                                 onChange={this.handleChange}
-                            >
-                                <FormControlLabel value="internet" control={<Radio color='primary'/>} label="Sync from internet" />
-                                <FormControlLabel value="scada" control={<Radio color='primary'/>} label="Sync from SCADA" />
-                            </RadioGroup>
-                            <Button variant='contained' color='primary' style={{marginBottom: 10}}>Sync</Button>
-                        </FormControl>
-                        </div>
+                                disabled={this.state.DHCP}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                            />
+                            <Button variant='contained' color='primary' onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
+                            </div>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{textAlign: 'center'}}>
+                                Big Query Configuration
+                            </Typography>
+                            <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
+                                control={
+                                    <Switch color='primary' checked={this.state.BQ} onClick={() => this.BQToggle()} />
+                                }
+                                label='Enable Big Query'
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='bqKey'
+                                label='Big Query key'
+                                value={this.state.bqKey}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                            />
+                            <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                            </div>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{textAlign: 'center'}}>
+                                Heart Beat Configuration
+                            </Typography>
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='heartbeatInterval'
+                                label='Heart Beat Interval'
+                                value={this.state.password}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='heartbeatMaxMessages'
+                                label='Heart Beat Max Messages'
+                                value={this.state.password}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                            />
+                            <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                            </div>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{textAlign: 'center'}}>
+                                PAN ID Configuration
+                            </Typography>
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='panID'
+                                label='PAN ID'
+                                value={this.state.panID}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                            />
+                            <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                            </div>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{textAlign: 'center'}}>
+                                Sync Configuration
+                            </Typography>
+                            <FormControl component="fieldset" className={classes.field}>
+                                <RadioGroup
+                                    row
+                                    aria-label="Sync"
+                                    name="sync"
+                                    value={this.state.syncTime}
+                                    onChange={this.handleChange}
+                                >
+                                    <FormControlLabel value="internet" control={<Radio color='primary'/>} label="Sync from internet" />
+                                    <FormControlLabel value="scada" control={<Radio color='primary'/>} label="Sync from SCADA" />
+                                </RadioGroup>
+                                <Button variant='contained' color='primary' style={{marginBottom: 10}}>Sync</Button>
+                            </FormControl>
+                            </div>
+                        </Grid>
+                        <Grid item className={classes.grid}>
+                            <Typography variant='h5' style={{textAlign: 'left', marginLeft: '5%', marginTop: 10, marginBottom: 10}}>
+                                Sensor Limits
+                            </Typography>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{textAlign: 'center'}}>
+                                Wind Sensor
+                            </Typography>
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='lowerSpeedLimit'
+                                label='Lower Speed Limit'
+                                value={this.state.lowerSpeedLimit}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                                }}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='upperSpeedLimit'
+                                label='Upper Speed Limit'
+                                value={this.state.upperSpeedLimit}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                                }}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='minBreachTime'
+                                label='Min Breach Time'
+                                value={this.state.minBreachTime}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                                }}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='maxBreachTime'
+                                label='Max Breach Time'
+                                value={this.state.maxBreachTime}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                                }}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='maxBreachCount'
+                                label='Max Breach Count'
+                                value={this.state.maxBreachCount}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
+                            />
+                            <Button disabled={this.props.gettingWindLimits || this.props.settingWindLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setWindLimits()}>{this.props.settingWindLimits ? 'Saving...' : 'Save'}</Button>
+                            </div>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{textAlign: 'center'}}>
+                                Flood Sensor
+                            </Typography>
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='maxFloodLevel'
+                                label='Max FLood Level'
+                                value={this.state.maxFloodLevel}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                disabled={this.props.gettingFloodLimits || this.props.settingFloodLimits}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                                }}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='floodMovingAveragePeriod'
+                                label='Moving Average Period'
+                                value={this.state.floodMovingAveragePeriod}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                disabled={this.props.gettingFloodLimits || this.props.settingFloodLimits}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                                }}
+                            />
+                            <Button disabled={this.props.gettingFloodLimits || this.props.settingFloodLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setFloodLimits()}>{this.props.settingFloodLimits ? 'Saving...': 'Save'}</Button>
+                            </div>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{textAlign: 'center'}}>
+                                Snow Sensor
+                            </Typography>
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='maxSnowLevel'
+                                label='Max Snow Level'
+                                value={this.state.maxSnowLevel}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                                }}
+                                disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='snowMovingAveragePeriod'
+                                label='Moving Average Period'
+                                value={this.state.snowMovingAveragePeriod}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                                }}
+                                disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='rowHeight'
+                                label='Row Height'
+                                value={this.state.rowHeight}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                                }}
+                                disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='rowWidth'
+                                label='Row Width'
+                                value={this.state.rowWidth}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                                }}
+                                disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='stepSize'
+                                label='Step Size'
+                                value={this.state.stepSize}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
+                            />
+                            <Button disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setSnowLimits()}>{this.props.settingSnowLimits ? 'Saving...' : 'Save'}</Button>
+                            </div>
+                        </Grid>
+                        
+                        
                     </Grid>
             </Fragment>
         )
