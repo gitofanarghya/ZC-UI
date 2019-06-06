@@ -34,12 +34,104 @@ export const appService = {
     removeSensor,
     enableSensor,
     disableSensor,
-    scanWifi
+    scanWifi,
+    getWindLimits,
+    setWindLimits,
+    getFloodLimits,
+    setFloodLimits,
+    getSnowLimits,
+    setSnowLimits
 };
 const hostName = 'http://159.89.169.50:4000'; 
 /*const hostName = `http://${window.location.hostname}:5000`;*/
 
 const hostName2 = `http://${window.location.hostname}:5001`; 
+
+function setSnowLimits(maxSnowLevel, movingAveragePeriod, rowHeight, rowWidth, stepSize) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            maxSnowLevel: maxSnowLevel,
+            movingAveragePeriod: movingAveragePeriod,
+            rowHeight: rowHeight,
+            rowWidth: rowWidth,
+            stepSize: stepSize
+        })
+    }
+
+    return fetch(`${hostName}/limits/snow/set`, requestOptions)
+        .then(handleResponse)
+}
+
+function getSnowLimits() {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors',
+        body: null
+    }
+
+    return fetch(`${hostName}/limits/snow/get`, requestOptions)
+        .then(handleResponse)
+}
+
+
+function setFloodLimits(maxFloodLevel, movingAveragePeriod) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            maxFloodLevel : maxFloodLevel,
+            movingAveragePeriod : movingAveragePeriod
+        })
+    }
+
+    return fetch(`${hostName}/limits/flood/set`, requestOptions)
+        .then(handleResponse)
+}
+
+function getFloodLimits() {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors',
+        body: null
+    }
+
+    return fetch(`${hostName}/limits/flood/get`, requestOptions)
+        .then(handleResponse)
+}
+
+function setWindLimits(lowerSpeedLimit, upperSpeedLimit, minBreachTime, maxBreachTime, maxBreachCount) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            speedLimits : {
+                upperSpeedLimit: upperSpeedLimit,
+                lowerSpeedLimit: lowerSpeedLimit
+            },
+            breachParameters : {
+                minBreachTime: minBreachTime,
+                maxBreachTime: maxBreachTime,
+                maxBreachCount: maxBreachCount
+            }
+        })
+    }
+
+    return fetch(`${hostName}/limits/wind/set`, requestOptions)
+        .then(handleResponse)
+}
+
+function getWindLimits() {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors',
+        body: null
+    }
+
+    return fetch(`${hostName}/limits/wind/get`, requestOptions)
+        .then(handleResponse)
+}
 
 function scanWifi() {
     const requestOptions = {
@@ -232,14 +324,13 @@ function handleResponse(response) {
 }
 
 
-function setWifiInfo(ssid, pass, staticIP) {
+function setWifiInfo(ssid, pass) {
     const requestOptions = {
         method: "POST",
         mode: 'cors',
         body: JSON.stringify({
             "ssid": ssid,
-            "password": pass,
-            "staticIP": staticIP
+            "password": pass
         })
     };
 
@@ -342,7 +433,7 @@ function sendCommand(deviceID, value) {
         })
     };
 
-    return fetch(`${hostName}/rover/control`, requestOptions)
+    return fetch(`${hostName}/rover/command`, requestOptions)
         .then(handleResponse)
 }
 
@@ -358,7 +449,7 @@ function sendStow(deviceID, mode) {
         })
     };
 
-    return fetch(`${hostName}/rover/control`, requestOptions)
+    return fetch(`${hostName}/rover/command`, requestOptions)
         .then(handleResponse)
 }
 //dashboard

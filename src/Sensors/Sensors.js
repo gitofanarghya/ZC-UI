@@ -39,11 +39,11 @@ class Sensors extends React.Component {
         samplingPeriod: '',
         driverFile: '',
         driverFileName: '',
-        enabled: []
+        enabled: [...this.props.sensors.filter(s => s.enabled === true)]
     }
 
     componentDidMount = () => {
-        this.props.getSensors()
+        /* this.props.getSensors() */
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -130,7 +130,7 @@ class Sensors extends React.Component {
         })
     }
 
-    render() {console.log(this.state)
+    render() {
         const { classes, sensors } = this.props
 
         return (

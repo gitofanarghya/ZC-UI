@@ -51,6 +51,20 @@ client.on('connect', function () {
       console.log("\x1b[31m error subscribing to mqtt topic sensorReadings/wind")
     }
   })
+  client.subscribe('sensorReadings/flood', function (err) {
+    if(!err) {
+      console.log("\x1B[32m subscribed to mqtt topic sensorReadings/flood")
+    } else {
+      console.log("\x1b[31m error subscribing to mqtt topic sensorReadings/flood")
+    }
+  })
+  client.subscribe('sensorReadings/snow', function (err) {
+    if(!err) {
+      console.log("\x1B[32m subscribed to mqtt topic sensorReadings/snow")
+    } else {
+      console.log("\x1b[31m error subscribing to mqtt topic sensorReadings/snow")
+    }
+  })
   client.subscribe('changeEvent/sensor', function (err) {
     if(!err) {
       console.log("\x1B[32m subscribed to mqtt topic changeEvent/sensor")
@@ -67,12 +81,13 @@ client.on('connect', function () {
   })
 })
 
+client.on('message', function(topic, message) {
+  console.log(`\x1B[33m mqtt: ${topic} says ${message}`)
+  io.emit(topic, message.toString())
+})
+
 io.on('connection', function(socket) {
   console.log(`\x1B[32m client ${socket.id} connected to socket server`)
-  client.on('message', function(topic, message) {
-    console.log(`\x1B[33m mqtt: ${topic} says ${message}`)
-    socket.emit(topic, message.toString())
-  })
   socket.on('disconnect', function(reason) {
     console.log(`\x1B[31m client ${socket.id} disconnected from socket server`)
     socket.disconnect(true)

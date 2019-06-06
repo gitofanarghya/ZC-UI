@@ -150,6 +150,35 @@ div.footer:after {
   -moz-animation: spin 5000ms infinite linear;
   animation: spin 5000ms infinite linear;
 }
+@-webkit-keyframes turn {
+  from {
+      transform:rotateY(0deg);
+  }
+  to {
+      transform:rotateY(360deg);
+  }
+}
+@-moz-keyframes turn {
+  from {
+    transform:rotateY(0deg);
+  }
+  to {
+      transform:rotateY(360deg);
+  }
+}
+@keyframes turn {
+  from {
+    transform:rotateY(0deg);
+  }
+  to {
+      transform:rotateY(360deg);
+  }
+}
+.rotateHorizontal {
+  -webkit-animation: turn 5000ms infinite linear;
+  -moz-animation: turn 5000ms infinite linear;
+  animation: turn 5000ms infinite linear;
+}
 
 .zoneDetail{
   color: black;

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, TextField, Typography, IconButton, FormControlLabel, FormControl, Radio, RadioGroup, Button, MenuItem, OutlinedInput, Select, InputLabel, CircularProgress } from '@material-ui/core';
+import { Grid, TextField, Typography, IconButton, FormControlLabel, FormControl, Radio, RadioGroup, Button, MenuItem, OutlinedInput, Select, InputLabel, CircularProgress, Switch, InputAdornment } from '@material-ui/core';
 import { connect } from 'react-redux'
 import { appService } from '../App/app.services';
 import Refresh from '@material-ui/icons/Refresh'
@@ -10,11 +10,12 @@ const styles = theme => ({
     minWidth: 300,
     backgroundColor: theme.palette.background.paper,
     [theme.breakpoints.up('md')]: {
-        height: '660px'
+        height: '1000px'
     }
   },
   grid2: {
     display: 'flex',
+    borderBottom: '1px solid #54aab3',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -51,11 +52,58 @@ class ZoneController extends React.Component {
     state = {
         ssid: '',
         password: '',
-        staticIP: ''
+        DHCP: false,
+        staticIP: '',
+        BQ: false,
+        upperSpeedLimit: '',
+        lowerSpeedLimit: '',
+        minBreachTime: '',
+        maxBreachTime: '',
+        maxBreachCount: '',
+        maxFloodLevel: '',
+        floodMovingAveragePeriod: '',
+        maxSnowLevel: '',
+        snowMovingAveragePeriod: '',
+        rowHeight: '',
+        rowWidth: '',
+        stepSize: ''
     }
 
     componentDidMount = () => {
         this.props.scanWifi()
+        this.props.getWindLimits()
+        this.props.getFloodLimits()
+        this.props.getSnowLimits()
+    }
+
+    componentWillReceiveProps = (nextProps) => {
+        if(nextProps.floodLimits !== this.props.floodLimits) {
+            this.setState({
+                ...this.state,
+                maxFloodLevel: nextProps.floodLimits.maxFloodLevel,
+                floodMovingAveragePeriod: nextProps.floodLimits.movingAveragePeriod
+            })
+        }
+        if(nextProps.windLimits !== this.props.windLimits) {
+            this.setState({
+                ...this.state,
+                upperSpeedLimit: nextProps.windLimits.speedLimits.upperSpeedLimit,
+                lowerSpeedLimit: nextProps.windLimits.speedLimits.lowerSpeedLimit,
+                minBreachTime: nextProps.windLimits.breachParameters.minBreachTime,
+                maxBreachTime: nextProps.windLimits.breachParameters.maxBreachTime,
+                maxBreachCount: nextProps.windLimits.breachParameters.maxBreachCount
+            })
+        }
+        if(nextProps.snowLimits !== this.props.snowLimits) {
+            this.setState({
+                ...this.state,
+                maxSnowLevel: nextProps.snowLimits.maxSnowLevel,
+                snowMovingAveragePeriod: nextProps.snowLimits.movingAveragePeriod,
+                rowHeight: nextProps.snowLimits.rowHeight,
+                rowWidth: nextProps.snowLimits.rowWidth,
+                stepSize: nextProps.snowLimits.stepSize
+            })
+        }
     }
 
     handleChange = (event) => {
@@ -66,7 +114,27 @@ class ZoneController extends React.Component {
     }
 
     setWifiInfo = () => {
-        this.props.setWifiInfo(this.state.ssid, this.props.password, this.state.staticIP)
+        this.props.setWifiInfo(this.state.ssid, this.state.password)
+    }
+
+    DHCPToggle = () => {
+        this.setState({...this.state, DHCP: !this.state.DHCP})
+    }
+
+    BQToggle = () => {
+        this.setState({...this.state, BQ: !this.state.BQ})
+    }
+
+    setWindLimits = () => {
+        this.props.setWindLimits(this.state.lowerSpeedLimit, this.state.upperSpeedLimit, this.state.minBreachTime, this.state.maxBreachTime, this.state.maxBreachCount)
+    }
+    
+    setFloodLimits = () => {
+        this.props.setFloodLimits(this.state.maxFloodLevel, this.state.floodMovingAveragePeriod)
+    }
+    
+    setSnowLimits = () => {
+        this.props.setSnowLimits(this.state.maxSnowLevel, this.state.snowMovingAveragePeriod, this.state.rowHeight, this.state.rowWidth, this.state.stepSize)
     }
 
 
@@ -74,10 +142,10 @@ class ZoneController extends React.Component {
         const { classes, wifiList } = this.props
         return (
             <Fragment>
-                    <Grid item xs={12} container direction='column' justify='center' alignItems='center' className={classes.root}>
+                    <Grid item xs={12} container direction='column' justify='flex-start' alignItems='center' className={classes.root}>
                         <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Network
+                            Wifi Configuration
                         </Typography>
                         <FormControl variant="outlined" className={classes.field} fullWidth>
                             <InputLabel htmlFor="ssid">
@@ -107,7 +175,18 @@ class ZoneController extends React.Component {
                             value={this.state.password}
                             onChange={this.handleChange}
                             variant='outlined'
-                            InputLabelProps={{ shrink: true }}
+                        />
+                        <Button variant='contained' color='primary' onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
+                        </div>
+                        <div className={classes.grid2}>
+                        <Typography variant='h6' style={{textAlign: 'center'}}>
+                            Ethernet Configuration
+                        </Typography>
+                        <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
+                            control={
+                                <Switch color='primary' checked={this.state.DHCP} onClick={() => this.DHCPToggle()} />
+                            }
+                            label='Enable DHCP'
                         />
                         <TextField
                             className={classes.field}
@@ -116,6 +195,7 @@ class ZoneController extends React.Component {
                             label='Static IP'
                             value={this.state.staticIP}
                             onChange={this.handleChange}
+                            disabled={!this.state.DHCP}
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
                         />
@@ -123,40 +203,18 @@ class ZoneController extends React.Component {
                         </div>
                         <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Heart Beat
+                            Big Query Configuration
                         </Typography>
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            id='heartbeatInterval'
-                            label='Heart Beat Interval'
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
+                        <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
+                            control={
+                                <Switch color='primary' checked={this.state.BQ} onClick={() => this.BQToggle()} />
+                            }
+                            label='Enable Big Query'
                         />
                         <TextField
                             className={classes.field}
                             fullWidth
-                            id='heartbeatMaxMessages'
-                            label='Heart Beat Max Messages'
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
-                        </div>
-                        <div className={classes.grid2}>
-                        <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Big Query
-                        </Typography>
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            id='bqKey'
+                            name='bqKey'
                             label='Big Query key'
                             value={this.state.bqKey}
                             onChange={this.handleChange}
@@ -168,14 +226,25 @@ class ZoneController extends React.Component {
                         </div>
                         <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
-                            PAN ID
+                            Heart Beat
                         </Typography>
                         <TextField
                             className={classes.field}
                             fullWidth
-                            id='panID'
-                            label='PAN ID'
-                            value={this.state.panID}
+                            name='heartbeatInterval'
+                            label='Heart Beat Interval'
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant='outlined'
+                            InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                            className={classes.field}
+                            fullWidth
+                            name='heartbeatMaxMessages'
+                            label='Heart Beat Max Messages'
+                            value={this.state.password}
                             onChange={this.handleChange}
                             margin="normal"
                             variant='outlined'
@@ -190,37 +259,76 @@ class ZoneController extends React.Component {
                         <TextField
                             className={classes.field}
                             fullWidth
-                            id='maxWindSpeed'
-                            label='Max Wind Speed'
-                            value={this.state.maxWindSpeed}
+                            name='lowerSpeedLimit'
+                            label='Lower Speed Limit'
+                            value={this.state.lowerSpeedLimit}
                             onChange={this.handleChange}
                             margin="normal"
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
+                            disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                              }}
                         />
                         <TextField
                             className={classes.field}
                             fullWidth
-                            id='meanWindSpeed'
-                            label='Mean Wind Speed'
-                            value={this.state.meanWindSpeed}
+                            name='upperSpeedLimit'
+                            label='Upper Speed Limit'
+                            value={this.state.upperSpeedLimit}
                             onChange={this.handleChange}
                             margin="normal"
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
+                            disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                              }}
                         />
                         <TextField
                             className={classes.field}
                             fullWidth
-                            id='windSpeedTimer'
-                            label='Wind Speed Timer'
-                            value={this.state.windSpeedTimer}
+                            name='minBreachTime'
+                            label='Min Breach Time'
+                            value={this.state.minBreachTime}
                             onChange={this.handleChange}
                             margin="normal"
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
+                            disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                              }}
                         />
-                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                        <TextField
+                            className={classes.field}
+                            fullWidth
+                            name='maxBreachTime'
+                            label='Max Breach Time'
+                            value={this.state.maxBreachTime}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant='outlined'
+                            InputLabelProps={{ shrink: true }}
+                            disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                              }}
+                        />
+                        <TextField
+                            className={classes.field}
+                            fullWidth
+                            name='maxBreachCount'
+                            label='Max Breach Count'
+                            value={this.state.maxBreachCount}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant='outlined'
+                            InputLabelProps={{ shrink: true }}
+                            disabled={this.props.gettingWindLimits || this.props.settingWindLimits}
+                        />
+                        <Button disabled={this.props.gettingWindLimits || this.props.settingWindLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setWindLimits()}>{this.props.settingWindLimits ? 'Saving...' : 'Save'}</Button>
                         </div>
                         <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
@@ -229,26 +337,34 @@ class ZoneController extends React.Component {
                         <TextField
                             className={classes.field}
                             fullWidth
-                            id='maxFloodLevel'
+                            name='maxFloodLevel'
                             label='Max FLood Level'
                             value={this.state.maxFloodLevel}
                             onChange={this.handleChange}
                             margin="normal"
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
+                            disabled={this.props.gettingFloodLimits || this.props.settingFloodLimits}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                              }}
                         />
                         <TextField
                             className={classes.field}
                             fullWidth
-                            id='floodLevelTimer'
-                            label='Flood level Timer'
-                            value={this.state.floodLevelTimer}
+                            name='floodMovingAveragePeriod'
+                            label='Moving Average Period'
+                            value={this.state.floodMovingAveragePeriod}
                             onChange={this.handleChange}
                             margin="normal"
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
+                            disabled={this.props.gettingFloodLimits || this.props.settingFloodLimits}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                              }}
                         />
-                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                        <Button disabled={this.props.gettingFloodLimits || this.props.settingFloodLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setFloodLimits()}>{this.props.settingFloodLimits ? 'Saving...': 'Save'}</Button>
                         </div>
                         <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
@@ -257,48 +373,87 @@ class ZoneController extends React.Component {
                         <TextField
                             className={classes.field}
                             fullWidth
-                            id='maxSnowLevel'
+                            name='maxSnowLevel'
                             label='Max Snow Level'
                             value={this.state.maxSnowLevel}
                             onChange={this.handleChange}
                             margin="normal"
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                              }}
+                            disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
                         />
                         <TextField
                             className={classes.field}
                             fullWidth
-                            id='snowLevelTimer'
-                            label='Snow level Timer'
-                            value={this.state.snowLevelTimer}
+                            name='snowMovingAveragePeriod'
+                            label='Moving Average Period'
+                            value={this.state.snowMovingAveragePeriod}
                             onChange={this.handleChange}
                             margin="normal"
                             variant='outlined'
                             InputLabelProps={{ shrink: true }}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                              }}
+                            disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
                         />
-                        <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                        <TextField
+                            className={classes.field}
+                            fullWidth
+                            name='rowHeight'
+                            label='Row Height'
+                            value={this.state.rowHeight}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant='outlined'
+                            InputLabelProps={{ shrink: true }}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                              }}
+                            disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
+                        />
+                        <TextField
+                            className={classes.field}
+                            fullWidth
+                            name='rowWidth'
+                            label='Row Width'
+                            value={this.state.rowWidth}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant='outlined'
+                            InputLabelProps={{ shrink: true }}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                              }}
+                            disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
+                        />
+                        <TextField
+                            className={classes.field}
+                            fullWidth
+                            name='stepSize'
+                            label='Step Size'
+                            value={this.state.stepSize}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant='outlined'
+                            InputLabelProps={{ shrink: true }}
+                            disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits}
+                        />
+                        <Button disabled={this.props.gettingSnowLimits || this.props.settingSnowLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setSnowLimits()}>{this.props.settingSnowLimits ? 'Saving...' : 'Save'}</Button>
                         </div>
                         <div className={classes.grid2}>
                         <Typography variant='h6' style={{textAlign: 'center'}}>
-                            Rain Sensor
+                            PAN ID
                         </Typography>
                         <TextField
                             className={classes.field}
                             fullWidth
-                            id='maxRainLevel'
-                            label='Max Rain Level'
-                            value={this.state.maxRainLevel}
-                            onChange={this.handleChange}
-                            margin="normal"
-                            variant='outlined'
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                            className={classes.field}
-                            fullWidth
-                            id='rainLevelTimer'
-                            label='Rain level Timer'
-                            value={this.state.rainLevelTimer}
+                            name='panID'
+                            label='PAN ID'
+                            value={this.state.panID}
                             onChange={this.handleChange}
                             margin="normal"
                             variant='outlined'
@@ -329,17 +484,26 @@ class ZoneController extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { wifiList } = state.app
+    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits} = state.app
 
     return {
-        wifiList
+        wifiList,
+        windLimits,
+        floodLimits,
+        snowLimits,
+        gettingFloodLimits, 
+        settingFloodLimits, 
+        gettingSnowLimits, 
+        settingSnowLimits, 
+        gettingWindLimits, 
+        settingWindLimits 
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    setWifiInfo: (ssid, pass, staticIP) => {
+    setWifiInfo: (ssid, pass) => {
         dispatch({type: 'SET_WIFI_INFO_REQUEST'}) 
-        appService.setWifiInfo(ssid, pass, staticIP)
+        appService.setWifiInfo(ssid, pass)
             .then(json => {
                 dispatch({type: 'SET_WIFI_INFO_SUCCESS', json})
             }, error => {
@@ -353,6 +517,81 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'SCAN_WIFI_SUCCESS', json})
             }, error => {
                 dispatch({type: 'SCAN_WIFI_FAILURE'})
+            })
+    },
+    setWindLimits: (lowerSpeedLimit, upperSpeedLimit, minBreachTime, maxBreachTime, maxBreachCount) => {
+        dispatch({type: 'SET_WIND_LIMITS_REQUEST'})
+        appService.setWindLimits(lowerSpeedLimit, upperSpeedLimit, minBreachTime, maxBreachTime, maxBreachCount)
+            .then(json => {
+                dispatch({type: 'SET_WIND_LIMITS_SUCCESS'})
+                dispatch({type: 'GET_WIND_LIMITS_REQUEST'})
+                appService.getWindLimits()
+                    .then(json => {
+                        dispatch({type: 'GET_WIND_LIMITS_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_WIND_LIMITS_FAILURE'})
+                    })
+            }, error => {
+                dispatch({type: 'SET_WIND_LIMITS_FAILURE'})
+            })
+    },
+    getWindLimits: () => {
+        dispatch({type: 'GET_WIND_LIMITS_REQUEST'})
+        appService.getWindLimits()
+            .then(json => {
+                dispatch({type: 'GET_WIND_LIMITS_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_WIND_LIMITS_FAILURE'})
+            })
+    },
+    setFloodLimits: (maxFloodLevel, movingAveragePeriod) => {
+        dispatch({type: 'SET_FLOOD_LIMITS_REQUEST'})
+        appService.setFloodLimits(maxFloodLevel, movingAveragePeriod)
+            .then(json => {
+                dispatch({type: 'SET_FLOOD_LIMITS_SUCCESS'})
+                dispatch({type: 'GET_FLOOD_LIMITS_REQUEST'})
+                appService.getFloodLimits()
+                    .then(json => {
+                        dispatch({type: 'GET_FLOOD_LIMITS_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_FLOOD_LIMITS_FAILURE'})
+                    })
+            }, error => {
+                dispatch({type: 'SET_FLOOD_LIMITS_FAILURE'})
+            })
+    },
+    getFloodLimits: () => {
+        dispatch({type: 'GET_FLOOD_LIMITS_REQUEST'})
+        appService.getFloodLimits()
+            .then(json => {
+                dispatch({type: 'GET_FLOOD_LIMITS_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_FLOOD_LIMITS_FAILURE'})
+            })
+    },
+    setSnowLimits: (maxSnowLevel, snowMovingAveragePeriod, rowHeight, rowWidth, stepSize) => {
+        dispatch({type: 'SET_SNOW_LIMITS_REQUEST'})
+        appService.setSnowLimits(maxSnowLevel, snowMovingAveragePeriod, rowHeight, rowWidth, stepSize)
+            .then(json => {
+                dispatch({type: 'SET_SNOW_LIMITS_SUCCESS'})
+                dispatch({type: 'GET_SNOW_LIMITS_REQUEST'})
+                appService.getSnowLimits()
+                    .then(json => {
+                        dispatch({type: 'GET_SNOW_LIMITS_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_SNOW_LIMITS_FAILURE'})
+                    })
+            }, error => {
+                dispatch({type: 'SET_SNOW_LIMITS_FAILURE'})
+            })
+    },
+    getSnowLimits: () => {
+        dispatch({type: 'GET_SNOW_LIMITS_REQUEST'})
+        appService.getSnowLimits()
+            .then(json => {
+                dispatch({type: 'GET_SNOW_LIMITS_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_SNOW_LIMITS_FAILURE'})
             })
     }
 })

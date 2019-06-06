@@ -89,6 +89,22 @@ class App extends React.Component {
                 io.emit('ui/log/errors', e)
             } 
         })
+        io.on('sensorReadings/flood', data => {
+            try {
+                const json = JSON.parse(data)
+                this.props.received('sensorReadings/flood', json)
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
+        })
+        io.on('sensorReadings/snow', data => {
+            try {
+                const json = JSON.parse(data)
+                this.props.received('sensorReadings/snow', json)
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
+        })
         io.on('changeEvent/sensor', data => {
             try {
                 if(data === '') this.props.getSensors()
@@ -146,7 +162,7 @@ class App extends React.Component {
                     {
                         this.props.currentPage === 'Dashboard' ? <Dashboard /> :
                         this.props.currentPage === 'Row Controller' ? <RowController /> :
-                        this.props.currentPage === 'Zone Controller' ? <ZoneController /> :
+                        this.props.currentPage === 'Zone Settings' ? <ZoneController /> :
                         this.props.currentPage === 'Sensors' ? <Sensors /> : 
                         this.props.currentPage === 'About' ? <About /> : <Initializing />
                     }

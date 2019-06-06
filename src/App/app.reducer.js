@@ -26,11 +26,43 @@ const initialState = {
         speed: null,
         direction: null
     },
+    floodSense: null,
+    snowSense: null,
     wifiList: [],
     sensorEvents: {
-        wind: false
+        wind: false,
+        flood: false,
+        snow: false
     },
-    roverStatus: {}
+    roverStatus: {},
+    windLimits: {
+        speedLimits : {
+            upperSpeedLimit: '',
+            lowerSpeedLimit: ''
+        },
+        breachParameters : {
+            minBreachTime: '',
+            maxBreachTime: '',
+            maxBreachCount: ''
+        }
+    },
+    floodLimits: {
+        maxFloodLevel: '',
+        movingAveragePeriod: ''
+    },
+    snowLimits: {
+        maxSnowLevel: '',
+        movingAveragePeriod: '',
+        rowHeight: '',
+        rowWidth: '',
+        stepSize: ''
+    },
+    gettingFloodLimits: false,
+    settingFloodLimits: false,
+    gettingSnowLimits: false,
+    settingSnowLimits: false,
+    gettingWindLimits: false,
+    settingWindLimits: false    
 }
 
 const difference = (a1, a2) => {
@@ -48,6 +80,82 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
+
+        case 'SET_SNOW_LIMITS_REQUEST':
+        return {
+            ...state,
+            settingSnowLimits: true
+        }
+
+        case 'SET_FLOOD_LIMITS_REQUEST':
+        return {
+            ...state,
+            settingFloodLimits: true
+        }
+        
+        case 'SET_WIND_LIMITS_REQUEST':
+        return {
+            ...state,
+            settingWindLimits: true
+        }
+        
+        case 'SET_SNOW_LIMITS_SUCCESS':
+        return {
+            ...state,
+            settingSnowLimits: false
+        }
+
+        case 'SET_FLOOD_LIMITS_SUCCESS':
+        return {
+            ...state,
+            settingFloodLimits: false
+        }
+        
+        case 'SET_WIND_LIMITS_SUCCESS':
+        return {
+            ...state,
+            settingWindLimits: false
+        }
+        
+        case 'GET_SNOW_LIMITS_REQUEST':
+        return {
+            ...state,
+            gettingSnowLimits: true
+        }
+
+        case 'GET_FLOOD_LIMITS_REQUEST':
+        return {
+            ...state,
+            gettingFloodLimits: true
+        }
+        
+        case 'GET_WIND_LIMITS_REQUEST':
+        return {
+            ...state,
+            gettingWindLimits: true
+        }
+        
+        case 'GET_SNOW_LIMITS_SUCCESS':
+        return {
+            ...state,
+            snowLimits: action.json,
+            gettingSnowLimits: false
+        }
+
+        case 'GET_FLOOD_LIMITS_SUCCESS':
+        return {
+            ...state,
+            floodLimits: action.json,
+            gettingFloodLimits: false
+        }
+        
+        case 'GET_WIND_LIMITS_SUCCESS':
+        return {
+            ...state,
+            windLimits: action.json.message,
+            gettingWindLimits: false
+        }
+        
         case 'changeEvent/rover':
         return {
             ...state,
@@ -64,6 +172,17 @@ export function app(state, action) {
         return {
             ...state,
             windSense: action.json
+        }
+
+        case 'sensorReadings/flood':
+        return {
+            ...state,
+            floodSense: action.json.reading
+        }
+        case 'sensorReadings/snow':
+        return {
+            ...state,
+            snowSense: action.json.reading
         }
 
         case 'time':
