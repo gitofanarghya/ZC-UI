@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, TextField, Typography, IconButton, FormControlLabel, FormControl, Radio, RadioGroup, Button, MenuItem, OutlinedInput, Select, InputLabel, CircularProgress, Switch, InputAdornment } from '@material-ui/core';
+import { Grid, TextField, Typography, IconButton, FormControlLabel, FormControl, Radio, RadioGroup, Button, MenuItem, OutlinedInput, Select, InputLabel, CircularProgress, Switch, InputAdornment, Toolbar, AppBar } from '@material-ui/core';
 import { connect } from 'react-redux'
 import { appService } from '../App/app.services';
 import Refresh from '@material-ui/icons/Refresh'
@@ -31,6 +31,9 @@ const styles = theme => ({
     width: '90%',
     marginRight: '5%',
     marginLeft: '5%',
+    paddingBottom: 20,
+    paddingTop: 20,
+    borderBottom: '1px solid #54aab3'
   },
   field: {
     flexDirection: 'row',
@@ -157,11 +160,15 @@ class ZoneController extends React.Component {
             <Fragment>
                     <Grid item xs={12} container justify='center' alignItems='flex-start' className={classes.root}>
                         <Grid item className={[classes.grid, classes.specialBorder]}>
-                            <Typography variant='h5' style={{textAlign: 'center', marginTop: 35, marginBottom: 10 }}>
+                            <AppBar position="static" color='primary' className={classes.appBar}>
+                            <Toolbar>
+                            <Typography variant="h5" color="inherit" noWrap>
                                 ZC Parameters
                             </Typography>
+                            </Toolbar>
+                            </AppBar>
                             <div className={classes.grid2}>
-                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10, marginTop: 35}}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Wifi Configuration
                             </Typography>
                             <FormControl variant="outlined" className={classes.field} fullWidth>
@@ -197,7 +204,7 @@ class ZoneController extends React.Component {
                             <Button variant='contained' color='primary' onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
-                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10, marginTop: 35}}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Ethernet Configuration
                             </Typography>
                             <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
@@ -221,7 +228,7 @@ class ZoneController extends React.Component {
                             <Button variant='contained' color='primary' onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
-                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10, marginTop: 35}}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Big Query Configuration
                             </Typography>
                             <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
@@ -244,7 +251,7 @@ class ZoneController extends React.Component {
                             <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
-                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10, marginTop: 35}}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Heart Beat Configuration
                             </Typography>
                             <TextField
@@ -272,7 +279,7 @@ class ZoneController extends React.Component {
                             <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
-                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10, marginTop: 35}}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 PAN ID Configuration
                             </Typography>
                             <TextField
@@ -289,7 +296,7 @@ class ZoneController extends React.Component {
                             <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
-                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10, marginTop: 35}}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Sync Configuration
                             </Typography>
                             <FormControl component="fieldset" className={classes.field}>
@@ -308,11 +315,15 @@ class ZoneController extends React.Component {
                             </div>
                         </Grid>
                         <Grid item className={classes.grid}>
-                            <Typography variant='h5' style={{textAlign: 'center', marginTop: 35, marginBottom: 10 }}>
+                        <AppBar position='static' color='primary' className={classes.appBar}>
+                            <Toolbar>
+                            <Typography variant="h5" color="inherit" noWrap>
                                 Sensor Limits
                             </Typography>
+                            </Toolbar>
+                            </AppBar>
                             <div className={classes.grid2}>
-                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10, marginTop: 35}}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Wind Sensor
                             </Typography>
                             <TextField
@@ -390,7 +401,7 @@ class ZoneController extends React.Component {
                             <Button disabled={this.props.gettingWindLimits || this.props.settingWindLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setWindLimits()}>{this.props.settingWindLimits ? 'Saving...' : 'Save'}</Button>
                             </div>
                             <div className={classes.grid2}>
-                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10, marginTop: 35}}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Flood Sensor
                             </Typography>
                             <TextField
@@ -426,7 +437,7 @@ class ZoneController extends React.Component {
                             <Button disabled={this.props.gettingFloodLimits || this.props.settingFloodLimits} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setFloodLimits()}>{this.props.settingFloodLimits ? 'Saving...': 'Save'}</Button>
                             </div>
                             <div className={classes.grid2}>
-                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10, marginTop: 35}}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Snow Sensor
                             </Typography>
                             <TextField
