@@ -41,8 +41,8 @@ export const appService = {
     getSnowLimits,
     setSnowLimits
 };
-const hostName = 'http://159.89.169.50:4000'; 
-/*const hostName = `http://${window.location.hostname}:5000`;*/
+/*const hostName = 'http://159.89.169.50:4000'; */
+const hostName = `http://${window.location.hostname}:5000`;
 
 const hostName2 = `http://${window.location.hostname}:5001`; 
 
