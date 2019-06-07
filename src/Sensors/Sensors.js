@@ -103,7 +103,7 @@ class Sensors extends React.Component {
         
     }
 
-    handleClose = () => {
+    handleAdd = () => {
         if(this.state.which === 'edit') {
             this.props.softRemoveSensor(this.state.selectedSensors)
             this.props.addSensor(this.state.driverFile, this.state.port, this.state.type, this.state.model, this.state.samplingPeriod)
@@ -117,6 +117,10 @@ class Sensors extends React.Component {
 
     handleChange = (e) => {
         this.setState({ ...this.state, [e.target.name]: e.target.value })
+    }
+
+    handleClose = () => {
+        this.setState({ ...this.state, dialog: false, which: 'none' });
     }
 
     
@@ -196,7 +200,7 @@ class Sensors extends React.Component {
                 </Grid>
                 <Dialog
                     open={this.state.dialog}
-                    onClose={this.handleClose}
+                    disableBackdropClick
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">{this.state.which === 'add' ? 'Add Sensor' : 'Edit Sensor'}</DialogTitle>
@@ -290,8 +294,11 @@ class Sensors extends React.Component {
                         </div>
                     </DialogContent>
                     <DialogActions>
-                        <Button variant='contained' onClick={this.handleClose} color="primary">
+                        <Button variant='contained' onClick={this.handleAdd} color="primary">
                             {this.state.which === 'add' ? 'Add Sensor' : 'Save'}
+                        </Button>
+                        <Button variant='contained' onClick={this.handleClose} color="primary">
+                            Close
                         </Button>
                     </DialogActions>
                 </Dialog>
