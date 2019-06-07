@@ -110,7 +110,6 @@ class ResponsiveDrawer extends React.Component {
                 onClick={() => this.props.changePage(text)}
                 selected={this.props.currentPage === text}
                 classes={{selected: classes.selected}}
-                style={{fontWeight: 600}}
                 disabled={text === 'About'}
             >{/* 
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}

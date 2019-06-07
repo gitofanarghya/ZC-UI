@@ -43,7 +43,7 @@ class Sensors extends React.Component {
     }
 
     componentDidMount = () => {
-        /* this.props.getSensors() */
+        this.props.getSensors()
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -106,11 +106,9 @@ class Sensors extends React.Component {
     handleClose = () => {
         if(this.state.which === 'edit') {
             this.props.softRemoveSensor(this.state.selectedSensors)
-            this.props.addSensor(this.state.port, this.state.type, this.state.model, this.state.samplingPeriod)
-            this.props.uploadDriver(this.state.driverFile, this.state.type, this.state.model)   
+            this.props.addSensor(this.state.driverFile, this.state.port, this.state.type, this.state.model, this.state.samplingPeriod)
         } else {
-            this.props.addSensor(this.state.port, this.state.type, this.state.model, this.state.samplingPeriod)
-            this.props.uploadDriver(this.state.driverFile, this.state.type, this.state.model)
+            this.props.addSensor(this.state.driverFile, this.state.port, this.state.type, this.state.model, this.state.samplingPeriod)
         }
             
         
@@ -322,18 +320,23 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'GET_SENSORS_FAILURE'})
             })        
     },
-    addSensor: (port, type, model, samplingPeriod) => {
+    addSensor: (file, port, type, model, samplingPeriod) => {
         dispatch({type: 'ADD_SENSOR_REQUEST'})
-        appService.addSensor(port, type, model, samplingPeriod)
+        appService.addSensor(file, port, type, model, samplingPeriod)
             .then(json => {
-                dispatch({type: 'ADD_SENSORS_SUCCESS'})
-                dispatch({type: 'GET_SENSORS_REQUEST'})
-                appService.getSensors()
-                    .then(json => {
-                        dispatch({type: 'GET_SENSORS_SUCCESS', json})
-                    }, error => {
-                        dispatch({type: 'GET_SENSORS_FAILURE'})
-                    }) 
+                if(json.Result === 'Success') {
+                    dispatch({type: 'ADD_SENSORS_SUCCESS'})
+                    dispatch({type: 'GET_SENSORS_REQUEST'})
+                    appService.getSensors()
+                        .then(json => {
+                            dispatch({type: 'GET_SENSORS_SUCCESS', json})
+                        }, error => {
+                            dispatch({type: 'GET_SENSORS_FAILURE'})
+                        }) 
+                } else {
+                    const error = json.message
+                    dispatch({type: 'ADD_SENSORS_FAILURE', error})    
+                }
             }, error => {
                 dispatch({type: 'ADD_SENSORS_FAILURE'})
             })
@@ -359,12 +362,12 @@ const mapDispatchToProps = (dispatch) => ({
     },
     softRemoveSensor: (selectedSensors) => {
         selectedSensors.map(s => {
-            dispatch({type: 'REMOVE_SENSOR_REQUEST'})
+            dispatch({type: 'SOFT_REMOVE_SENSOR_REQUEST'})
             appService.removeSensor(s.model, s.type)
                 .then(json => {
-                    dispatch({type: 'REMOVE_SENSOR_SUCCESS'})
+                    dispatch({type: 'SOFT_REMOVE_SENSOR_SUCCESS'})
                 }, error => {
-                    dispatch({type: 'REMOVE_SENSOR_FAILURE'})
+                    dispatch({type: 'SOFT_REMOVE_SENSOR_FAILURE'})
                 })
         })
     },
@@ -398,15 +401,6 @@ const mapDispatchToProps = (dispatch) => ({
                     }) 
             }, error => {
                 dispatch({type: 'DISABLE_SENSOR_FAILURE'})
-            })
-    },
-    uploadDriver: (file, type, model) => {
-        dispatch({type: 'UPLOAD_DRIVER_FILE_REQUEST'})
-        appService.uploadDriver(file, type, model)
-            .then(json => {
-                dispatch({type: 'UPLOAD_DRIVER_FILE_SUCCESS'})
-            }, error => {
-                dispatch({type: 'UPLOAD_DRIVER_FILE_FAILURE'})
             })
     }
 })

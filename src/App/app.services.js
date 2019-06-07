@@ -1,6 +1,5 @@
 export const appService = {
     setWifiInfo,
-    uploadDriver,
     selectSensor,
     uploadKey,
     setWindAddress,
@@ -186,19 +185,16 @@ function removeSensor(model, type) {
         .then(handleResponse)
 }
 
-function addSensor(port, type, model, samplingPeriod) {
+function addSensor(file, port, type, model, samplingPeriod) {
+    var data = new FormData()
+    data.append('file', file)
     const requestOptions = {
-        method: 'POST',
+        method: "POST",
         mode: 'cors',
-        body: JSON.stringify({
-            port: port, 
-            type: type, 
-            samplingPeriod: samplingPeriod,
-            model: model
-        })
-    }
+        body: data
+    };
 
-    return fetch(`${hostName}/sensors/setParams`, requestOptions)
+    return fetch(`${hostName}/sensors/add?type=${type}&model=${model}&port=${port}&samplingPeriod=${samplingPeriod}`, requestOptions)
         .then(handleResponse)
 }
 
@@ -338,18 +334,6 @@ function setWifiInfo(ssid, pass) {
         .then(handleResponse)
 }
 
-function uploadDriver(file, type, model) {
-    var data = new FormData()
-    data.append('file', file)
-    const requestOptions = {
-        method: "POST",
-        mode: 'cors',
-        body: data
-    };
-
-    return fetch(`${hostName}/sensors/addDriver?type=${type}&model=${model}`, requestOptions)
-        .then(handleResponse)
-}
 
 function uploadKey(file) {
     var data = new FormData()
