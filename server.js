@@ -101,7 +101,7 @@ app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 80;
 server.listen(PORT, () => {
   console.log(`\x1B[33m App listening on port ${PORT}`);
   console.log('\x1B[33m Press Ctrl+C to quit.');
