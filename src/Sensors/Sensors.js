@@ -90,6 +90,7 @@ class Sensors extends React.Component {
 
     removeSensor = () => {
         this.props.removeSensor(this.state.selectedSensors)
+        this.setState({ ...this.state, selectedSensors: [] })
     }
 
     enable = (row) => {
@@ -112,7 +113,7 @@ class Sensors extends React.Component {
         }
             
         
-        this.setState({ ...this.state, dialog: false, which: 'none' });
+        this.setState({ ...this.state, dialog: false, which: 'none', port: '', type: '', model: '', samplingPeriod: '', driverFile: '', driverFileName: '' });
     };
 
     handleChange = (e) => {
@@ -353,7 +354,9 @@ const mapDispatchToProps = (dispatch) => ({
             dispatch({type: 'REMOVE_SENSOR_REQUEST'})
             appService.removeSensor(s.model, s.type)
                 .then(json => {
-                    dispatch({type: 'REMOVE_SENSOR_SUCCESS'})
+                    const type = s.type,
+                          model = s.model  
+                    dispatch({type: 'REMOVE_SENSOR_SUCCESS', type, model})
                     dispatch({type: 'GET_SENSORS_REQUEST'})
                     appService.getSensors()
                         .then(json => {
