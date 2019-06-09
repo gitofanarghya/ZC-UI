@@ -30,9 +30,9 @@ const initialState = {
     snowSense: null,
     wifiList: [],
     sensorEvents: {
-        wind: false,
-        flood: false,
-        snow: false
+        wind: 'disconnected',
+        snow: 'disconnected',
+        flood: 'disconnected'
     },
     roverStatus: {},
     windLimits: {
@@ -238,13 +238,9 @@ export function app(state, action) {
         
 
         case 'GET_SENSORS_SUCCESS':
-        let temp = {
-            wind: false,
-            snow: false,
-            flood: false
-        }
+        let temp = state.sensorEvents
         action.json.message.map(s => {
-            temp[s.type] = s.enabled
+            temp[s.type] = s.status
         })
         return {
             ...state,

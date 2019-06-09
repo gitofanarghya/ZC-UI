@@ -170,9 +170,7 @@ class Sensors extends React.Component {
                     </TableHead>
                     <TableBody>
                     {sensors && sensors.map(row => (
-                        <TableRow key={row.port+row.type+row.model}
-                            style={{cursor: 'pointer'}}
-                        >
+                        <TableRow key={row.port+row.type+row.model}>
                             <TableCell>
                                 <Checkbox 
                                     onClick={() => this.selectSensor(row)}
