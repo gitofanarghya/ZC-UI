@@ -165,6 +165,7 @@ class Sensors extends React.Component {
                         <TableCell >Model #</TableCell>
                         <TableCell >Sampling Period</TableCell>
                         <TableCell >Enabled</TableCell>
+                        <TableCell >Status</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
@@ -191,6 +192,7 @@ class Sensors extends React.Component {
                                 /> */}
                                 <Switch color='primary' checked={this.state.enabled.filter(t => t.model === row.model && t.type === row.type).length !== 0} onClick={() => this.enable(row)} />
                             </TableCell>
+                            <TableCell >{row.status}</TableCell>
                         </TableRow>
                     ))}
                     </TableBody>
@@ -332,7 +334,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({type: 'ADD_SENSOR_REQUEST'})
         appService.addSensor(file, port, type, model, samplingPeriod)
             .then(json => {
-                if(json.Result === 'Success') {
+                if(json.result === 'success') {
                     dispatch({type: 'ADD_SENSORS_SUCCESS'})
                     dispatch({type: 'GET_SENSORS_REQUEST'})
                     appService.getSensors()

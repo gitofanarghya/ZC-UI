@@ -183,7 +183,7 @@ class ZoneController extends React.Component {
                                     input={<OutlinedInput labelWidth={50} name="ssid" id="ssid" />}
                                 >
                                     {
-                                        wifiList.length === 0 ? <MenuItem value={'none'}> <CircularProgress /></MenuItem> : wifiList.map(w => <MenuItem key={w} value={w}>{w}</MenuItem>)
+                                        wifiList.length === 0 ? <MenuItem value={'none'}> <CircularProgress /></MenuItem> : wifiList.map(w => <MenuItem key={w + Math.random() * (+100 - +0) + +0} value={w}>{w}</MenuItem>)
                                     }
                                     
                                 </Select>

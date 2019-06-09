@@ -557,7 +557,7 @@ function setTimeZone(time) {
         })
     };
 
-    return fetch(`${hostName}/set/timeZone`, requestOptions)
+    return fetch(`${hostName}/timeZone/set`, requestOptions)
         .then(handleResponse)
 }
 
@@ -569,7 +569,7 @@ function getTimeZone() {
         body: null
     };
 
-    return fetch(`${hostName}/get/timeZone`, requestOptions)
+    return fetch(`${hostName}/timeZone/get`, requestOptions)
         .then(handleResponse)
 }
 

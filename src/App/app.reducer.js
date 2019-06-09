@@ -165,7 +165,7 @@ export function app(state, action) {
         case 'SCAN_WIFI_SUCCESS':
         return {
             ...state,
-            wifiList: action.json.Result
+            wifiList: action.json.message
         }
 
         case 'sensorReadings/wind':
@@ -243,12 +243,12 @@ export function app(state, action) {
             snow: false,
             flood: false
         }
-        action.json.Result.map(s => {
+        action.json.message.map(s => {
             temp[s.type] = s.enabled
         })
         return {
             ...state,
-            sensors: action.json.Result,
+            sensors: action.json.message,
             sensorEvents: temp
         }
 
