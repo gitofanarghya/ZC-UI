@@ -238,7 +238,11 @@ export function app(state, action) {
         
 
         case 'GET_SENSORS_SUCCESS':
-        let temp = state.sensorEvents
+        let temp = {
+            wind: 'disconnected',
+            snow: 'disconnecetd',
+            flood: 'disconnected'
+        }
         action.json.message.map(s => {
             temp[s.type] = s.status
         })
@@ -252,7 +256,7 @@ export function app(state, action) {
                 alert(`Removed Sensor of type: ${action.type} and model no: ${action.model} successfully`)
         return {
             ...state,
-            sensorEvents: {...state.sensorEvents, [action.type]: false}/* 
+            sensorEvents: {...state.sensorEvents, [action.type]: 'disconnected'}/* 
             alert: {
                 type: 'success',
                 message: 'Removed Sensor Successfully'
