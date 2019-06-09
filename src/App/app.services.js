@@ -314,8 +314,14 @@ function handleResponse(response) {
         if (!response.ok) {
             const error = (json && json.message) || response.statusText;
             return Promise.reject(error);
+        } else {
+            if(json.result === 'failure') {
+                const error = json.message
+                return Promise.reject(error)
+            } else {
+                return json
+            }
         }
-        return json;
     });
 }
 
