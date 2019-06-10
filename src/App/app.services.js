@@ -12,7 +12,7 @@ export const appService = {
     triggerDiscovery,
     setPanID,
     threshold,
-    heartBeat,
+    setHeartBeat,
     setTimeZone,
     getHeartBeat,
     getThreshold,
@@ -41,12 +41,50 @@ export const appService = {
     getSnowLimits,
     setSnowLimits,
     getBQ,
-    disableBQ
+    disableBQ,
+    getWifi,
+    getZoneID,
+    setZoneID
 };
-/*const hostName = 'http://159.89.169.50:4000'; */
-const hostName = `http://${window.location.hostname}:5000`;
+const hostName = 'http://159.89.169.50:4000'; 
+/*const hostName = `http://${window.location.hostname}:5000`;*/
 
 const hostName2 = `http://${window.location.hostname}:5001`; 
+
+function setZoneID(id) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            zoneID: id
+        })
+    }
+
+    return fetch(`${hostName}/zoneID/set`, requestOptions)
+        .then(handleResponse)
+}
+
+function getZoneID() {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors',
+        body: null
+    }
+
+    return fetch(`${hostName}/zoneID/get`, requestOptions)
+        .then(handleResponse)
+}
+
+function getWifi() {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors',
+        body: null
+    }
+
+    return fetch(`${hostName}/currentWifi`, requestOptions)
+        .then(handleResponse)
+}
 
 function setSnowLimits(maxSnowLevel, movingAveragePeriod, rowHeight, rowWidth, stepSize) {
     const requestOptions = {
@@ -556,7 +594,7 @@ function setFrequency(power, status) {
 
 
 
-function heartBeat(enabled, hbinterval, maxMsgs) {
+function setHeartBeat(enabled, hbinterval, maxMsgs) {
     const requestOptions = {
         method: "POST",
         mode: 'cors',
@@ -567,7 +605,7 @@ function heartBeat(enabled, hbinterval, maxMsgs) {
         })
     };
 
-    return fetch(`${hostName}/set/heartBeatSettings`, requestOptions)
+    return fetch(`${hostName}/heartBeat/set`, requestOptions)
         .then(handleResponse)
 }
 
@@ -636,7 +674,7 @@ function getHeartBeat() {
         body: null
     };
 
-    return fetch(`${hostName}/get/heartBeatSettings`, requestOptions)
+    return fetch(`${hostName}/heartBeat/get`, requestOptions)
         .then(handleResponse)
 }
 

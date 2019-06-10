@@ -64,7 +64,12 @@ const initialState = {
     gettingWindLimits: false,
     settingWindLimits: false,
     PANID: '',
-    bqEnabled: false
+    bqEnabled: false,
+    currentWifi: '',
+    zoneID: '',
+    heartBeatInterval: '',
+    heartBeatMaxMessages: '',
+    heartBeatEnabled: false
 }
 
 const difference = (a1, a2) => {
@@ -82,6 +87,27 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
+
+        case 'GET_HEARTBEAT_SETTINGS_SUCCESS': 
+        return {
+            ...state,
+            heartBeatInterval: action.json.message.interval,
+            heartBeatMaxMessages: action.json.message.maxMsgs,
+            heartBeatEnabled: Boolean(action.json.message.enabled)
+        }
+
+        case 'GET_ZONE_ID_SUCCESS': 
+        return {
+            ...state,
+            zoneID: action.json.message
+        }
+
+        case 'GET_WIFI_SUCCESS': 
+        return {
+            ...state,
+            currentWifi: action.json.message
+        }
+
         case 'GET_BQ_SUCCESS': 
         return {
             ...state,

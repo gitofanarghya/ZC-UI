@@ -66,7 +66,7 @@ const styles = theme => ({
 class ZoneController extends React.Component {
 
     state = {
-        ssid: '',
+        ssid: this.props.currentWifi,
         password: '',
         DHCP: false,
         staticIP: '',
@@ -84,14 +84,21 @@ class ZoneController extends React.Component {
         stepSize: '',
         bqFile: '',
         bqFileName: '',
-        bqEnabled: this.props.bqEnabled
+        bqEnabled: this.props.bqEnabled,
+        zoneID: this.props.zoneID,
+        heartBeatInterval: this.props.heartBeatInterval,
+        heartBeatMaxMessages: this.props.heartBeatMaxMessages,
+        heartBeatEnabled: this.props.heartBeatEnabled
     }
 
     componentDidMount = () => {
+        this.props.getZoneID()
+        this.props.getWifi()
         this.props.scanWifi()
         this.props.getWindLimits()
         this.props.getFloodLimits()
         this.props.getSnowLimits()
+        this.props.getHeartBeatSettings()
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -126,6 +133,26 @@ class ZoneController extends React.Component {
             this.setState({
                 ...this.state,
                 bqEnabled: nextProps.bqEnabled
+            })
+        }
+        if(nextProps.currentWifi !== this.props.currentWifi) {
+            this.setState({
+                ...this.state,
+                ssid: nextProps.currentWifi
+            })
+        }
+        if(nextProps.zoneID !== this.props.zoneID) {
+            this.setState({
+                ...this.state,
+                zoneID: nextProps.zoneID
+            })
+        }
+        if(nextProps.heartBeatInterval !== this.props.heartBeatInterval || nextProps.heartBeatMaxMessages !== this.props.heartBeatMaxMessages || nextProps.heartBeatEnabled !== this.props.heartBeatEnabled) {
+            this.setState({
+                ...this.state,
+                heartBeatInterval: nextProps.heartBeatInterval,
+                heartBeatMaxMessages: nextProps.heartBeatMaxMessages,
+                heartBeatEnabled: nextProps.heartBeatEnabled
             })
         }
     }
@@ -193,6 +220,21 @@ class ZoneController extends React.Component {
         }
     }
 
+    heartBeatToggle = () => {
+        this.setState({
+            ...this.state,
+            heartBeatEnabled: !this.state.heartBeatEnabled
+        })
+    }
+
+    setZoneID = () => {
+        this.props.setZoneID(this.state.zoneID)
+    }
+
+    setHeartBeatSettings = () => {
+        this.props.setHeartBeatSettings(this.state.heartBeatEnabled, this.state.heartBeatInterval, this.state.heartBeatInterval)
+    }
+
     render() {
         const { classes, wifiList } = this.props
         return (
@@ -206,6 +248,23 @@ class ZoneController extends React.Component {
                             </Typography>
                             </Toolbar>
                             </AppBar>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
+                                Zone ID Configuration
+                            </Typography>
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='zoneID'
+                                label='Zone ID'
+                                value={this.state.zoneID}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                            />
+                            <Button variant='contained' color='primary' disabled={this.state.zoneID === this.props.zoneID} onClick={() => this.setZoneID()} className={classes.saveButton}>Save</Button>
+                            </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Wifi Configuration
@@ -307,12 +366,19 @@ class ZoneController extends React.Component {
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Heart Beat Configuration
                             </Typography>
+                            <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
+                                control={
+                                    <Switch color='primary' checked={this.state.heartBeatEnabled} onClick={() => this.heartBeatToggle()} />
+                                }
+                                label='Enable Heart Beat'
+                            />
                             <TextField
                                 className={classes.field}
                                 fullWidth
-                                name='heartbeatInterval'
+                                name='heartBeatInterval'
                                 label='Heart Beat Interval'
-                                value={this.state.password}
+                                value={this.state.heartBeatInterval}
+                                disabled={!this.state.heartBeatEnabled}
                                 onChange={this.handleChange}
                                 margin="normal"
                                 variant='outlined'
@@ -321,33 +387,17 @@ class ZoneController extends React.Component {
                             <TextField
                                 className={classes.field}
                                 fullWidth
-                                name='heartbeatMaxMessages'
+                                name='heartBeatMaxMessages'
                                 label='Heart Beat Max Messages'
-                                value={this.state.password}
+                                value={this.state.heartBeatMaxMessages}
+                                disabled={!this.state.heartBeatEnabled}
                                 onChange={this.handleChange}
                                 margin="normal"
                                 variant='outlined'
                                 InputLabelProps={{ shrink: true }}
                             />
-                            <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
-                            </div>{/* 
-                            <div className={classes.grid2}>
-                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
-                                PAN ID Configuration
-                            </Typography>
-                            <TextField
-                                className={classes.field}
-                                fullWidth
-                                name='panID'
-                                label='PAN ID'
-                                value={this.state.panID}
-                                onChange={this.handleChange}
-                                margin="normal"
-                                variant='outlined'
-                                InputLabelProps={{ shrink: true }}
-                            />
-                            <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
-                            </div> */}
+                            <Button variant='contained' color='primary' disabled={!this.state.heartBeatEnabled} onClick={() => this.setHeartBeatSettings()} className={classes.saveButton}>Save</Button>
+                            </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Sync Configuration
@@ -578,7 +628,7 @@ class ZoneController extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits, bqEnabled} = state.app
+    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits, bqEnabled, currentWifi, zoneID, heartBeatEnabled, heartBeatInterval, heartBeatMaxMessages} = state.app
 
     return {
         wifiList,
@@ -591,7 +641,12 @@ function mapStateToProps(state) {
         settingSnowLimits, 
         gettingWindLimits, 
         settingWindLimits,
-        bqEnabled
+        bqEnabled,
+        currentWifi,
+        heartBeatEnabled,
+        heartBeatInterval,
+        heartBeatMaxMessages,
+        zoneID
     }
 }
 
@@ -706,7 +761,67 @@ const mapDispatchToProps = (dispatch) => ({
             }, error => {
                 dispatch({type: 'DISABLE_BQ_FAILURE'})
             })
-    }
+    },
+    getWifi: () => {
+        dispatch({type: 'GET_WIFI_REQUEST'})
+        appService.getWifi()
+            .then(json => {
+                dispatch({type: 'GET_WIFI_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_WIFI_FAILURE'})
+            })
+    },
+    getZoneID: () => {
+        dispatch({type: 'GET_ZONE_ID_REQUEST'})
+        appService.getZoneID()
+            .then(json => {
+                dispatch({type: 'GET_ZONE_ID_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_ZONE_ID_FAILURE'})
+            })
+    },
+    setZoneID: (id) => {
+        dispatch({type: 'SET_ZONE_ID_REQUEST'})
+        appService.setZoneID(id)
+            .then(json => {
+                dispatch({type: 'SET_ZONE_ID_SUCCESS'})
+                dispatch({type: 'GET_ZONE_ID_REQUEST'})
+                appService.getZoneID()
+                    .then(json => {
+                        dispatch({type: 'GET_ZONE_ID_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_ZONE_ID_FAILURE'})
+                    })
+            }, error => {
+                dispatch({type: 'SET_ZONE_ID_FAILURE'})
+            })
+    },
+    getHeartBeatSettings: () => {
+        dispatch({type: 'GET_HEARTBEAT_SETTINGS_REQUEST'})
+        appService.getHeartBeat()
+            .then(json => {
+                dispatch({type: 'GET_HEARTBEAT_SETTINGS_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_HEARTBEAT_SETTINGS_FAILURE'})
+            })
+    },
+    setHeartBeatSettings: (enabled, interval, maxMsgs) => {
+        dispatch({type: 'SET_HEARTBEAT_SETTINGS_REQUEST'})
+        appService.setHeartBeat(enabled, interval, maxMsgs)
+            .then(json => {
+                dispatch({type: 'SET_HEARTBEAT_SETTINGS_SUCCESS'})
+                dispatch({type: 'GET_HEARTBEAT_SETTINGS_REQUEST'})
+                appService.getHeartBeat()
+                    .then(json => {
+                        dispatch({type: 'GET_HEARTBEAT_SETTINGS_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_HEARTBEAT_SETTINGS_FAILURE'})
+                    })
+            }, error => {
+                dispatch({type: 'SET_HEARTBEAT_SETTINGS_FAILURE'})
+            })
+    },
+
 })
 
 

@@ -4,7 +4,7 @@ const app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 const mqtt = require('mqtt')
-const mqttServerURL =  /*'http://159.89.169.50:2000'*/ 'http://localhost:1883'
+const mqttServerURL =  'http://159.89.169.50:2000'/* 'http://localhost:1883'*/
 const client = mqtt.connect(mqttServerURL)
 
 client.on('connect', function () {
@@ -13,14 +13,14 @@ client.on('connect', function () {
     if(!err) {
       console.log("\x1B[32m subscribed to mqtt topic ui/rover/scan")
     } else {
-      console.log("\x1b[31m error subscribing to mqtt topic ui/rover/stowangles")
+      console.log("\x1b[31m error subscribing to mqtt topic ui/rover/scan")
     }
   })
   client.subscribe('ui/rover/spa', function (err) {
     if(!err) {
       console.log("\x1B[32m subscribed to mqtt topic ui/rover/spa")
     } else {
-      console.log("\x1b[31m error subscribing to mqtt topic ui/rover/stowangles")
+      console.log("\x1b[31m error subscribing to mqtt topic ui/rover/spa")
     }
   })
   client.subscribe('ui/rover/stowangles', function (err) {
