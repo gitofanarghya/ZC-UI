@@ -36,6 +36,7 @@ class App extends React.Component {
     componentDidMount = () => {
         this.props.init()
         this.props.getPanID()
+        this.props.getBQ()
         const io = socketIOClient(`http://${window.location.hostname}:80`);
         io.on('connect', () => {
             console.log('connected')
@@ -117,6 +118,14 @@ class App extends React.Component {
             try {
                 const json = JSON.parse(data)
                 this.props.received('changeEvent/rover', json)
+            } catch(e) {
+                io.emit('ui/log/errors', e)
+            } 
+        })
+        io.on('ui/xbee/panid', data => {
+            try {
+                const json = JSON.parse(data)
+                this.props.received('ui/xbee/panid', json)
             } catch(e) {
                 io.emit('ui/log/errors', e)
             } 
@@ -275,6 +284,15 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'GET_PAN_ID_SUCCESS', json})
             }, error => {
                 dispatch({type: 'GET_PAN_ID_FAILURE'})
+            })
+    },
+    getBQ: () => {
+        dispatch({type: 'GET_BQ_REQUEST'})
+        appService.getBQ()
+            .then(json => {
+                dispatch({type: 'GET_BQ_SUCCESS', json: json.message.enabled})
+            }, error => {
+                dispatch({type: 'GET_BQ_FAILURE'})
             })
     }
 })

@@ -63,7 +63,8 @@ const initialState = {
     settingSnowLimits: false,
     gettingWindLimits: false,
     settingWindLimits: false,
-    PANID: null 
+    PANID: '',
+    bqEnabled: false
 }
 
 const difference = (a1, a2) => {
@@ -81,7 +82,13 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
-        case 'GET_PAN_ID_SUCCESS':
+        case 'GET_BQ_SUCCESS': 
+        return {
+            ...state,
+            bqEnabled: action.json
+        }
+
+        case 'ui/xbee/panid':
         return {
             ...state,
             PANID: action.json.panID

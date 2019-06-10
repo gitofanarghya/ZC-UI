@@ -79,6 +79,13 @@ client.on('connect', function () {
       console.log("\x1b[31m error subscribing to mqtt topic changeEvent/rover")
     }
   })
+  client.subscribe('ui/xbee/panid', function (err) {
+    if(!err) {
+      console.log("\x1B[32m subscribed to mqtt topic ui/xbee/panid")
+    } else {
+      console.log("\x1b[31m error subscribing to mqtt topic ui/xbee/panid")
+    }
+  })
 })
 
 client.on('message', function(topic, message) {

@@ -70,7 +70,6 @@ class ZoneController extends React.Component {
         password: '',
         DHCP: false,
         staticIP: '',
-        BQ: false,
         upperSpeedLimit: '',
         lowerSpeedLimit: '',
         minBreachTime: '',
@@ -82,7 +81,10 @@ class ZoneController extends React.Component {
         snowMovingAveragePeriod: '',
         rowHeight: '',
         rowWidth: '',
-        stepSize: ''
+        stepSize: '',
+        bqFile: '',
+        bqFileName: '',
+        bqEnabled: this.props.bqEnabled
     }
 
     componentDidMount = () => {
@@ -120,6 +122,12 @@ class ZoneController extends React.Component {
                 stepSize: nextProps.snowLimits.stepSize
             })
         }
+        if(nextProps.bqEnabled !== this.props.bqEnabled) {
+            this.setState({
+                ...this.state,
+                bqEnabled: nextProps.bqEnabled
+            })
+        }
     }
 
     handleChange = (event) => {
@@ -153,6 +161,37 @@ class ZoneController extends React.Component {
         this.props.setSnowLimits(this.state.maxSnowLevel, this.state.snowMovingAveragePeriod, this.state.rowHeight, this.state.rowWidth, this.state.stepSize)
     }
 
+    handleSelectedFile = e => {
+        this.setState({
+            ...this.state,
+            bqFile: e.target.files[0],
+            bqFileName: e.target.files[0].name
+        })
+    }
+
+    saveBQKey = () => {
+        this.props.saveBQKey(this.state.bqFile)
+        this.setState({
+            ...this.state,
+            bqFile: '',
+            bqFileName: ''
+        })
+    }
+
+    BQToggle = () => {
+        if(this.state.bqEnabled) {
+            this.props.disableBQ()
+            this.setState({
+                ...this.state,
+                bqEnabled: false
+            })
+        } else {
+            this.setState({
+                ...this.state,
+                bqEnabled: true
+            })
+        }
+    }
 
     render() {
         const { classes, wifiList } = this.props
@@ -233,22 +272,36 @@ class ZoneController extends React.Component {
                             </Typography>
                             <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
                                 control={
-                                    <Switch color='primary' checked={this.state.BQ} onClick={() => this.BQToggle()} />
+                                    <Switch color='primary' checked={this.state.bqEnabled} onClick={() => this.BQToggle()} />
                                 }
                                 label='Enable Big Query'
                             />
+                            <div style={{display: 'flex', alignItems: 'baseline', width: '100%'}}>
                             <TextField
-                                className={classes.field}
+                                id="bqkey"
+                                label="Big Query Key"
+                                helperText="Upload Big Query Key File"
+                                name='bqFile'
+                                value={this.state.bqFileName}
+                                disabled={!this.state.bqEnabled}
+                                margin="dense"
+                                variant="outlined"
                                 fullWidth
-                                name='bqKey'
-                                label='Big Query key'
-                                value={this.state.bqKey}
-                                onChange={this.handleChange}
-                                margin="normal"
-                                variant='outlined'
-                                InputLabelProps={{ shrink: true }}
                             />
-                            <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
+                            <input
+                                accept="*"
+                                style={{ display: 'none'}}
+                                id="contained-button-file"
+                                type="file"
+                                onChange={this.handleSelectedFile}
+                            />
+                            <label htmlFor="contained-button-file">
+                                <Button variant="contained" disabled={!this.state.bqEnabled} color="primary" component="span" style={{margin: 5}}>
+                                    Browse
+                                </Button>
+                            </label>
+                            </div>
+                            <Button variant='contained' disabled={!this.state.bqEnabled} onClick={() => this.saveBQKey()} color='primary'className={classes.saveButton}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
@@ -277,7 +330,7 @@ class ZoneController extends React.Component {
                                 InputLabelProps={{ shrink: true }}
                             />
                             <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
-                            </div>
+                            </div>{/* 
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 PAN ID Configuration
@@ -294,7 +347,7 @@ class ZoneController extends React.Component {
                                 InputLabelProps={{ shrink: true }}
                             />
                             <Button variant='contained' color='primary'className={classes.saveButton}>Save</Button>
-                            </div>
+                            </div> */}
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
                                 Sync Configuration
@@ -525,7 +578,7 @@ class ZoneController extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits} = state.app
+    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits, bqEnabled} = state.app
 
     return {
         wifiList,
@@ -537,7 +590,8 @@ function mapStateToProps(state) {
         gettingSnowLimits, 
         settingSnowLimits, 
         gettingWindLimits, 
-        settingWindLimits 
+        settingWindLimits,
+        bqEnabled
     }
 }
 
@@ -633,6 +687,24 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'GET_SNOW_LIMITS_SUCCESS', json})
             }, error => {
                 dispatch({type: 'GET_SNOW_LIMITS_FAILURE'})
+            })
+    },
+    saveBQKey: (file) => {
+        dispatch({type: 'SAVE_BQ_KEY_REQUEST'})
+        appService.uploadKey(file)
+            .then(json => {
+                dispatch({type: 'SAVE_BQ_KEY_SUCCESS'})
+            }, error => {
+                dispatch({type: 'SAVE_BQ_KEY_FAILURE'})
+            })
+    },
+    disableBQ: () => {
+        dispatch({type: 'DISABLE_BQ_REQUEST'})
+        appService.disableBQ()
+            .then(json => {
+                dispatch({type: 'DISABLE_BQ_SUCCESS'})
+            }, error => {
+                dispatch({type: 'DISABLE_BQ_FAILURE'})
             })
     }
 })

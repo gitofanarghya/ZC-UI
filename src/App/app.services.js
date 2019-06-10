@@ -39,7 +39,9 @@ export const appService = {
     getFloodLimits,
     setFloodLimits,
     getSnowLimits,
-    setSnowLimits
+    setSnowLimits,
+    getBQ,
+    disableBQ
 };
 /*const hostName = 'http://159.89.169.50:4000'; */
 const hostName = `http://${window.location.hostname}:5000`;
@@ -340,6 +342,27 @@ function setWifiInfo(ssid, pass) {
         .then(handleResponse)
 }
 
+function getBQ() {
+    const requestOptions = {
+        method: "GET",
+        mode: 'cors',
+        body: null
+    };
+
+    return fetch(`${hostName}/bigQuery/get`, requestOptions)
+        .then(handleResponse)
+}
+
+function disableBQ() {
+    const requestOptions = {
+        method: "POST",
+        mode: 'cors',
+        body: null
+    };
+
+    return fetch(`${hostName}/bigQuery/set?enabled=false`, requestOptions)
+        .then(handleResponse)
+}
 
 function uploadKey(file) {
     var data = new FormData()
@@ -350,7 +373,7 @@ function uploadKey(file) {
         body: data
     };
 
-    return fetch(`${hostName}/loadBigQueryKey`, requestOptions)
+    return fetch(`${hostName}/bigQuery/set?enabled=true`, requestOptions)
         .then(handleResponse)
 }
 
