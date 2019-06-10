@@ -35,6 +35,7 @@ class App extends React.Component {
 
     componentDidMount = () => {
         this.props.init()
+        this.props.getPanID()
         const io = socketIOClient(`http://${window.location.hostname}:80`);
         io.on('connect', () => {
             console.log('connected')
@@ -265,6 +266,15 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'GET_SENSORS_SUCCESS', json})
             }, error => {
                 dispatch({type: 'GET_SENSORS_FAILURE'})
+            })
+    },
+    getPanID: () => {
+        dispatch({type: 'GET_PAN_ID_REQUEST'})
+        appService.getPanID()
+            .then(json => {
+                dispatch({type: 'GET_PAN_ID_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_PAN_ID_FAILURE'})
             })
     }
 })

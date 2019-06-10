@@ -2,9 +2,9 @@ const express = require('express');
 const path = require('path');
 const app = express();
 var server = require('http').Server(app);
-var io = require('socket.io')(server, { origins: '*:*' });
+var io = require('socket.io')(server);
 const mqtt = require('mqtt')
-const mqttServerURL =  'http://159.89.169.50:2000'/* 'http://localhost:1883'*/
+const mqttServerURL =  /*'http://159.89.169.50:2000'*/ 'http://localhost:1883'
 const client = mqtt.connect(mqttServerURL)
 
 client.on('connect', function () {

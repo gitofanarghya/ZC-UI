@@ -86,7 +86,7 @@ class ScanTab extends React.Component {
     }
 
     render() {
-        const { classes, xbeeResponse } = this.props
+        const { classes, xbeeResponse, PANID } = this.props
 
         return (
             <Fragment>
@@ -111,9 +111,9 @@ class ScanTab extends React.Component {
                         <TextField
                             id="scanParameter"
                             className={classes.textField}
-                            value={this.state.scanParameter}
+                            value={PANID}
                             onChange={this.inputChange}
-                            placeholder='PAN ID'
+                            disabled={this.state.scanSelection === 'PAN ID'}
                             margin="none"
                             variant='outlined'
                         /> :
@@ -179,10 +179,11 @@ class ScanTab extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { xbeeResponse } = state.app
+    const { xbeeResponse, PANID } = state.app
 
     return {
-        xbeeResponse
+        xbeeResponse,
+        PANID
     }
 }
 

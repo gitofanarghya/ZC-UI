@@ -62,7 +62,8 @@ const initialState = {
     gettingSnowLimits: false,
     settingSnowLimits: false,
     gettingWindLimits: false,
-    settingWindLimits: false    
+    settingWindLimits: false,
+    PANID: null 
 }
 
 const difference = (a1, a2) => {
@@ -80,6 +81,11 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
+        case 'GET_PAN_ID_SUCCESS':
+        return {
+            ...state,
+            PANID: action.json.panID
+        }
 
         case 'SET_SNOW_LIMITS_REQUEST':
         return {

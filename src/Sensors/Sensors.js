@@ -75,7 +75,7 @@ class Sensors extends React.Component {
         } else {
             this.setState({
                 ...this.state,
-                selectedSensors: [...this.state.selectedSensors.filter(t => t.model !== row.model)]
+                selectedSensors: [...this.state.selectedSensors.filter(t => t.model !== row.model && t.type !== row.type)]
             })
         }
     }
