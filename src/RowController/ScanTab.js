@@ -150,7 +150,7 @@ class ScanTab extends React.Component {
                         <TableBody>
                         {xbeeResponse.length !== 0 && xbeeResponse !== undefined && xbeeResponse.map(res => {
                             return (
-                            <TableRow key={res.DID}
+                            <TableRow key={res.macID}
                                 onClick={() => this.selectRow(res)}
                                 style={{cursor: 'pointer'}}
                             >

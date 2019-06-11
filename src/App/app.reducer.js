@@ -456,15 +456,19 @@ export function app(state, action) {
         case 'ui/rover/scan':
         let a = null
         if(state.commissioningData === null) {
-            if(state.xbeeResponse.filter(r => action.json.DID === r.DID).length === 0) {
+            if(state.xbeeResponse.filter(r => action.json.macID === r.macID).length === 0) {
                 a = [...state.xbeeResponse, action.json]
             } else {
                 a = state.xbeeResponse
             }
         } else {
-            let b = state.commissioningData.filter(r => action.json.DID === r.deviceID)
+            let b = state.commissioningData.filter(r => action.json.macID === r.macID)
             if(b.length === 0) {
-                a = [...state.xbeeResponse, action.json]
+                if(state.xbeeResponse.filter(r => action.json.macID === r.macID).length === 0) {
+                    a = [...state.xbeeResponse, action.json]
+                } else {
+                    a = [...state.xbeeResponse]    
+                }
             } else {
                 a = [...state.xbeeResponse]
             }
