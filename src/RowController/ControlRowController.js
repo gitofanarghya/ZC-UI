@@ -63,8 +63,8 @@ class ControlRowController extends React.Component {
                     
                     </Grid>
                     <Grid item style={{textAlign: 'center'}}>
-                        <Button color='primary' variant='contained' onClick={() => this.props.controlledTrackers.map(t => this.props.sendCommand(t.deviceID, 'NEGATIVE'))} style={{ margin: 10 }}>Run West</Button>
-                        <Button color='primary' variant='contained' onClick={() => this.props.controlledTrackers.map(t => this.props.sendCommand(t.deviceID, 'POSITIVE'))} style={{ margin: 10 }}>Run East</Button>
+                        <Button color='primary' variant='contained' onClick={() => this.props.controlledTrackers.map(t => this.props.sendCommand(t.deviceID, 'POSITIVE'))} style={{ margin: 10 }}>Run West</Button>
+                        <Button color='primary' variant='contained' onClick={() => this.props.controlledTrackers.map(t => this.props.sendCommand(t.deviceID, 'NEGATIVE'))} style={{ margin: 10 }}>Run East</Button>
                         <Button color='primary' variant='contained' onClick={() => this.props.controlledTrackers.map(t => this.props.sendCommand(t.deviceID, 'STOP'))} style={{ margin: 10 }}>Stop</Button>
                         <Button color='primary' disabled={this.state.typeOfStow === 'STOW'} onClick={() => this.props.controlledTrackers.map(t => this.props.sendStow(t.deviceID, this.state.typeOfStow))} variant='contained' style={{ marginLeft: 10 }}>{this.state.typeOfStow}</Button>
                         <Button 
