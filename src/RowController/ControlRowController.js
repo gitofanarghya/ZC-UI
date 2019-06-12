@@ -36,10 +36,10 @@ class ControlRowController extends React.Component {
 
     autoToggle = () => {
         if(this.state.auto) {
-            this.props.controlledTrackers.map(t => this.props.sendStow(t.deviceID, 'AUTO'))
+            this.props.controlledTrackers.map(t => this.props.sendStow(t.deviceID, 'MANUAL'))
             this.setState({...this.state, auto: !this.state.auto})
         } else {
-            this.props.controlledTrackers.map(t => this.props.sendStow(t.deviceID, 'MANUAL'))
+            this.props.controlledTrackers.map(t => this.props.sendStow(t.deviceID, 'AUTO'))
             this.setState({...this.state, auto: !this.state.auto})
         }
     } 
