@@ -350,7 +350,7 @@ export function app(state, action) {
         }
 
         case 'GET_COMMISSIONING_DATA_SUCCESS':
-        if(action.json.staticData === null || action.json.staticData.length === 0) {
+        if(action.json.message === null || action.json.message.length === 0) {
             return {
                 ...state,
                 fetchingCommissioningData: false,
@@ -359,15 +359,15 @@ export function app(state, action) {
             }
         } else {
             let newRoverStatus = {...state.roverStatus}
-            action.json.staticData.map(r => {
+            action.json.message.map(r => {
                 newRoverStatus[r.deviceID] = 'online'
             })
             return {
                 ...state,
                 fetchingCommissioningData: false,
                 currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
-                commissioningData: action.json.staticData,
-                currentTracker: action.json.staticData[0].trackerID,
+                commissioningData: action.json.message,
+                currentTracker: action.json.message[0].trackerID,
                 roverStatus: newRoverStatus
             }
         }

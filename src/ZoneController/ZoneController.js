@@ -4,6 +4,7 @@ import { Grid, TextField, Typography, IconButton, FormControlLabel, FormControl,
 import { connect } from 'react-redux'
 import { appService } from '../App/app.services';
 import Refresh from '@material-ui/icons/Refresh'
+import {timezones} from '../util/timeZones'
 
 const styles = theme => ({
   root: {
@@ -88,7 +89,8 @@ class ZoneController extends React.Component {
         zoneID: this.props.zoneID,
         heartBeatInterval: this.props.heartBeatInterval,
         heartBeatMaxMessages: this.props.heartBeatMaxMessages,
-        heartBeatEnabled: this.props.heartBeatEnabled
+        heartBeatEnabled: this.props.heartBeatEnabled,
+        timezone: this.props.timezone
     }
 
     componentDidMount = () => {
@@ -153,6 +155,12 @@ class ZoneController extends React.Component {
                 heartBeatInterval: nextProps.heartBeatInterval,
                 heartBeatMaxMessages: nextProps.heartBeatMaxMessages,
                 heartBeatEnabled: nextProps.heartBeatEnabled
+            })
+        }
+        if(nextProps.timezone !== this.props.timezone) {
+            this.setState({
+                ...this.state,
+                timezone: nextProps.timezone
             })
         }
     }
@@ -233,6 +241,10 @@ class ZoneController extends React.Component {
 
     setHeartBeatSettings = () => {
         this.props.setHeartBeatSettings(this.state.heartBeatEnabled, this.state.heartBeatInterval, this.state.heartBeatInterval)
+    }
+
+    setTimeZone = () => {
+        this.props.setTimezone(this.state.timezone)
     }
 
     render() {
@@ -396,7 +408,28 @@ class ZoneController extends React.Component {
                                 variant='outlined'
                                 InputLabelProps={{ shrink: true }}
                             />
-                            <Button variant='contained' color='primary' disabled={!this.state.heartBeatEnabled} onClick={() => this.setHeartBeatSettings()} className={classes.saveButton}>Save</Button>
+                            <Button variant='contained' color='primary' disabled={this.state.heartBeatEnabled === this.props.heartBeatEnabled && this.state.heartBeatInterval === this.props.heartBeatInterval && this.state.heartBeatMaxMessages === this.props.heartBeatMaxMessages} onClick={() => this.setHeartBeatSettings()} className={classes.saveButton}>Save</Button>
+                            </div>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
+                                Timezone Configuration
+                            </Typography>
+                            <FormControl variant="outlined" className={classes.field} fullWidth>
+                                <InputLabel htmlFor="ssid">
+                                    Timezone
+                                </InputLabel>
+                                <Select
+                                    value={this.state.timezone}
+                                    onChange={this.handleChange}
+                                    input={<OutlinedInput labelWidth={70} style={{width:'inherit'}}name="timezone" id="timezone" />}
+                                >
+                                    {
+                                        timezones.filter(t => t.isdst === false).map(t => <MenuItem key={t.value} value={t.utc[0]}>{t.text}</MenuItem>)
+                                    }
+                                    
+                                </Select>
+                            </FormControl>
+                            <Button disabled={this.props.timezone === this.state.timezone} variant='contained' color='primary'className={classes.saveButton} onClick={() => this.setTimeZone()}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
@@ -628,7 +661,7 @@ class ZoneController extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits, bqEnabled, currentWifi, zoneID, heartBeatEnabled, heartBeatInterval, heartBeatMaxMessages} = state.app
+    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits, bqEnabled, currentWifi, zoneID, heartBeatEnabled, heartBeatInterval, heartBeatMaxMessages, timeZone} = state.app
 
     return {
         wifiList,
@@ -646,7 +679,8 @@ function mapStateToProps(state) {
         heartBeatEnabled,
         heartBeatInterval,
         heartBeatMaxMessages,
-        zoneID
+        zoneID,
+        timezone: timeZone
     }
 }
 
@@ -821,6 +855,22 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'SET_HEARTBEAT_SETTINGS_FAILURE'})
             })
     },
+    setTimezone: (t) => {
+        dispatch({type: 'SET_TIMEZONE_REQUEST'})
+        appService.setTimeZone(t)
+            .then(json => {
+                dispatch({type: 'SET_TIMEZONE_SUCCESS'})
+                dispatch({type: 'GET_TIMEZONE_REQUEST'})
+                appService.getTimeZone()
+                    .then(json => {
+                        dispatch({type: 'GET_TIMEZONE_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_TIMEZONE_FAILURE', error})
+                    })
+            }, error => {
+                dispatch({type: 'SET_TIMEZONE_FAILURE'})
+            })
+    }
 
 })
 

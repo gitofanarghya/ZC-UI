@@ -46,8 +46,8 @@ export const appService = {
     getZoneID,
     setZoneID
 };
-/*const hostName = 'http://159.89.169.50:4000'; */
-const hostName = `http://${window.location.hostname}:5000`;
+const hostName = 'http://astralpresence.in:5000'; 
+/*const hostName = `http://${window.location.hostname}:5000`;*/
 
 const hostName2 = `http://${window.location.hostname}:5001`; 
 
@@ -513,7 +513,7 @@ function getCommissioningData() {
         body: null
     };
 
-    return fetch(`${hostName}/getCommissioningData`, requestOptions)
+    return fetch(`${hostName}/rover/get`, requestOptions)
         .then(handleResponse)
 }
 
@@ -524,7 +524,7 @@ function getCurrentTrackerInfo(trackerID) {
         body: null
     };
 
-    return fetch(`${hostName}/getCurrentTrackerInfo?id=${trackerID}`, requestOptions)
+    return fetch(`${hostName}/rover/stats/get?trackerID=${trackerID}`, requestOptions)
         .then(handleResponse)
 }
 
