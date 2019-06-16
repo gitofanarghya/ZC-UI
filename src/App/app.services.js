@@ -344,7 +344,7 @@ function discover(did) {
         })
     }
 
-    return fetch(`${hostName}/scan`, requestOptions)
+    return fetch(`${hostName}/rover/scan`, requestOptions)
         .then(handleResponse)
 }
 
