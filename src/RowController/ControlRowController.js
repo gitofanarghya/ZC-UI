@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import LeftIcon from '@material-ui/icons/ArrowBack'
 import { withStyles } from '@material-ui/core/styles'
-import { IconButton, Typography, Grid, Button, Menu, MenuItem, FormControlLabel, Switch } from '@material-ui/core';
+import { IconButton, Typography, Grid, Button, Menu, MenuItem, FormControlLabel, Switch, TextField } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { appService } from '../App/app.services';
 import {connect} from 'react-redux'
@@ -23,7 +23,9 @@ const styles = theme => ({
 class ControlRowController extends React.Component {
     state = {
         typeOfStow: 'STOW',
-        auto: false
+        auto: false,
+        angle: '',
+        angleError: ''
     }
 
     handleClick = event => {
@@ -44,6 +46,34 @@ class ControlRowController extends React.Component {
         }
     } 
 
+    handleChange = (e) => {
+        if(e.target.value === '' || e.target.value === '-' || e.target.value === '+') {
+            this.setState({
+                ...this.state,
+                angleError: '',
+                angle: e.target.value
+            })
+        } else if(Number.isInteger(Number(e.target.value))) {
+            if(parseInt(e.target.value) > -61 && parseInt(e.target.value) < 61) {
+                this.setState({
+                    ...this.state,
+                    angle: e.target.value,
+                    angleError: ''
+                })
+            } else {
+                this.setState({
+                    ...this.state,
+                    angleError: 'min: -60 & max: +60'
+                })
+            }
+        } else {
+            this.setState({
+                ...this.state,
+                angleError: 'signed integer only'
+            })
+        }
+    }
+
     render() {
         const { classes } = this.props
         const { anchorEl } = this.state
@@ -63,8 +93,18 @@ class ControlRowController extends React.Component {
                     
                     </Grid>
                     <Grid item style={{textAlign: 'center'}}>
-                        <Button color='primary' variant='contained' onClick={() => this.props.controlledTrackers.map(t => this.props.sendCommand(t.deviceID, 'POSITIVE'))} style={{ margin: 10 }}>Run West</Button>
-                        <Button color='primary' variant='contained' onClick={() => this.props.controlledTrackers.map(t => this.props.sendCommand(t.deviceID, 'NEGATIVE'))} style={{ margin: 10 }}>Run East</Button>
+                        <TextField
+                            error={this.state.angleError !== ''}
+                            name='angle'
+                            label='angle'
+                            value={this.state.angle}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant='outlined'
+                            InputLabelProps={{ shrink: true }}
+                            helperText={this.state.angleError}
+                        />
+                        <Button color='primary' variant='contained' disabled={this.state.angleError !== '' || this.state.angle === '' || this.state.angle === '-' || this.state.angle === '+'} onClick={() => this.props.controlledTrackers.map(t => this.props.sendCommand(t.deviceID, this.state.angle))} style={{ margin: 10 }}>Set to Angle</Button>
                         <Button color='primary' variant='contained' onClick={() => this.props.controlledTrackers.map(t => this.props.sendCommand(t.deviceID, 'STOP'))} style={{ margin: 10 }}>Stop</Button>
                         <Button color='primary' disabled={this.state.typeOfStow === 'STOW'} onClick={() => this.props.controlledTrackers.map(t => this.props.sendStow(t.deviceID, this.state.typeOfStow))} variant='contained' style={{ marginLeft: 10 }}>{this.state.typeOfStow}</Button>
                         <Button 
