@@ -186,14 +186,14 @@ export function app(state, action) {
         case 'GET_SNOW_LIMITS_SUCCESS':
         return {
             ...state,
-            snowLimits: action.json,
+            snowLimits: action.json.message,
             gettingSnowLimits: false
         }
 
         case 'GET_FLOOD_LIMITS_SUCCESS':
         return {
             ...state,
-            floodLimits: action.json,
+            floodLimits: action.json.message,
             gettingFloodLimits: false
         }
         
