@@ -44,12 +44,24 @@ export const appService = {
     disableBQ,
     getWifi,
     getZoneID,
-    setZoneID
+    setZoneID,
+    syncFromInternet
 };
 const hostName = 'http://astralpresence.in:5000'; 
 /*const hostName = `http://${window.location.hostname}:5000`;*/
 
 const hostName2 = `http://${window.location.hostname}:5001`; 
+
+function syncFromInternet() {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: null
+    }
+
+    return fetch(`${hostName}/syncFromInternet`, requestOptions)
+        .then(handleResponse)
+}
 
 function setZoneID(id) {
     const requestOptions = {
@@ -588,7 +600,7 @@ function setFrequency(power, status) {
         })
     };
 
-    return fetch(`${hostName}/set/requestFrequency`, requestOptions)
+    return fetch(`${hostName}/requestFrequency/set`, requestOptions)
         .then(handleResponse)
 }
 
@@ -663,7 +675,7 @@ function getFrequency() {
         body: null
     };
 
-    return fetch(`${hostName}/get/requestFrequency`, requestOptions)
+    return fetch(`${hostName}/requestFrequency/get`, requestOptions)
         .then(handleResponse)
 }
 

@@ -69,7 +69,9 @@ const initialState = {
     zoneID: '',
     heartBeatInterval: '',
     heartBeatMaxMessages: '',
-    heartBeatEnabled: false
+    heartBeatEnabled: false,
+    powerRequestTimePeriod: '',
+    statusRequestTimePeriod: ''
 }
 
 const difference = (a1, a2) => {
@@ -87,6 +89,13 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
+
+        case 'GET_REQUEST_FREQUENCY_SUCCESS':
+        return {
+            ...state,
+            powerRequestTimePeriod: action.json.message.powerRequestTimePeriod,
+            statusRequestTimePeriod: action.json.message.statusRequestTimePeriod
+        }
 
         case 'GET_HEARTBEAT_SETTINGS_SUCCESS': 
         return {

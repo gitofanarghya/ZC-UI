@@ -395,6 +395,13 @@ const mapDispatchToProps = (dispatch) => ({
                     }) 
             }, error => {
                 dispatch({type: 'ENABLE_SENSOR_FAILURE'})
+                dispatch({type: 'GET_SENSORS_REQUEST'})
+                appService.getSensors()
+                    .then(json => {
+                        dispatch({type: 'GET_SENSORS_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_SENSORS_FAILURE'})
+                    }) 
             })
     },
     disableSensor: (type, model) => {
@@ -411,6 +418,13 @@ const mapDispatchToProps = (dispatch) => ({
                     }) 
             }, error => {
                 dispatch({type: 'DISABLE_SENSOR_FAILURE'})
+                dispatch({type: 'GET_SENSORS_REQUEST'})
+                appService.getSensors()
+                    .then(json => {
+                        dispatch({type: 'GET_SENSORS_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_SENSORS_FAILURE'})
+                    }) 
             })
     }
 })

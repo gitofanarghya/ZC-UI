@@ -71,18 +71,18 @@ class ZoneController extends React.Component {
         password: '',
         DHCP: false,
         staticIP: '',
-        upperSpeedLimit: '',
-        lowerSpeedLimit: '',
-        minBreachTime: '',
-        maxBreachTime: '',
-        maxBreachCount: '',
-        maxFloodLevel: '',
-        floodMovingAveragePeriod: '',
-        maxSnowLevel: '',
-        snowMovingAveragePeriod: '',
-        rowHeight: '',
-        rowWidth: '',
-        stepSize: '',
+        upperSpeedLimit: this.props.windLimits.speedLimits.upperSpeedLimit,
+        lowerSpeedLimit: this.props.windLimits.speedLimits.lowerSpeedLimit,
+        minBreachTime: this.props.windLimits.breachParameters.minBreachTime,
+        maxBreachTime: this.props.windLimits.breachParameters.maxBreachTime,
+        maxBreachCount: this.props.windLimits.breachParameters.maxBreachCount,
+        maxFloodLevel: this.props.floodLimits.maxFloodLevel,
+        floodMovingAveragePeriod: this.props.floodLimits.movingAveragePeriod,
+        maxSnowLevel: this.props.snowLimits.maxSnowLevel,
+        snowMovingAveragePeriod: this.props.snowLimits.movingAveragePeriod,
+        rowHeight: this.props.snowLimits.rowHeight,
+        rowWidth: this.props.snowLimits.rowWidth,
+        stepSize: this.props.snowLimits.stepSize,
         bqFile: '',
         bqFileName: '',
         bqEnabled: this.props.bqEnabled,
@@ -90,7 +90,9 @@ class ZoneController extends React.Component {
         heartBeatInterval: this.props.heartBeatInterval,
         heartBeatMaxMessages: this.props.heartBeatMaxMessages,
         heartBeatEnabled: this.props.heartBeatEnabled,
-        timezone: this.props.timezone
+        timezone: this.props.timezone,
+        statusRequestTimePeriod: this.props.statusRequestTimePeriod,
+        powerRequestTimePeriod: this.props.powerRequestTimePeriod
     }
 
     componentDidMount = () => {
@@ -101,6 +103,7 @@ class ZoneController extends React.Component {
         this.props.getFloodLimits()
         this.props.getSnowLimits()
         this.props.getHeartBeatSettings()
+        this.props.getRequestFrequency()
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -161,6 +164,13 @@ class ZoneController extends React.Component {
             this.setState({
                 ...this.state,
                 timezone: nextProps.timezone
+            })
+        }
+        if(nextProps.powerRequestTimePeriod !== this.props.powerRequestTimePeriod || nextProps.statusRequestTimePeriod !== this.props.statusRequestTimePeriod) {
+            this.setState({
+                ...this.state,
+                powerRequestTimePeriod: nextProps.powerRequestTimePeriod,
+                statusRequestTimePeriod: nextProps.statusRequestTimePeriod
             })
         }
     }
@@ -245,6 +255,10 @@ class ZoneController extends React.Component {
 
     setTimeZone = () => {
         this.props.setTimezone(this.state.timezone)
+    }
+
+    setRequestFrequency = () => {
+        this.props.setRequestFrequency(this.state.powerRequestTimePeriod, this.state.statusRequestTimePeriod)
     }
 
     render() {
@@ -433,21 +447,43 @@ class ZoneController extends React.Component {
                             </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
-                                Sync Configuration
+                                Request Frequency Configuration
                             </Typography>
-                            <FormControl component="fieldset" className={classes.field}>
-                                <RadioGroup
-                                    row
-                                    aria-label="Sync"
-                                    name="sync"
-                                    value={this.state.syncTime}
-                                    onChange={this.handleChange}
-                                >
-                                    <FormControlLabel value="internet" control={<Radio color='primary'/>} label="Sync from internet" />
-                                    <FormControlLabel value="scada" control={<Radio color='primary'/>} label="Sync from SCADA" />
-                                </RadioGroup>
-                                <Button variant='contained' color='primary' style={{marginBottom: 10}}>Sync</Button>
-                            </FormControl>
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='powerRequestTimePeriod'
+                                label='Power Request Time Period'
+                                value={this.state.powerRequestTimePeriod}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                                }}
+                            />
+                            <TextField
+                                className={classes.field}
+                                fullWidth
+                                name='statusRequestTimePeriod'
+                                label='Status Request Time Period'
+                                value={this.state.statusRequestTimePeriod}
+                                onChange={this.handleChange}
+                                margin="normal"
+                                variant='outlined'
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                                }}
+                            />
+                            <Button variant='contained' color='primary' className={classes.saveButton} onClick={() => this.setRequestFrequency()}>Save</Button>
+                            </div>
+                            <div className={classes.grid2}>
+                            <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
+                                Time Sync Configuration
+                            </Typography>
+                            <Button variant='contained' color='primary' className={classes.saveButton} onClick={() => this.props.syncFromInternet()}>Sync from internet</Button>
                             </div>
                         </Grid>
                         <Grid item className={classes.grid}>
@@ -661,7 +697,7 @@ class ZoneController extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits, bqEnabled, currentWifi, zoneID, heartBeatEnabled, heartBeatInterval, heartBeatMaxMessages, timeZone} = state.app
+    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits, bqEnabled, currentWifi, zoneID, heartBeatEnabled, heartBeatInterval, heartBeatMaxMessages, timeZone, powerRequestTimePeriod, statusRequestTimePeriod} = state.app
 
     return {
         wifiList,
@@ -680,7 +716,9 @@ function mapStateToProps(state) {
         heartBeatInterval,
         heartBeatMaxMessages,
         zoneID,
-        timezone: timeZone
+        timezone: timeZone,
+        powerRequestTimePeriod,
+        statusRequestTimePeriod,
     }
 }
 
@@ -869,6 +907,47 @@ const mapDispatchToProps = (dispatch) => ({
                     })
             }, error => {
                 dispatch({type: 'SET_TIMEZONE_FAILURE'})
+            })
+    },
+    getRequestFrequency: () => {
+        dispatch({type: 'GET_REQUEST_FREQUENCY_REQUEST'})
+        appService.getFrequency()
+            .then(json => {
+                dispatch({type: 'GET_REQUEST_FREQUENCY_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_REQUEST_FREQUENCY_FAILURE'})
+            })
+    },
+    setRequestFrequency: (p, s) => {
+        dispatch({type: 'SET_REQUEST_FREQUENCY_REQUEST'})
+        appService.setFrequency(p, s)
+            .then(json => {
+                dispatch({type: 'SET_REQUEST_FREQUENCY_SUCCESS'})
+                dispatch({type: 'GET_REQUEST_FREQUENCY_REQUEST'})
+                appService.getFrequency()
+                    .then(json => {
+                        dispatch({type: 'GET_REQUEST_FREQUENCY_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_REQUEST_FREQUENCY_FAILURE'})
+                    })
+            }, error => {
+                dispatch({type: 'SET_REQUEST_FREQUENCY_FAILURE'})
+                dispatch({type: 'GET_REQUEST_FREQUENCY_REQUEST'})
+                appService.getFrequency()
+                    .then(json => {
+                        dispatch({type: 'GET_REQUEST_FREQUENCY_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_REQUEST_FREQUENCY_FAILURE'})
+                    })
+            })
+    },
+    syncFromInternet: () => {
+        dispatch({type: 'SYNC_FROM_INTERNET_REQUEST'})
+        appService.syncFromInternet()
+            .then(json => {
+                dispatch({type: 'SYNC_FROM_INTERNET_SUCCESS'})
+            }, error => {
+                dispatch({type: 'SYNC_FROM_INTERNET_FAILURE'})
             })
     }
 
