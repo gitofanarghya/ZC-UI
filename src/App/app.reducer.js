@@ -428,7 +428,7 @@ export function app(state, action) {
         case 'GET_CURRENT_TRACKER_INFO_SUCCESS':
         return {
             ...state,
-            currentTrackerInfo: action.json
+            currentTrackerInfo: action.json.message
         }
 
         case 'GET_CURRENT_TRACKER_INFO_FAILURE':
