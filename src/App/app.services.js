@@ -82,7 +82,7 @@ function getWifi() {
         body: null
     }
 
-    return fetch(`${hostName}/currentWifi`, requestOptions)
+    return fetch(`${hostName}/wifi/current/get`, requestOptions)
         .then(handleResponse)
 }
 
@@ -179,7 +179,7 @@ function scanWifi() {
         body: null
     }
 
-    return fetch(`${hostName}/scanWifi`, requestOptions)
+    return fetch(`${hostName}/wifi/get/scan`, requestOptions)
         .then(handleResponse)
 }
 
@@ -245,7 +245,7 @@ function getSensors() {
         body: null
     }
 
-    return fetch(`${hostName}/sensors/getParams`, requestOptions)
+    return fetch(`${hostName}/sensors/get`, requestOptions)
         .then(handleResponse)
 }
 
@@ -318,7 +318,7 @@ function removeTrackers(DIDs) {
         })
     }
 
-    return fetch(`${hostName}/removePairedDevices`, requestOptions)
+    return fetch(`${hostName}/rover/remove`, requestOptions)
         .then(handleResponse)
 }
 
@@ -331,7 +331,7 @@ function addTrackers(devices) {
         })
     }
 
-    return fetch(`${hostName}/addDiscoveredDevices`, requestOptions)
+    return fetch(`${hostName}/rover/add`, requestOptions)
         .then(handleResponse)
 }
 
@@ -376,7 +376,7 @@ function setWifiInfo(ssid, pass) {
         })
     };
 
-    return fetch(`${hostName}/setWifiInfo`, requestOptions)
+    return fetch(`${hostName}/wifi/set`, requestOptions)
         .then(handleResponse)
 }
 
