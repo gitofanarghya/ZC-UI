@@ -46,6 +46,10 @@ class TrackerDetails extends React.Component {
         }
     }
 
+    componentWillUnmount = () => {
+        clearTimeout(this.timer)
+    }
+
     render() {
         const { classes, currentTrackerInfo } = this.props
 
