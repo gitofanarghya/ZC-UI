@@ -69,8 +69,6 @@ class ZoneController extends React.Component {
     state = {
         ssid: this.props.currentWifi,
         password: '',
-        DHCP: false,
-        staticIP: '',
         upperSpeedLimit: this.props.windLimits.speedLimits.upperSpeedLimit,
         lowerSpeedLimit: this.props.windLimits.speedLimits.lowerSpeedLimit,
         minBreachTime: this.props.windLimits.breachParameters.minBreachTime,
@@ -92,7 +90,9 @@ class ZoneController extends React.Component {
         heartBeatEnabled: this.props.heartBeatEnabled,
         timezone: this.props.timezone,
         statusRequestTimePeriod: this.props.statusRequestTimePeriod,
-        powerRequestTimePeriod: this.props.powerRequestTimePeriod
+        powerRequestTimePeriod: this.props.powerRequestTimePeriod,
+        enableEthernet: this.props.enableEthernet,
+        staticIP: this.props.staticIP
     }
 
     componentDidMount = () => {
@@ -104,6 +104,7 @@ class ZoneController extends React.Component {
         this.props.getSnowLimits()
         this.props.getHeartBeatSettings()
         this.props.getRequestFrequency()
+        this.props.getEthernetSettings()
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -173,6 +174,13 @@ class ZoneController extends React.Component {
                 statusRequestTimePeriod: nextProps.statusRequestTimePeriod
             })
         }
+        if(nextProps.enableEthernet !== this.props.enableEthernet || nextProps.staticIP !== this.props.staticIP) {
+            this.setState({
+                ...this.state,
+                enableEthernet: nextProps.enableEthernet,
+                staticIP: nextProps.staticIP
+            })
+        }
     }
 
     handleChange = (event) => {
@@ -187,11 +195,11 @@ class ZoneController extends React.Component {
     }
 
     DHCPToggle = () => {
-        this.setState({...this.state, DHCP: !this.state.DHCP})
+        this.setState({...this.state, enableEthernet: !this.state.enableEthernet})
     }
 
     BQToggle = () => {
-        this.setState({...this.state, BQ: !this.state.BQ})
+        this.setState({...this.state, bqEnabled: !this.state.bqEnabled})
     }
 
     setWindLimits = () => {
@@ -215,14 +223,14 @@ class ZoneController extends React.Component {
     }
 
     saveBQKey = () => {
-        this.props.saveBQKey(this.state.bqFile)
+        this.props.saveBQKey(this.state.bqEnabled, this.state.bqFile)
         this.setState({
             ...this.state,
             bqFile: '',
             bqFileName: ''
         })
     }
-
+/* 
     BQToggle = () => {
         if(this.state.bqEnabled) {
             this.props.disableBQ()
@@ -236,7 +244,7 @@ class ZoneController extends React.Component {
                 bqEnabled: true
             })
         }
-    }
+    } */
 
     heartBeatToggle = () => {
         this.setState({
@@ -259,6 +267,10 @@ class ZoneController extends React.Component {
 
     setRequestFrequency = () => {
         this.props.setRequestFrequency(this.state.powerRequestTimePeriod, this.state.statusRequestTimePeriod)
+    }
+
+    setEthernetInfo = () => {
+        this.props.setEthernetInfo(this.state.enableEthernet, this.state.staticIP)
     }
 
     render() {
@@ -325,7 +337,7 @@ class ZoneController extends React.Component {
                                 margin="normal"
                                 variant='outlined'
                             />
-                            <Button variant='contained' color='primary' onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
+                            <Button variant='contained' color='primary' disabled={this.state.ssid === this.props.currentWifi} onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
@@ -333,7 +345,7 @@ class ZoneController extends React.Component {
                             </Typography>
                             <FormControlLabel style={{ margin: 10 }} labelPlacement="start"
                                 control={
-                                    <Switch color='primary' checked={this.state.DHCP} onClick={() => this.DHCPToggle()} />
+                                    <Switch color='primary' checked={this.state.enableEthernet} onClick={() => this.DHCPToggle()} />
                                 }
                                 label='Enable DHCP'
                             />
@@ -344,12 +356,12 @@ class ZoneController extends React.Component {
                                 label='Static IP'
                                 value={this.state.staticIP}
                                 onChange={this.handleChange}
-                                disabled={this.state.DHCP}
+                                disabled={this.state.enableEthernet}
                                 margin="normal"
                                 variant='outlined'
                                 InputLabelProps={{ shrink: true }}
                             />
-                            <Button variant='contained' color='primary' onClick={() => this.setWifiInfo()} className={classes.saveButton}>Save</Button>
+                            <Button variant='contained' color='primary' disabled={this.state.enableEthernet === this.props.enableEthernet && this.state.staticIP === this.props.staticIP} onClick={() => this.setEthernetInfo()} className={classes.saveButton}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
@@ -386,7 +398,7 @@ class ZoneController extends React.Component {
                                 </Button>
                             </label>
                             </div>
-                            <Button variant='contained' disabled={!this.state.bqEnabled} onClick={() => this.saveBQKey()} color='primary'className={classes.saveButton}>Save</Button>
+                            <Button variant='contained' disabled={this.state.bqEnabled === this.props.bqEnabled} onClick={() => this.saveBQKey()} color='primary'className={classes.saveButton}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
@@ -477,7 +489,7 @@ class ZoneController extends React.Component {
                                     endAdornment: <InputAdornment position="end">s</InputAdornment>,
                                 }}
                             />
-                            <Button variant='contained' color='primary' className={classes.saveButton} onClick={() => this.setRequestFrequency()}>Save</Button>
+                            <Button variant='contained' color='primary' disabled={this.state.powerRequestTimePeriod === this.props.powerRequestTimePeriod && this.state.statusRequestTimePeriod === this.props.statusRequestTimePeriod} className={classes.saveButton} onClick={() => this.setRequestFrequency()}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
@@ -697,7 +709,7 @@ class ZoneController extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits, bqEnabled, currentWifi, zoneID, heartBeatEnabled, heartBeatInterval, heartBeatMaxMessages, timeZone, powerRequestTimePeriod, statusRequestTimePeriod} = state.app
+    const { wifiList, windLimits, floodLimits, snowLimits, gettingFloodLimits, settingFloodLimits, gettingSnowLimits, settingSnowLimits, gettingWindLimits, settingWindLimits, bqEnabled, currentWifi, zoneID, heartBeatEnabled, heartBeatInterval, heartBeatMaxMessages, timeZone, powerRequestTimePeriod, statusRequestTimePeriod, enableEthernet, staticIP} = state.app
 
     return {
         wifiList,
@@ -719,6 +731,8 @@ function mapStateToProps(state) {
         timezone: timeZone,
         powerRequestTimePeriod,
         statusRequestTimePeriod,
+        enableEthernet,
+        staticIP
     }
 }
 
@@ -816,23 +830,24 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'GET_SNOW_LIMITS_FAILURE'})
             })
     },
-    saveBQKey: (file) => {
-        dispatch({type: 'SAVE_BQ_KEY_REQUEST'})
-        appService.uploadKey(file)
-            .then(json => {
-                dispatch({type: 'SAVE_BQ_KEY_SUCCESS'})
-            }, error => {
-                dispatch({type: 'SAVE_BQ_KEY_FAILURE'})
-            })
-    },
-    disableBQ: () => {
-        dispatch({type: 'DISABLE_BQ_REQUEST'})
-        appService.disableBQ()
-            .then(json => {
-                dispatch({type: 'DISABLE_BQ_SUCCESS'})
-            }, error => {
-                dispatch({type: 'DISABLE_BQ_FAILURE'})
-            })
+    saveBQKey: (enabled, file) => {
+        if(enabled) {
+            dispatch({type: 'SAVE_BQ_KEY_REQUEST'})
+            appService.uploadKey(file)
+                .then(json => {
+                    dispatch({type: 'SAVE_BQ_KEY_SUCCESS'})
+                }, error => {
+                    dispatch({type: 'SAVE_BQ_KEY_FAILURE'})
+                })
+        } else {
+            dispatch({type: 'DISABLE_BQ_REQUEST'})
+            appService.disableBQ()
+                .then(json => {
+                    dispatch({type: 'DISABLE_BQ_SUCCESS'})
+                }, error => {
+                    dispatch({type: 'DISABLE_BQ_FAILURE'})
+                })
+        }
     },
     getWifi: () => {
         dispatch({type: 'GET_WIFI_REQUEST'})
@@ -948,6 +963,38 @@ const mapDispatchToProps = (dispatch) => ({
                 dispatch({type: 'SYNC_FROM_INTERNET_SUCCESS'})
             }, error => {
                 dispatch({type: 'SYNC_FROM_INTERNET_FAILURE'})
+            })
+    },
+    getEthernetSettings: () => {
+        dispatch({type: 'GET_ETHERNET_SETTINGS_REQUEST'})
+        appService.getEthernetSettings()
+            .then(json => {
+                dispatch({type: 'GET_ETHERNET_SETTINGS_SUCCESS', json})
+            }, error => {
+                dispatch({type: 'GET_ETHERNET_SETTINGS_FAILURE'})
+            })
+    },
+    setEthernetInfo: (enableEthernet, staticIP) => {
+        dispatch({type: 'SET_ETHERNET_SETTINGS_REQUEST'})
+        appService.setEthernetSettings(enableEthernet, staticIP)
+            .then(json => {
+                dispatch({type: 'SET_ETHERNET_SETTINGS_SUCCESS'})
+                dispatch({type: 'GET_ETHERNET_SETTINGS_REQUEST'})
+                appService.getEthernetSettings()
+                    .then(json => {
+                        dispatch({type: 'GET_ETHERNET_SETTINGS_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_ETHERNET_SETTINGS_FAILURE'})
+                    })
+            }, error => {
+                dispatch({type: 'SET_ETHERNET_SETTINGS_FAILURE'})
+                dispatch({type: 'GET_ETHERNET_SETTINGS_REQUEST'})
+                appService.getEthernetSettings()
+                    .then(json => {
+                        dispatch({type: 'GET_ETHERNET_SETTINGS_SUCCESS', json})
+                    }, error => {
+                        dispatch({type: 'GET_ETHERNET_SETTINGS_FAILURE'})
+                    })
             })
     }
 

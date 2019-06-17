@@ -34,7 +34,8 @@ const styles = theme => ({
 class ScanTab extends React.Component {
     state = {
         selectedTrackers: [],
-        scanSelection: 'PAN ID'
+        scanSelection: 'PAN ID',
+        scanParameter: this.props.PANID
     }
 
     selectAll = () => {
@@ -62,9 +63,18 @@ class ScanTab extends React.Component {
     }
 
     handleChange = (e) => {
-        this.setState({
-            scanSelection: e.target.value
-        })
+        if(e.target.value === 'PAN ID') {
+            this.setState({
+                scanSelection: e.target.value,
+                scanParameter: this.props.PANID
+            })
+        } else {
+            this.setState({
+                scanSelection: e.target.value,
+                scanParameter: ''
+            })
+        }
+        
     }
 
     inputChange = (e) =>{
@@ -86,7 +96,7 @@ class ScanTab extends React.Component {
     }
 
     render() {
-        const { classes, xbeeResponse, PANID } = this.props
+        const { classes, xbeeResponse } = this.props
 
         return (
             <Fragment>
@@ -111,7 +121,7 @@ class ScanTab extends React.Component {
                         <TextField
                             id="scanParameter"
                             className={classes.textField}
-                            value={PANID}
+                            value={this.state.scanParameter}
                             onChange={this.inputChange}
                             disabled={this.state.scanSelection === 'PAN ID'}
                             margin="none"

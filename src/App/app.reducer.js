@@ -71,7 +71,10 @@ const initialState = {
     heartBeatMaxMessages: '',
     heartBeatEnabled: false,
     powerRequestTimePeriod: '',
-    statusRequestTimePeriod: ''
+    statusRequestTimePeriod: '',
+    logList: [],
+    enableEthernet: false,
+    staticIP: ''
 }
 
 const difference = (a1, a2) => {
@@ -89,6 +92,19 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
+
+        case 'GET_ETHERNET_SETTINGS_SUCCESS':
+        return {
+            ...state,
+            enableEthernet: action.json.message.dhcpStatus,
+            staticIP: action.json.message.staticIP === null ? '' : action.json.message.staticIP
+        }
+
+        case 'GET_LOGS_LIST_SUCCESS':
+        return {
+            ...state,
+            logList: action.json.message
+        }
 
         case 'GET_REQUEST_FREQUENCY_SUCCESS':
         return {

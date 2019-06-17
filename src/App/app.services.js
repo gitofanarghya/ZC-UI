@@ -45,12 +45,51 @@ export const appService = {
     getWifi,
     getZoneID,
     setZoneID,
-    syncFromInternet
+    syncFromInternet,
+    getDownloadLogList,
+    getEthernetSettings,
+    setEthernetSettings
 };
 const hostName = 'http://astralpresence.in:5000'; 
 /*const hostName = `http://${window.location.hostname}:5000`;*/
 
 const hostName2 = `http://${window.location.hostname}:5001`; 
+
+function setEthernetSettings(enable, IP) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify({
+            dhcpStatus: enable,
+            staticIP: IP
+        })
+    }
+
+    return fetch(`${hostName}/ethernetInfo/set`, requestOptions)
+        .then(handleResponse)
+}
+
+function getEthernetSettings() {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors',
+        body: null
+    }
+
+    return fetch(`${hostName}/ethernetInfo/get`, requestOptions)
+        .then(handleResponse)
+}
+
+function getDownloadLogList() {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors',
+        body: null
+    }
+
+    return fetch(`${hostName}/listLogFiles`, requestOptions)
+        .then(handleResponse)
+}
 
 function syncFromInternet() {
     const requestOptions = {

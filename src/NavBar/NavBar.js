@@ -103,7 +103,7 @@ class ResponsiveDrawer extends React.Component {
         </div>
         <Divider />
         <List>
-          {['Dashboard', 'Row Controller', 'Zone Settings', 'Sensors', 'About'].map((text, index) => (
+          {['Dashboard', 'Row Controller', 'Zone Settings', 'Sensors', 'Logs', 'About'].map((text, index) => (
             <ListItem 
                 button 
                 key={text}

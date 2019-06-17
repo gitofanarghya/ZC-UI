@@ -12,6 +12,7 @@ import { SnackbarContentWrapper } from '../util/SnackbarContentWrapper';
 import {withStyles} from '@material-ui/core/styles'
 import socketIOClient from "socket.io-client";
 import { store } from '../util/store'
+import { Logs } from '../Logs/Logs';
 
 const styles = theme => ({
     root: {
@@ -173,7 +174,8 @@ class App extends React.Component {
                         this.props.currentPage === 'Dashboard' ? <Dashboard /> :
                         this.props.currentPage === 'Row Controller' ? <RowController /> :
                         this.props.currentPage === 'Zone Settings' ? <ZoneController /> :
-                        this.props.currentPage === 'Sensors' ? <Sensors /> : 
+                        this.props.currentPage === 'Sensors' ? <Sensors /> :
+                        this.props.currentPage === 'Logs' ? <Logs /> : 
                         this.props.currentPage === 'About' ? <About /> : <Initializing />
                     }
                     </NavBar>
