@@ -18,8 +18,9 @@ const styles = theme => ({
     root: {
         height: '100%'
     },
-    topCenter: {
-        top: 75
+    bottom: {
+        bottom: 0,
+        right: 0
     }
 })
 
@@ -39,9 +40,7 @@ class App extends React.Component {
         this.props.getPanID()
         this.props.getBQ()
         const io = socketIOClient(`http://${window.location.hostname}:80`);
-        io.on('connect', () => {
-            console.log('connected')
-        })
+        io.on('connect', () => this.props.showConnected())
         io.on('ui/rover/scan', data => {
             try {
                 const json = JSON.parse(data)
@@ -131,6 +130,7 @@ class App extends React.Component {
                 io.emit('ui/log/errors', e)
             } 
         })
+        io.on('disconnect', () => this.props.showDisconnected())
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -196,6 +196,23 @@ class App extends React.Component {
                             message={this.state.alert === null ? '' : this.state.alert.message}
                         />
                     </Snackbar>
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        }}
+                        open={!this.props.connected}
+                        //autoHideDuration={3000}
+                        onClose={this.handleClose}
+                        onExited={this.handleExited}
+                        classes={{anchorOriginBottomRight: classes.bottom}}
+                    >
+                        <SnackbarContentWrapper
+                            onClose={this.handleClose}
+                            variant='error'
+                            message='disconnected from network'
+                        />
+                    </Snackbar>
                     {/* <Dialog
                         open={this.state.open}
                         onClose={this.handleClose}
@@ -221,12 +238,13 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { currentPage, alert, timeZone } = state.app
+    const { currentPage, alert, timeZone, connected } = state.app
 
     return {
         currentPage,
         alert,
-        timeZone
+        timeZone,
+        connected
     }
 }
 
@@ -296,6 +314,12 @@ const mapDispatchToProps = (dispatch) => ({
             }, error => {
                 dispatch({type: 'GET_BQ_FAILURE'})
             })
+    },
+    showConnected: () => {
+        dispatch({type: 'CONNECTED'})
+    },
+    showDisconnected: () => {
+        dispatch({type: 'DISCONNECTED'})
     }
 })
 

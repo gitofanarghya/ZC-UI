@@ -113,7 +113,7 @@ class Sensors extends React.Component {
         }
             
         
-        this.setState({ ...this.state, dialog: false, which: 'none', port: '', type: '', model: '', samplingPeriod: '', driverFile: '', driverFileName: '' });
+        this.setState({ ...this.state, dialog: false, port: '', type: '', model: '', samplingPeriod: '', driverFile: '', driverFileName: '' });
     };
 
     handleChange = (e) => {
@@ -121,7 +121,7 @@ class Sensors extends React.Component {
     }
 
     handleClose = () => {
-        this.setState({ ...this.state, dialog: false, which: 'none' });
+        this.setState({ ...this.state, dialog: false });
     }
 
     

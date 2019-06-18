@@ -74,7 +74,8 @@ const initialState = {
     statusRequestTimePeriod: '',
     logList: [],
     enableEthernet: false,
-    staticIP: ''
+    staticIP: '',
+    connected: false
 }
 
 const difference = (a1, a2) => {
@@ -92,6 +93,18 @@ export function app(state, action) {
       return initialState
     }
     switch (action.type) {
+
+        case 'CONNECTED':
+        return {
+            ...state,
+            connected: true
+        }
+
+        case 'DISCONNECTED':
+        return {
+            ...state,
+            connected: false
+        }
 
         case 'GET_ETHERNET_SETTINGS_SUCCESS':
         return {

@@ -319,7 +319,7 @@ class ZoneController extends React.Component {
                                     input={<OutlinedInput labelWidth={50} name="ssid" id="ssid" />}
                                 >
                                     {
-                                        wifiList.length === 0 ? <MenuItem value={'none'}> <CircularProgress /></MenuItem> : wifiList.map(w => <MenuItem key={w + Math.random() * (+100 - +0) + +0} value={w}>{w}</MenuItem>)
+                                        wifiList.length === 0 ? <MenuItem value={'none'}> <CircularProgress size={25}/></MenuItem> : wifiList.map(w => <MenuItem key={w + Math.random() * (+100 - +0) + +0} value={w}>{w}</MenuItem>)
                                     }
                                     
                                 </Select>
@@ -398,7 +398,7 @@ class ZoneController extends React.Component {
                                 </Button>
                             </label>
                             </div>
-                            <Button variant='contained' disabled={this.state.bqEnabled === this.props.bqEnabled} onClick={() => this.saveBQKey()} color='primary'className={classes.saveButton}>Save</Button>
+                            <Button variant='contained' disabled={this.state.bqEnabled === this.props.bqEnabled && this.state.bqFileName === ''} onClick={() => this.saveBQKey()} color='primary'className={classes.saveButton}>Save</Button>
                             </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
@@ -508,7 +508,7 @@ class ZoneController extends React.Component {
                             </AppBar>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
-                                Wind Sensor
+                                Wind Sensor {(this.props.gettingWindLimits || this.props.settingWindLimits) && <CircularProgress size={25} />}
                             </Typography>
                             <TextField
                                 className={classes.field}
@@ -586,7 +586,7 @@ class ZoneController extends React.Component {
                             </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
-                                Flood Sensor
+                                Flood Sensor {(this.props.gettingFloodLimits || this.props.settingFloodLimits) && <CircularProgress size={25}/>}
                             </Typography>
                             <TextField
                                 className={classes.field}
@@ -622,7 +622,7 @@ class ZoneController extends React.Component {
                             </div>
                             <div className={classes.grid2}>
                             <Typography variant='h6' style={{alignSelf: 'flex-start', marginBottom: 10}}>
-                                Snow Sensor
+                                Snow Sensor {(this.props.gettingSnowLimits || this.props.settingSnowLimits) && <CircularProgress size={25}/>}
                             </Typography>
                             <TextField
                                 className={classes.field}
