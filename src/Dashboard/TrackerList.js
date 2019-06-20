@@ -10,7 +10,7 @@ import {withStyles} from '@material-ui/core/styles'
 
 const styles = theme => ({
     root: {
-        height: '100%', width: '100%', padding: 24
+        width: '100%', padding: 24
     },
     selected: {
         backgroundColor: '#54aab3 !important'
@@ -31,7 +31,7 @@ class TrackerList extends React.Component {
                     <Table>
                         <TableHead>
                         <TableRow>
-                            <TableCell >TrackerID</TableCell>
+                            <TableCell >deviceID</TableCell>
                             <TableCell >Status</TableCell>
                         </TableRow>
                         </TableHead>
@@ -40,24 +40,24 @@ class TrackerList extends React.Component {
                                 return (
                                 <TableRow
                                     hover
-                                    //className={[n.trackerID === currentTracker ? classes.selected : classes.row, classes.tableRow]}
-                                    key={n.trackerID}
-                                    onClick={() => this.props.setCurrentTracker(n.trackerID)}
+                                    //className={[n.deviceID === currentTracker ? classes.selected : classes.row, classes.tableRow]}
+                                    key={n.deviceID}
+                                    onClick={() => this.props.setCurrentTracker(n.deviceID)}
                                     style={{cursor: 'pointer'}}
-                                    selected={n.trackerID === currentTracker}
+                                    selected={n.deviceID === currentTracker}
                                     classes={{selected: classes.selected}}
                                 >
-                                    <TableCell style={n.trackerID === currentTracker ? {color: 'white'} : {}}>
-                                        {n.trackerID}
+                                    <TableCell style={n.deviceID === currentTracker ? {color: 'white'} : {}}>
+                                        {n.deviceID}
                                     </TableCell>
-                                    <TableCell style={n.trackerID === currentTracker ? {color: 'white'} : {}}>
+                                    <TableCell style={n.deviceID === currentTracker ? {color: 'white'} : {}}>
                                         {roverStatus[n.deviceID]}
                                     </TableCell>
                                 </TableRow>
                                 );
                             })}
-                            </TableBody>
-                        </Table>
+                        </TableBody>
+                    </Table>
                 </Grid>
             </Fragment>
         )
@@ -75,8 +75,8 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    setCurrentTracker: (trackerID) => {
-        dispatch({type: 'SET_CURRENT_TRACKER', trackerID})
+    setCurrentTracker: (deviceID) => {
+        dispatch({type: 'SET_CURRENT_TRACKER', deviceID})
     }
 })
 

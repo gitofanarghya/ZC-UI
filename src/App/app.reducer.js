@@ -271,7 +271,7 @@ export function app(state, action) {
         case 'SET_CURRENT_TRACKER':
         return {
             ...state,
-            currentTracker: action.trackerID
+            currentTracker: action.deviceID
         }
 
         case 'SET_RESPONSE_LISTENER':
@@ -405,7 +405,7 @@ export function app(state, action) {
                 fetchingCommissioningData: false,
                 currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
                 commissioningData: action.json.message.sort((a, b) => a.deviceID - b.deviceID),
-                currentTracker: action.json.message[0].trackerID,
+                currentTracker: action.json.message[0].deviceID,
                 roverStatus: newRoverStatus
             }
         }
@@ -461,7 +461,7 @@ export function app(state, action) {
         }
 
         case 'GET_CURRENT_TRACKER_INFO_FAILURE':
-        alert('Error getting current tracker info')
+        //alert('Error getting current tracker info')
         return {
             ...state,/* 
             alert: {

@@ -205,9 +205,9 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    getCurrentTrackerInfo : (trackerID) => {
+    getCurrentTrackerInfo : (deviceID) => {
         dispatch({type: 'GET_CURRENT_TRACKER_INFO_REQUEST'})
-        appService.getCurrentTrackerInfo(trackerID)
+        appService.getCurrentTrackerInfo(deviceID)
             .then(json => {
                 dispatch({type: 'GET_CURRENT_TRACKER_INFO_SUCCESS', json})
             }, error => {

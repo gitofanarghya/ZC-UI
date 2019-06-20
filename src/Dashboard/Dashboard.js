@@ -64,12 +64,12 @@ class Dashboard extends React.Component {
         return ( fetchingCommissioningData ? <Fetching /> : commissioningData === null ? <Initializing scan={() => this.scan()} getCommissioningData={() => this.getCommissioningData()}/> :
             <Grid container direction="column" className={classes.root}>
                 <Grid item className={classes.trackerList}>
-                    <Paper style={{height: '100%'}}>
+                    <Paper>
                         <TrackerList />
                     </Paper>
                 </Grid>
                 <Grid item className={classes.trackerDetails}>
-                    <Paper style={{height: '100%'}}>
+                    <Paper>
                         <TrackerDetails />
                     </Paper>
                 </Grid>

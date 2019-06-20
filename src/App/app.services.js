@@ -568,14 +568,14 @@ function getCommissioningData() {
         .then(handleResponse)
 }
 
-function getCurrentTrackerInfo(trackerID) {
+function getCurrentTrackerInfo(deviceID) {
     const requestOptions = {
         method: "GET",
         mode: 'cors',
         body: null
     };
 
-    return fetch(`${hostName}/rover/stats/get?trackerID=${trackerID}`, requestOptions)
+    return fetch(`${hostName}/rover/stats/get?deviceID=${deviceID}`, requestOptions)
         .then(handleResponse)
 }
 
