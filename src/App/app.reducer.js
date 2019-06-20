@@ -404,7 +404,7 @@ export function app(state, action) {
                 ...state,
                 fetchingCommissioningData: false,
                 currentPage: state.currentPage === '' ? 'Dashboard' : state.currentPage,
-                commissioningData: action.json.message,
+                commissioningData: action.json.message.sort((a, b) => a.deviceID - b.deviceID),
                 currentTracker: action.json.message[0].trackerID,
                 roverStatus: newRoverStatus
             }
