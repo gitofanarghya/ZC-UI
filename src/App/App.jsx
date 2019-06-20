@@ -12,7 +12,7 @@ import { SnackbarContentWrapper } from '../util/SnackbarContentWrapper';
 import {withStyles} from '@material-ui/core/styles'
 import socketIOClient from "socket.io-client";
 import { store } from '../util/store'
-import { Logs } from '../Logs/Logs';
+import { Logs } from '../_Logs/Logs';
 
 const styles = theme => ({
     root: {
