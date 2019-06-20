@@ -105,6 +105,7 @@ class RowControllerTab extends React.Component {
                         <Grid item style={{textAlign: 'end'}}>
                             <Button color='primary' variant='contained' disabled={this.state.selectedTrackers.length === 0} className={classes.buttons} onClick={() => this.editTracker()}>Edit</Button>
                             <Button color='primary' variant='contained' disabled={this.state.selectedTrackers.length === 0} className={classes.buttons} onClick={() => this.controlTracker()}>Control</Button>
+                            <Button variant='contained' color='primary' className={classes.buttons} disabled={this.state.selectedTrackers.length === 0} onClick={() => this.removeTrackers()}>Forget</Button>
                         </Grid>
                         <Grid item>
                         <Table className={classes.table}>
@@ -143,10 +144,7 @@ class RowControllerTab extends React.Component {
                             ))}
                             </TableBody>
                         </Table>
-                        </Grid>{commissioningData !== null &&
-                        <Grid item style={{textAlign: 'end'}}>
-                            <Button variant='contained' color='primary' className={classes.buttons} disabled={this.state.selectedTrackers.length === 0} onClick={() => this.removeTrackers()}>Forget</Button>
-                        </Grid>}
+                        </Grid>
                     </Grid>
                     
                 }

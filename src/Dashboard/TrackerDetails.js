@@ -2,15 +2,19 @@ import React from 'react'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid, IconButton } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
 import { connect } from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import { appService } from '../App/app.services';
+import Refresh from '@material-ui/icons/Refresh'
 
 const styles = theme => ({
     root: {
         height: '100%', width: '100%', padding: 24, flexWrap: 'nowrap'
+    },
+    header: {
+        display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
     }
 })
 
@@ -55,9 +59,14 @@ class TrackerDetails extends React.Component {
 
         return (currentTrackerInfo === null ? <NoCurrentTrackerInfo /> :
                 <Grid container direction='column' className={classes.root}>
+                    <div className={classes.header}>
                     <Typography variant='h5' style={{height: '48px'}}>
                         Tracker Details
                     </Typography>
+                    <IconButton className={classes.button} aria-label="Refresh" onClick={() => this.props.getCurrentTrackerInfo(this.props.currentTracker)}>
+                        <Refresh />
+                    </IconButton>
+                    </div>
                     <div 
                         className={currentTrackerInfo.currentAngle !== '--' && (currentTrackerInfo.currentAngle > 58 ? 'angle60' :
                         currentTrackerInfo.currentAngle > 56 ? 'angle58' :

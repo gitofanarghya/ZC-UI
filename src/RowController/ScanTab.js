@@ -138,7 +138,12 @@ class ScanTab extends React.Component {
                         />
                     }
                         <Button color='primary' onClick={() => this.scan()} variant='contained' style={{marginLeft: 24, verticalAlign: 'bottom'}}>Scan</Button>
-                    </Grid>{xbeeResponse.length !== 0 && xbeeResponse !== undefined &&
+                    </Grid>
+                    {xbeeResponse.length !== 0 && xbeeResponse !== undefined &&
+                    <Grid item style={{textAlign: 'end', padding: 10, fontSize: 15}}>
+                        Selected Trackers: {this.state.selectedTrackers.length}
+                    </Grid>}
+                    {xbeeResponse.length !== 0 && xbeeResponse !== undefined &&
                     <Grid item>
                     <Table className={classes.table}>
                         <TableHead>
