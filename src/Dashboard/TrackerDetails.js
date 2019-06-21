@@ -144,15 +144,6 @@ class TrackerDetails extends React.Component {
                         <TableRow style={{cursor: 'pointer'}}>
                             <TableCell>
                                 <Typography variant="body1">
-                                Tracker ID
-                                </Typography>
-                            </TableCell>
-                            <TableCell>{currentTrackerInfo.trackerID}</TableCell>
-                        </TableRow>
-
-                        <TableRow style={{cursor: 'pointer'}}>
-                            <TableCell>
-                                <Typography variant="body1">
                                 Device ID
                                 </Typography>
                             </TableCell>
