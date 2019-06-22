@@ -317,7 +317,7 @@ export function app(state, action) {
         case 'GET_SENSORS_SUCCESS':
         let temp = {
             wind: 'disconnected',
-            snow: 'disconnecetd',
+            snow: 'disconnected',
             flood: 'disconnected'
         }
         action.json.message.map(s => {
