@@ -48,7 +48,7 @@ class TrackerList extends React.Component {
                                     classes={{selected: classes.selected}}
                                 >
                                     <TableCell style={n.deviceID === currentTracker ? {color: 'white'} : {}}>
-                                        {n.deviceID}
+                                        {n.rowNumber}
                                     </TableCell>
                                     <TableCell style={n.deviceID === currentTracker ? {color: 'white'} : {}}>
                                         {roverStatus[n.deviceID]}
