@@ -26,12 +26,12 @@ class TrackerList extends React.Component {
             <Fragment>
                 <Grid container direction='column' className={classes.root}>
                     <Typography variant='h5'>
-                        Tracker List
+                        Row List
                     </Typography>
                     <Table>
                         <TableHead>
                         <TableRow>
-                            <TableCell >deviceID</TableCell>
+                            <TableCell >Row Number</TableCell>
                             <TableCell >Status</TableCell>
                         </TableRow>
                         </TableHead>

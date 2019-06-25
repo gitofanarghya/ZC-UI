@@ -51,7 +51,6 @@ export const appService = {
     setEthernetSettings
 };
 const hostName = `http://${window.location.hostname}:5000`; 
-/*const hostName = `http://${window.location.hostname}:5000`;*/
 
 const hostName2 = `http://${window.location.hostname}:5001`; 
 
